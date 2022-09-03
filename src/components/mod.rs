@@ -4,10 +4,7 @@ mod text;
 
 use std::{ops::Deref, rc::Rc};
 
-pub use empty::Empty;
-pub use section::Section;
-pub use text::Text;
-
+pub use self::{empty::Empty, section::Section, text::Text};
 use crate::{
   event::KeyEvent,
   terminal::{Frame, Rect},

@@ -19,4 +19,10 @@ pub enum Error {
 
   #[error("send: {0}")]
   Send(#[from] SendError<Event>),
+
+  #[error("manager: {0}")]
+  Manager(&'static str),
+
+  #[error("use_state calls must be in the same order: {0}")]
+  UseState(String),
 }
