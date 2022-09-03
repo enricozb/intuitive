@@ -15,7 +15,7 @@ impl PreRender {
     }
   }
 
-  pub fn done(&self) {
+  pub fn set_done(&self) {
     self.is_done.lock().set(true);
   }
 

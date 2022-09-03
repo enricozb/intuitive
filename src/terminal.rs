@@ -57,13 +57,13 @@ impl Terminal {
       self.root.draw(frame.size(), frame);
     })?;
 
+    state::render_done();
+
     Ok(())
   }
 
   pub fn run(&mut self) -> Result<()> {
     self.render()?;
-
-    state::pre_render_done();
 
     loop {
       match event::read()? {

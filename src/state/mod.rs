@@ -1,5 +1,4 @@
 mod pre_render;
-
 use std::{any::Any, sync::Arc};
 
 use lazy_static::lazy_static;
@@ -63,8 +62,18 @@ impl<T: Clone> State<T> {
   }
 }
 
-pub fn pre_render_done() {
-  PRE_RENDER.done();
+pub fn render_done() {
+  let mut states_idx = STATES_IDX.lock();
+
+  if PRE_RENDER.is_done() {
+    if *states_idx != STATES.lock().len() {
+      panic!("Insufficient use_state calls. use_state must be called in the same order")
+    }
+  } else {
+    PRE_RENDER.set_done();
+  }
+
+  *states_idx = 0;
 }
 
 pub fn use_state<T, F>(f: F) -> State<T>
@@ -72,17 +81,23 @@ where
   T: 'static + Send,
   F: FnOnce() -> T,
 {
-  let mut states = STATES.lock();
-
   if PRE_RENDER.is_done() {
+    let states = STATES.lock();
+
     let mut states_idx = STATES_IDX.lock();
 
-    let state = states.get(*states_idx).expect("states::get");
+    let state = states
+      .get(*states_idx)
+      .expect("Invalid use_state index. use_state must be called in the same order");
 
-    *states_idx = (*states_idx + 1) % states.len();
+    *states_idx = *states_idx + 1;
 
-    state.downcast_ref::<State<T>>().expect("downcast").clone()
+    state
+      .downcast_ref::<State<T>>()
+      .expect("Invalid use_state type, use_state must be called in the same order")
+      .clone()
   } else {
+    let mut states = STATES.lock();
     let state = State::new(f());
 
     states.push(Box::new(state.clone()));
@@ -93,29 +108,37 @@ where
 
 #[cfg(test)]
 mod tests {
+  use serial_test::serial;
+
   use super::*;
 
   fn setup() {
     // reset prerender and states
-    PRE_RENDER.reset();
-    STATES.lock().clear();
-    *STATES_IDX.lock() = 0;
+    {
+      PRE_RENDER.reset();
+      STATES.lock().clear();
+      *STATES_IDX.lock() = 0;
+    }
 
     let _ = use_state(|| 1);
     let _ = use_state(|| 2);
 
-    PRE_RENDER.done();
+    render_done();
   }
 
   #[test]
+  #[serial]
   fn use_state_no_panic() {
     setup();
 
     let _ = use_state(|| 1);
     let _ = use_state(|| 2);
+
+    render_done();
   }
 
   #[test]
+  #[serial]
   fn use_state_get() {
     setup();
 
@@ -124,9 +147,12 @@ mod tests {
 
     assert_eq!(state_1.get(), 1);
     assert_eq!(state_2.get(), 2);
+
+    render_done();
   }
 
   #[test]
+  #[serial]
   fn use_state_set_get() {
     setup();
 
@@ -138,13 +164,42 @@ mod tests {
 
     assert_eq!(state_1.get(), 3);
     assert_eq!(state_2.get(), 4);
+
+    render_done();
   }
 
   #[test]
+  #[serial]
   #[should_panic]
   fn use_state_wrong_type() {
     setup();
 
     let _ = use_state(|| ());
+
+    render_done();
+  }
+
+  #[test]
+  #[serial]
+  #[should_panic]
+  fn use_state_too_few() {
+    setup();
+
+    let _ = use_state(|| 1);
+
+    render_done();
+  }
+
+  #[test]
+  #[serial]
+  #[should_panic]
+  fn use_state_too_many() {
+    setup();
+
+    let _ = use_state(|| 1);
+    let _ = use_state(|| 2);
+    let _ = use_state(|| 3);
+
+    render_done();
   }
 }
