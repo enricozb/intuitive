@@ -10,7 +10,7 @@ pub use self::{
   any::Any as AnyComponent,
   empty::Empty,
   section::Section,
-  stack::{Flex, Vertical as VStack},
+  stack::{Flex, Horizontal as HStack, Vertical as VStack},
   text::Text,
 };
 use crate::{

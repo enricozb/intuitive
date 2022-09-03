@@ -1,5 +1,5 @@
 mod flex;
-// mod horizontal;
+mod horizontal;
 mod vertical;
 
-pub use self::{flex::Flex, vertical::Stack as Vertical};
+pub use self::{flex::Flex, horizontal::Stack as Horizontal, vertical::Stack as Vertical};
