@@ -1,5 +1,6 @@
 use crate::{
   components::{children::Children, AnyComponent, Component, Embed, Empty, HStack, VStack},
+  event::KeyEvent,
   render,
   terminal::{Frame, Rect},
 };
@@ -10,6 +11,10 @@ pub struct Centered {
 }
 
 impl Component for Centered {
+  fn on_key(&self, key: KeyEvent) {
+    self.children[0].on_key(key);
+  }
+
   fn draw(&self, rect: Rect, frame: &mut Frame) {
     self.render().draw(rect, frame);
   }

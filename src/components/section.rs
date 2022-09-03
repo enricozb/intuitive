@@ -18,7 +18,7 @@ pub struct Section {
 
 impl Component for Section {
   fn on_key(&self, event: KeyEvent) {
-    self.children[0].on_key(event)
+    self.children[0].on_key(event);
   }
 
   fn render(&self) -> AnyComponent {

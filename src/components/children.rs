@@ -7,7 +7,7 @@ pub struct Children<const N: usize>([AnyComponent; N]);
 
 impl<const N: usize> Default for Children<N> {
   fn default() -> Self {
-    Self([(); N].map(|_| Default::default()))
+    Self([(); N].map(|_| AnyComponent::default()))
   }
 }
 

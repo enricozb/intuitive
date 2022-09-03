@@ -15,7 +15,7 @@ pub struct Text {
 
 impl Component for Text {
   fn on_key(&self, event: KeyEvent) {
-    (self.on_key)(event)
+    (self.on_key)(event);
   }
 
   fn render(&self) -> AnyComponent {

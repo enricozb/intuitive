@@ -17,7 +17,7 @@ impl Deref for Key {
   type Target = dyn Fn(KeyEvent) + 'static;
 
   fn deref(&self) -> &Self::Target {
-    self.handler.deref()
+    &*self.handler
   }
 }
 
