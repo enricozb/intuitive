@@ -1,118 +1,61 @@
+mod hook;
 mod manager;
-mod state;
 
-use lazy_static::lazy_static;
+use std::sync::Arc;
+
+pub use hook::{render_done, use_state};
 use parking_lot::Mutex;
 
-use self::manager::Manager;
-pub use self::state::State;
-use crate::error::Error;
+use crate::event;
 
-lazy_static! {
-  static ref MANAGER: Mutex<Manager> = Mutex::new(Manager::new());
+#[derive(Default)]
+pub struct State<T> {
+  inner: Arc<Mutex<T>>,
 }
 
-pub fn render_done() {
-  MANAGER.lock().reset().map_err(|err| Error::UseState(err.to_string())).unwrap()
+impl<T> State<T> {
+  pub fn new(inner: T) -> Self {
+    Self {
+      inner: Arc::new(Mutex::new(inner)),
+    }
+  }
+
+  pub fn set(&self, new: T) {
+    let mut inner = self.inner.lock();
+    *inner = new;
+
+    event::re_render().expect("re_render");
+  }
+
+  pub fn mutate<F, R>(&self, f: F)
+  where
+    F: FnOnce(&mut T) -> R,
+  {
+    let mut inner = self.inner.lock();
+    drop(f(&mut inner));
+
+    event::re_render().expect("re_render");
+  }
+
+  pub fn update<F>(&self, f: F)
+  where
+    F: FnOnce(&T) -> T,
+  {
+    let mut inner = self.inner.lock();
+    *inner = f(&inner);
+
+    event::re_render().expect("re_render");
+  }
 }
 
-pub fn use_state<T, F>(f: F) -> State<T>
-where
-  T: 'static + Send,
-  F: FnOnce() -> T,
-{
-  MANAGER.lock().next(f).map_err(|err| Error::UseState(err.to_string())).unwrap()
+impl<T: Clone> State<T> {
+  pub fn get(&self) -> T {
+    self.inner.lock().clone()
+  }
 }
 
-#[cfg(test)]
-mod tests {
-  use serial_test::serial;
-
-  use super::*;
-
-  fn setup() {
-    *MANAGER.lock() = Manager::new();
-
-    let _ = use_state(|| 1);
-    let _ = use_state(|| 2);
-
-    render_done();
-  }
-
-  #[test]
-  #[serial]
-  fn use_state_no_panic() {
-    setup();
-
-    let _ = use_state(|| 1);
-    let _ = use_state(|| 2);
-
-    render_done();
-  }
-
-  #[test]
-  #[serial]
-  fn use_state_get() {
-    setup();
-
-    let state_1 = use_state(|| 1);
-    let state_2 = use_state(|| 2);
-
-    assert_eq!(state_1.get(), 1);
-    assert_eq!(state_2.get(), 2);
-
-    render_done();
-  }
-
-  #[test]
-  #[serial]
-  fn use_state_set_get() {
-    setup();
-
-    let state_1 = use_state(|| 1);
-    let state_2 = use_state(|| 2);
-
-    state_1.set(3);
-    state_2.set(4);
-
-    assert_eq!(state_1.get(), 3);
-    assert_eq!(state_2.get(), 4);
-
-    render_done();
-  }
-
-  #[test]
-  #[serial]
-  #[should_panic]
-  fn use_state_wrong_type() {
-    setup();
-
-    let _ = use_state(|| ());
-
-    render_done();
-  }
-
-  #[test]
-  #[serial]
-  #[should_panic]
-  fn use_state_too_few() {
-    setup();
-
-    let _ = use_state(|| 1);
-
-    render_done();
-  }
-
-  #[test]
-  #[serial]
-  #[should_panic]
-  fn use_state_too_many() {
-    setup();
-
-    let _ = use_state(|| 1);
-    let _ = use_state(|| 2);
-    let _ = use_state(|| 3);
-
-    render_done();
+impl<T> Clone for State<T> {
+  fn clone(&self) -> Self {
+    Self { inner: self.inner.clone() }
   }
 }
