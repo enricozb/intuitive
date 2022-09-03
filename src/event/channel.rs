@@ -25,6 +25,10 @@ pub fn send(event: Event) -> Result<()> {
   Ok(CHANNEL.sender.lock().send(event)?)
 }
 
+pub fn re_render() -> Result<()> {
+  Ok(CHANNEL.sender.lock().send(Event::Render)?)
+}
+
 pub fn quit() -> Result<()> {
   Ok(CHANNEL.sender.lock().send(Event::Quit)?)
 }

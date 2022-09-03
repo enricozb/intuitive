@@ -1,4 +1,8 @@
+mod text;
+
 use std::{ops::Deref, rc::Rc};
+
+pub use text::Text;
 
 use crate::{
   event::KeyEvent,
@@ -29,7 +33,9 @@ impl<C: Component + 'static> From<C> for Any {
 }
 
 pub trait Component {
-  fn on_key(&self, _event: KeyEvent) {}
+  fn on_key(&self, event: KeyEvent) {
+    self.render().on_key(event);
+  }
 
   fn render(&self) -> Any;
 

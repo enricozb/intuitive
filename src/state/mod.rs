@@ -6,6 +6,8 @@ use lazy_static::lazy_static;
 use parking_lot::Mutex;
 use pre_render::PRE_RENDER;
 
+use crate::event;
+
 lazy_static! {
   static ref STATES: Mutex<Vec<Box<dyn Any + Send + Sync>>> = Mutex::new(Vec::new());
   static ref STATES_IDX: Mutex<usize> = Mutex::new(0);
@@ -31,6 +33,28 @@ impl<T> State<T> {
   pub fn set(&self, new: T) {
     let mut inner = self.inner.lock();
     *inner = new;
+
+    event::re_render().expect("re_render");
+  }
+
+  pub fn mutate<F>(&self, f: F)
+  where
+    F: FnOnce(&mut T),
+  {
+    let mut inner = self.inner.lock();
+    f(&mut inner);
+
+    event::re_render().expect("re_render");
+  }
+
+  pub fn update<F>(&self, f: F)
+  where
+    F: FnOnce(&T) -> T,
+  {
+    let mut inner = self.inner.lock();
+    *inner = f(&inner);
+
+    event::re_render().expect("re_render");
   }
 }
 
