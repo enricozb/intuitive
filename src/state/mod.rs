@@ -13,6 +13,7 @@ lazy_static! {
   static ref STATES_IDX: Mutex<usize> = Mutex::new(0);
 }
 
+#[derive(Default)]
 pub struct State<T> {
   inner: Arc<Mutex<T>>,
 }
@@ -24,10 +25,8 @@ impl<T> State<T> {
     }
   }
 
-  fn clone(other: &Self) -> Self {
-    Self {
-      inner: other.inner.clone(),
-    }
+  pub fn clone(&self) -> Self {
+    Self { inner: self.inner.clone() }
   }
 
   pub fn set(&self, new: T) {
@@ -82,11 +81,11 @@ where
 
     *states_idx = (*states_idx + 1) % states.len();
 
-    State::clone(state.downcast_ref::<State<T>>().expect("downcast"))
+    state.downcast_ref::<State<T>>().expect("downcast").clone()
   } else {
     let state = State::new(f());
 
-    states.push(Box::new(State::clone(&state)));
+    states.push(Box::new(state.clone()));
 
     state
   }
