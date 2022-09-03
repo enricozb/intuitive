@@ -19,6 +19,11 @@ impl PreRender {
     self.is_done.lock().set(true);
   }
 
+  #[cfg(test)]
+  pub fn reset(&self) {
+    self.is_done.lock().set(false);
+  }
+
   pub fn is_done(&self) -> bool {
     self.is_done.lock().get()
   }
