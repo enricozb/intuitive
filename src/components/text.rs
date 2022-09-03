@@ -1,7 +1,7 @@
 use tui::widgets::Paragraph;
 
 use crate::{
-  components::{Any as AnyComponent, Component},
+  components::{AnyComponent, Component},
   event::{KeyEvent, KeyHandler},
   terminal::{Frame, Rect},
 };
@@ -19,7 +19,7 @@ impl Component for Text {
   }
 
   fn render(&self) -> AnyComponent {
-    Clone::clone(self).into()
+    self.clone().into()
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {

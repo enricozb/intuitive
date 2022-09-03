@@ -4,7 +4,7 @@ use tui::{
 };
 
 use crate::{
-  components::{Any as AnyComponent, Component},
+  components::{children::Children, AnyComponent, Component},
   event::KeyEvent,
   terminal::{Frame, Rect},
 };
@@ -13,7 +13,7 @@ use crate::{
 pub struct Section {
   pub title: String,
   pub color: Color,
-  pub children: [AnyComponent; 1],
+  pub children: Children<1>,
 }
 
 impl Component for Section {
@@ -22,7 +22,7 @@ impl Component for Section {
   }
 
   fn render(&self) -> AnyComponent {
-    Clone::clone(self).into()
+    self.clone().into()
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {
@@ -41,7 +41,7 @@ impl Default for Section {
     Self {
       title: String::default(),
       color: Color::White,
-      children: [Default::default()],
+      children: Children::default(),
     }
   }
 }

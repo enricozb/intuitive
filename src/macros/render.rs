@@ -28,7 +28,7 @@ macro_rules! render {
   (
     @children [$($parsed:tt)*]
   ) => {
-    [ $($parsed)* ]
+    [ $($parsed)* ].into()
   };
 
   (

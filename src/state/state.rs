@@ -23,12 +23,12 @@ impl<T> State<T> {
     event::re_render().expect("re_render");
   }
 
-  pub fn mutate<F>(&self, f: F)
+  pub fn mutate<F, R>(&self, f: F)
   where
-    F: FnOnce(&mut T),
+    F: FnOnce(&mut T) -> R,
   {
     let mut inner = self.inner.lock();
-    f(&mut inner);
+    drop(f(&mut inner));
 
     event::re_render().expect("re_render");
   }

@@ -9,7 +9,7 @@ pub use tui::layout::Rect;
 use tui::{backend::CrosstermBackend, terminal::Frame as TuiFrame, Terminal as TuiTerminal};
 
 use crate::{
-  components::Any as AnyComponent,
+  components::AnyComponent,
   error::Result,
   event::{self, Event},
   state,
