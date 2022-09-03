@@ -40,6 +40,10 @@ impl<T: Copy> State<T> {
   }
 }
 
+pub fn pre_render_done() {
+  PRE_RENDER.done();
+}
+
 pub fn use_state<T, F>(f: F) -> State<T>
 where
   T: 'static + Send,

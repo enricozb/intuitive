@@ -12,6 +12,7 @@ use crate::{
   components::Any as AnyComponent,
   error::Result,
   event::{self, Event},
+  state,
 };
 
 pub type Backend = CrosstermBackend<Stdout>;
@@ -61,6 +62,8 @@ impl Terminal {
 
   pub fn run(&mut self) -> Result<()> {
     self.render()?;
+
+    state::pre_render_done();
 
     loop {
       match event::read()? {
