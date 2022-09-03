@@ -34,9 +34,9 @@ impl<T> State<T> {
   }
 }
 
-impl<T: Copy> State<T> {
+impl<T: Clone> State<T> {
   pub fn get(&self) -> T {
-    *self.inner.lock()
+    self.inner.lock().clone()
   }
 }
 

@@ -24,7 +24,7 @@ pub struct Terminal {
 }
 
 impl Terminal {
-  pub fn new(root: AnyComponent) -> Result<Self> {
+  pub fn new<C: Into<AnyComponent>>(root: C) -> Result<Self> {
     Self::setup()?;
 
     event::start_crossterm_events();
@@ -32,7 +32,7 @@ impl Terminal {
     ctrlc::set_handler(|| event::send(Event::Quit).expect("ctrlc quit: send")).expect("setting sigterm handler");
 
     Ok(Self {
-      root,
+      root: root.into(),
       terminal: TuiTerminal::new(CrosstermBackend::new(io::stdout()))?,
     })
   }
