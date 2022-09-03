@@ -1,7 +1,11 @@
+mod empty;
+mod section;
 mod text;
 
 use std::{ops::Deref, rc::Rc};
 
+pub use empty::Empty;
+pub use section::Section;
 pub use text::Text;
 
 use crate::{
@@ -15,6 +19,12 @@ pub struct Any(Rc<dyn Component>);
 impl Any {
   fn new<C: Component + 'static>(component: C) -> Self {
     Any(Rc::new(component))
+  }
+}
+
+impl Default for Any {
+  fn default() -> Self {
+    Empty.into()
   }
 }
 
