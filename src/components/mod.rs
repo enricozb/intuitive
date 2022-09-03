@@ -1,6 +1,8 @@
 pub mod any;
 pub mod children;
 
+mod centered;
+mod embed;
 mod empty;
 mod section;
 mod stack;
@@ -8,6 +10,8 @@ mod text;
 
 pub use self::{
   any::Any as AnyComponent,
+  centered::Centered,
+  embed::Embed,
   empty::Empty,
   section::Section,
   stack::{Flex, Horizontal as HStack, Vertical as VStack},
