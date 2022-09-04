@@ -7,6 +7,7 @@ mod embed;
 mod empty;
 mod section;
 mod stack;
+mod table;
 mod text;
 
 pub use self::{
@@ -16,6 +17,7 @@ pub use self::{
   empty::Empty,
   section::Section,
   stack::{Flex, Horizontal as HStack, Vertical as VStack},
+  table::Table,
   text::Text,
 };
 use crate::element::Any as AnyElement;

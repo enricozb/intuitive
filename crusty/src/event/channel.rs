@@ -29,8 +29,8 @@ pub fn re_render() -> Result<()> {
   Ok(CHANNEL.sender.lock().send(Event::Render)?)
 }
 
-pub fn quit() -> Result<()> {
-  Ok(CHANNEL.sender.lock().send(Event::Quit)?)
+pub fn quit() {
+  CHANNEL.sender.lock().send(Event::Quit).expect("quit")
 }
 
 pub fn start_crossterm_events() {

@@ -5,6 +5,7 @@
 - if you take children in your custom component you must call `render` on them when being rendered
 - frozen / rendred structs should only take in `AnyElement` not `AnyComponent`
 - all components should take in a `on_key` parameter
+- custom components must implement `Default`
 
 # todo
 - ensure standard components take in `on_key` parameter as `Option<KeyHandler>` with sane default behavior
