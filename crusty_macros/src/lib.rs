@@ -5,14 +5,10 @@ use syn::{FnArg, Ident, ItemFn, Pat, PatType};
 #[proc_macro_attribute]
 pub fn component(attr: TokenStream, item: TokenStream) -> TokenStream {
   let component_name: Ident = syn::parse(attr).unwrap();
-  let func: ItemFn = syn::parse(item).unwrap();
 
-  let vis = func.vis;
-  let fields = func.sig.inputs.iter();
-  let params = func.sig.inputs.iter();
-  let param_names: Vec<Box<Pat>> = func
-    .sig
-    .inputs
+  let ItemFn { vis, sig, block, .. } = syn::parse(item).unwrap();
+  let params: Vec<_> = sig.inputs.iter().collect();
+  let param_names: Vec<Box<Pat>> = params
     .iter()
     .map(|input| match input {
       FnArg::Receiver { .. } => panic!("receivers not allowed in functional component"),
@@ -21,14 +17,10 @@ pub fn component(attr: TokenStream, item: TokenStream) -> TokenStream {
     .cloned()
     .collect();
 
-  let props = param_names.clone();
-
-  let block = func.block;
-
   quote! {
     #[derive(Default)]
     #vis struct #component_name {
-      #(#fields),*
+      #(#params),*
     }
 
     impl #component_name {
@@ -41,7 +33,7 @@ pub fn component(attr: TokenStream, item: TokenStream) -> TokenStream {
 
     impl crusty::components::Component for #component_name {
       fn render(&self) -> crusty::element::Any {
-        let #component_name { #(#props),* } = self;
+        let #component_name { #(#param_names),* } = self;
 
         #block
       }
