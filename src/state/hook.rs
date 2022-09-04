@@ -1,13 +1,10 @@
-use lazy_static::lazy_static;
 use parking_lot::Mutex;
 
 use super::manager::Manager;
 pub use super::State;
 use crate::error::Error;
 
-lazy_static! {
-  static ref MANAGER: Mutex<Manager> = Mutex::new(Manager::new());
-}
+static MANAGER: Mutex<Manager> = Mutex::new(Manager::new());
 
 pub fn render_done() {
   MANAGER.lock().reset().map_err(|err| Error::UseState(err.to_string())).unwrap();

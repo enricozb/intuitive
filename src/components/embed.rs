@@ -7,6 +7,6 @@ pub struct Embed {
 
 impl Component for Embed {
   fn render(&self) -> AnyComponent {
-    self.component.clone()
+    self.component.render()
   }
 }

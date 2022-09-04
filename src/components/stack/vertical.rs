@@ -46,7 +46,11 @@ impl<const N: usize> Stack<N> {
 
 impl<const N: usize> Component for Stack<N> {
   fn render(&self) -> AnyComponent {
-    self.clone().into()
+    Self {
+      flex: self.flex,
+      children: self.children.render(),
+    }
+    .into()
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {

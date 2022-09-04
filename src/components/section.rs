@@ -22,7 +22,12 @@ impl Component for Section {
   }
 
   fn render(&self) -> AnyComponent {
-    self.clone().into()
+    Self {
+      title: self.title.clone(),
+      color: self.color,
+      children: self.children.render(),
+    }
+    .into()
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {

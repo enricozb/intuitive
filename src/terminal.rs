@@ -52,23 +52,27 @@ impl Terminal {
     Ok(())
   }
 
-  fn render(&mut self) -> Result<()> {
+  fn draw(&mut self, component: AnyComponent) -> Result<()> {
     self.terminal.draw(|frame| {
-      self.root.draw(frame.size(), frame);
+      component.draw(frame.size(), frame);
     })?;
-
-    state::render_done();
 
     Ok(())
   }
 
   pub fn run(&mut self) -> Result<()> {
-    self.render()?;
+    let component = self.root.render();
+    state::render_done();
+
+    self.draw(component)?;
 
     loop {
+      let component = self.root.render();
+      state::render_done();
+
       match event::read()? {
-        Event::Render => self.render()?,
-        Event::Key(event) => self.root.on_key(event),
+        Event::Render => self.draw(component)?,
+        Event::Key(event) => component.on_key(event),
         Event::Quit => break,
       }
     }

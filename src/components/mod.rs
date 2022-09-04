@@ -4,6 +4,7 @@ pub mod children;
 mod centered;
 mod embed;
 mod empty;
+mod modal;
 mod section;
 mod stack;
 mod text;
@@ -13,6 +14,7 @@ pub use self::{
   centered::Centered,
   embed::Embed,
   empty::Empty,
+  modal::{use_modal_funcs, Modal},
   section::Section,
   stack::{Flex, Horizontal as HStack, Vertical as VStack},
   text::Text,
@@ -23,11 +25,11 @@ use crate::{
 };
 
 pub trait Component {
-  fn on_key(&self, event: KeyEvent) {
-    self.render().on_key(event);
-  }
+  fn on_key(&self, _event: KeyEvent) {}
 
-  fn render(&self) -> AnyComponent;
+  fn render(&self) -> AnyComponent {
+    Empty.into()
+  }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {
     self.render().draw(rect, frame);
