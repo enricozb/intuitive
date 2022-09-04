@@ -4,7 +4,24 @@ use super::KeyEvent;
 
 #[derive(Clone, Default)]
 pub struct Handler {
-  pub handler: Option<Arc<dyn Fn(KeyEvent) + 'static + Send + Sync>>,
+  handler: Option<Arc<dyn Fn(KeyEvent) + 'static + Send + Sync>>,
+}
+
+impl Handler {
+  pub fn handle(&self, event: KeyEvent) {
+    self.handle_or(event, |_| {})
+  }
+
+  pub fn handle_or<F>(&self, event: KeyEvent, alternative_handler: F)
+  where
+    F: FnOnce(KeyEvent),
+  {
+    if let Some(handler) = &self.handler {
+      handler(event)
+    } else {
+      alternative_handler(event)
+    }
+  }
 }
 
 impl<F> From<F> for Handler

@@ -7,27 +7,34 @@ use crate::{
     element::{Any as AnyElement, Element},
     Component,
   },
+  event::{KeyEvent, KeyHandler},
   terminal::{Frame, Rect},
 };
 
 #[derive(Clone, Default)]
 pub struct Stack<const N: usize> {
   pub flex: FlexArray<N>,
+
   pub children: Children<N>,
+  pub on_key: KeyHandler,
 }
 
 impl<const N: usize> Component for Stack<N> {
   fn render(&self) -> AnyElement {
     AnyElement::new(Frozen {
       flex: self.flex,
+
       children: self.children.render(),
+      on_key: self.on_key.clone(),
     })
   }
 }
 
 struct Frozen<const N: usize> {
   flex: FlexArray<N>,
+
   children: [AnyElement; N],
+  on_key: KeyHandler,
 }
 
 impl<const N: usize> Frozen<N> {
@@ -63,6 +70,10 @@ impl<const N: usize> Frozen<N> {
 }
 
 impl<const N: usize> Element for Frozen<N> {
+  fn on_key(&self, event: KeyEvent) {
+    self.on_key.handle(event);
+  }
+
   fn draw(&self, rect: Rect, frame: &mut Frame) {
     let layout = self.layout(rect);
 

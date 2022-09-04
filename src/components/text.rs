@@ -12,6 +12,7 @@ use crate::{
 #[derive(Default)]
 pub struct Text {
   pub text: String,
+
   pub on_key: KeyHandler,
 }
 
@@ -31,9 +32,7 @@ struct Frozen {
 
 impl Element for Frozen {
   fn on_key(&self, event: KeyEvent) {
-    if let Some(on_key) = &self.on_key.handler {
-      on_key(event);
-    }
+    self.on_key.handle(event);
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {

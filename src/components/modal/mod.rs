@@ -7,7 +7,7 @@ use crate::{
     element::{Any as AnyElement, Element},
     Component,
   },
-  event::KeyEvent,
+  event::{KeyEvent, KeyHandler},
   state::use_state,
   terminal::{Frame, Rect},
 };
@@ -15,6 +15,7 @@ use crate::{
 #[derive(Default)]
 pub struct Modal {
   pub children: Children<1>,
+  pub on_key: KeyHandler,
 }
 
 impl Component for Modal {
@@ -25,20 +26,24 @@ impl Component for Modal {
     hook::set_modal_funcs(funcs.get());
 
     AnyElement::new(Frozen {
-      content: self.children[0].render(),
       modal: modal.get().map(|modal| modal.render()),
+
+      content: self.children[0].render(),
+      on_key: self.on_key.clone(),
     })
   }
 }
 
 struct Frozen {
-  content: AnyElement,
   modal: Option<AnyElement>,
+
+  content: AnyElement,
+  on_key: KeyHandler,
 }
 
 impl Element for Frozen {
   fn on_key(&self, event: KeyEvent) {
-    self.content.on_key(event);
+    self.on_key.handle_or(event, |event| self.content.on_key(event));
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {
