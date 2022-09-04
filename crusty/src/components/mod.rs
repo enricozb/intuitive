@@ -9,6 +9,8 @@ mod section;
 mod stack;
 mod text;
 
+pub use crusty_macros::component;
+
 pub use self::{
   any::Any as AnyComponent,
   centered::Centered,
