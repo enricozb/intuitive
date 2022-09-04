@@ -4,3 +4,7 @@
 - `use_state` (and other hooks) can only be called in `render`
 - if you take children in your custom component you must call `render` on them when being rendered
 - frozen / rendred structs should only take in `AnyElement` not `AnyComponent`
+- all components should take in a `on_key` parameter
+
+# todo
+- ensure standard components take in `on_key` parameter
