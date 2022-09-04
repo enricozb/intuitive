@@ -5,3 +5,5 @@ pub mod event;
 pub mod macros;
 pub mod state;
 pub mod terminal;
+
+pub use crusty_macros::component;
