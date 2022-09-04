@@ -5,10 +5,10 @@ use crate::{
   components::{
     children::Children,
     element::{Any as AnyElement, Element},
-    AnyComponent, Component,
+    Component,
   },
   event::KeyEvent,
-  state::{use_state, State},
+  state::use_state,
   terminal::{Frame, Rect},
 };
 
@@ -19,7 +19,7 @@ pub struct Modal {
 
 impl Component for Modal {
   fn render(&self) -> AnyElement {
-    let modal: State<Option<AnyComponent>> = use_state(|| None);
+    let modal = use_state(|| None);
     let funcs = use_state(|| Funcs::new(modal.clone()));
 
     hook::set_modal_funcs(funcs.get());

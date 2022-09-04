@@ -7,4 +7,4 @@
 - all components should take in a `on_key` parameter
 
 # todo
-- ensure standard components take in `on_key` parameter
+- ensure standard components take in `on_key` parameter as `Option<KeyHandler>` with sane default behavior

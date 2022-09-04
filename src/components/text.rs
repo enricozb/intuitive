@@ -31,7 +31,9 @@ struct Frozen {
 
 impl Element for Frozen {
   fn on_key(&self, event: KeyEvent) {
-    (self.on_key)(event);
+    if let Some(on_key) = &self.on_key.handler {
+      on_key(event);
+    }
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {
