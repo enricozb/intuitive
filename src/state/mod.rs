@@ -8,9 +8,14 @@ use parking_lot::Mutex;
 
 use crate::event;
 
-#[derive(Default)]
 pub struct State<T> {
   inner: Arc<Mutex<T>>,
+}
+
+impl<T: Default + 'static + Send> Default for State<T> {
+  fn default() -> Self {
+    use_state(|| Default::default())
+  }
 }
 
 impl<T> State<T> {
