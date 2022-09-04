@@ -32,6 +32,13 @@ impl<T> State<T> {
     event::re_render().expect("re_render");
   }
 
+  pub fn inspect<F, R>(&self, f: F) -> R
+  where
+    F: FnOnce(&T) -> R,
+  {
+    f(&self.inner.lock())
+  }
+
   pub fn mutate<F, R>(&self, f: F)
   where
     F: FnOnce(&mut T) -> R,
