@@ -1,6 +1,5 @@
 pub mod any;
 pub mod children;
-pub mod element;
 
 mod centered;
 mod embed;
@@ -9,8 +8,6 @@ mod modal;
 mod section;
 mod stack;
 mod text;
-
-use element::Any as AnyElement;
 
 pub use self::{
   any::Any as AnyComponent,
@@ -22,6 +19,7 @@ pub use self::{
   stack::{Flex, Horizontal as HStack, Vertical as VStack},
   text::Text,
 };
+use crate::element::Any as AnyElement;
 
 pub trait Component {
   fn render(&self) -> AnyElement {

@@ -1,6 +1,6 @@
-use crate::components::{
+use crate::{
+  components::Component,
   element::{Any as AnyElement, Element},
-  Component,
 };
 
 #[derive(Clone, Default)]

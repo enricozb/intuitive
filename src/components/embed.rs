@@ -1,4 +1,7 @@
-use crate::components::{element::Any as AnyElement, AnyComponent, Component};
+use crate::{
+  components::{AnyComponent, Component},
+  element::Any as AnyElement,
+};
 
 #[derive(Default)]
 pub struct Embed {

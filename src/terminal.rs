@@ -9,7 +9,8 @@ pub use tui::layout::Rect;
 use tui::{backend::CrosstermBackend, terminal::Frame as TuiFrame, Terminal as TuiTerminal};
 
 use crate::{
-  components::{element::Any as AnyElement, AnyComponent},
+  components::AnyComponent,
+  element::Any as AnyElement,
   error::Result,
   event::{self, Event},
   state,
@@ -52,7 +53,7 @@ impl Terminal {
     Ok(())
   }
 
-  fn draw(&mut self, element: AnyElement) -> Result<()> {
+  fn draw(&mut self, element: &AnyElement) -> Result<()> {
     self.terminal.draw(|frame| {
       element.draw(frame.size(), frame);
     })?;
@@ -64,14 +65,14 @@ impl Terminal {
     let component = self.root.render();
     state::render_done();
 
-    self.draw(component)?;
+    self.draw(&component)?;
 
     loop {
       let component = self.root.render();
       state::render_done();
 
       match event::read()? {
-        Event::Render => self.draw(component)?,
+        Event::Render => self.draw(&component)?,
         Event::Key(event) => component.on_key(event),
         Event::Quit => break,
       }

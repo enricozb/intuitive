@@ -1,6 +1,7 @@
 use std::ops::Deref;
 
-use super::{element::Any as AnyElement, AnyComponent};
+use super::AnyComponent;
+use crate::element::Any as AnyElement;
 
 #[derive(Clone)]
 pub struct Children<const N: usize>([AnyComponent; N]);
@@ -10,7 +11,7 @@ impl<const N: usize> Children<N> {
     let mut components = [(); N].map(|()| AnyElement::default());
 
     for (i, component) in components.iter_mut().enumerate() {
-      *component = self.0[i].render()
+      *component = self.0[i].render();
     }
 
     components

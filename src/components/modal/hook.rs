@@ -24,11 +24,11 @@ impl Funcs {
   }
 
   pub fn show(&self, component: AnyComponent) {
-    (self.show)(component)
+    (self.show)(component);
   }
 
   pub fn hide(&self) {
-    (self.hide)()
+    (self.hide)();
   }
 }
 
@@ -40,5 +40,5 @@ pub fn use_modal_funcs() -> Funcs {
 }
 
 pub fn set_modal_funcs(funcs: Funcs) {
-  *FUNCS.lock() = Some(funcs)
+  *FUNCS.lock() = Some(funcs);
 }

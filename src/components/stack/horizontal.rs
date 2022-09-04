@@ -2,11 +2,8 @@ use tui::layout::{Constraint, Direction, Layout};
 
 use super::flex::{Array as FlexArray, Flex};
 use crate::{
-  components::{
-    children::Children,
-    element::{Any as AnyElement, Element},
-    Component,
-  },
+  components::{children::Children, Component},
+  element::{Any as AnyElement, Element},
   event::{KeyEvent, KeyHandler},
   terminal::{Frame, Rect},
 };

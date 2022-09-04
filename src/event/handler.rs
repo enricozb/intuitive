@@ -9,7 +9,7 @@ pub struct Handler {
 
 impl Handler {
   pub fn handle(&self, event: KeyEvent) {
-    self.handle_or(event, |_| {})
+    self.handle_or(event, |_| {});
   }
 
   pub fn handle_or<F>(&self, event: KeyEvent, alternative_handler: F)
@@ -17,9 +17,9 @@ impl Handler {
     F: FnOnce(KeyEvent),
   {
     if let Some(handler) = &self.handler {
-      handler(event)
+      handler(event);
     } else {
-      alternative_handler(event)
+      alternative_handler(event);
     }
   }
 }

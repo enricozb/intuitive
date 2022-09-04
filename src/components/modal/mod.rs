@@ -2,11 +2,8 @@ mod hook;
 
 pub use self::hook::{use_modal_funcs, Funcs};
 use crate::{
-  components::{
-    children::Children,
-    element::{Any as AnyElement, Element},
-    Component,
-  },
+  components::{children::Children, Component},
+  element::{Any as AnyElement, Element},
   event::{KeyEvent, KeyHandler},
   state::use_state,
   terminal::{Frame, Rect},

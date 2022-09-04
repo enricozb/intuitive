@@ -1,10 +1,8 @@
 use tui::widgets::Paragraph;
 
 use crate::{
-  components::{
-    element::{Any as AnyElement, Element},
-    Component,
-  },
+  components::Component,
+  element::{Any as AnyElement, Element},
   event::{KeyEvent, KeyHandler},
   terminal::{Frame, Rect},
 };
