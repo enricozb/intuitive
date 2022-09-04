@@ -1,7 +1,6 @@
 use crate::{
-  components::{children::Children, AnyComponent, Component, Embed, Empty, HStack, VStack},
+  components::{children::Children, element::Any as AnyElement, Component, Embed, Empty, HStack, VStack},
   render,
-  terminal::{Frame, Rect},
 };
 
 #[derive(Clone, Default)]
@@ -10,11 +9,7 @@ pub struct Centered {
 }
 
 impl Component for Centered {
-  fn draw(&self, rect: Rect, frame: &mut Frame) {
-    self.render().draw(rect, frame);
-  }
-
-  fn render(&self) -> AnyComponent {
+  fn render(&self) -> AnyElement {
     render! {
       VStack() {
         Empty()

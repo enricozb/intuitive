@@ -1,15 +1,15 @@
-use crate::{
-  components::{AnyComponent, Component},
-  terminal::{Frame, Rect},
+use crate::components::{
+  element::{Any as AnyElement, Element},
+  Component,
 };
 
 #[derive(Clone, Default)]
 pub struct Empty;
 
 impl Component for Empty {
-  fn draw(&self, _rect: Rect, _frame: &mut Frame) {}
-
-  fn render(&self) -> AnyComponent {
-    self.clone().into()
+  fn render(&self) -> AnyElement {
+    AnyElement::new(Empty)
   }
 }
+
+impl Element for Empty {}

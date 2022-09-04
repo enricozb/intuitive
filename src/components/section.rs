@@ -4,7 +4,11 @@ use tui::{
 };
 
 use crate::{
-  components::{children::Children, AnyComponent, Component},
+  components::{
+    children::Children,
+    element::{Any as AnyElement, Element},
+    Component,
+  },
   event::KeyEvent,
   terminal::{Frame, Rect},
 };
@@ -16,18 +20,35 @@ pub struct Section {
   pub children: Children<1>,
 }
 
-impl Component for Section {
-  fn on_key(&self, event: KeyEvent) {
-    self.children[0].on_key(event);
-  }
-
-  fn render(&self) -> AnyComponent {
+impl Default for Section {
+  fn default() -> Self {
     Self {
+      title: String::default(),
+      color: Color::White,
+      children: Children::default(),
+    }
+  }
+}
+
+impl Component for Section {
+  fn render(&self) -> AnyElement {
+    AnyElement::new(Frozen {
       title: self.title.clone(),
       color: self.color,
-      children: self.children.render(),
-    }
-    .into()
+      content: self.children[0].render(),
+    })
+  }
+}
+
+struct Frozen {
+  title: String,
+  color: Color,
+  content: AnyElement,
+}
+
+impl Element for Frozen {
+  fn on_key(&self, event: KeyEvent) {
+    self.content.on_key(event);
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {
@@ -36,17 +57,7 @@ impl Component for Section {
       .borders(Borders::ALL)
       .border_style(Style::default().fg(self.color));
 
-    self.children[0].draw(block.inner(rect), frame);
+    self.content.draw(block.inner(rect), frame);
     frame.render_widget(block, rect);
-  }
-}
-
-impl Default for Section {
-  fn default() -> Self {
-    Self {
-      title: String::default(),
-      color: Color::White,
-      children: Children::default(),
-    }
   }
 }

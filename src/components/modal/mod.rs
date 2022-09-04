@@ -2,7 +2,11 @@ mod hook;
 
 pub use self::hook::{use_modal_funcs, Funcs};
 use crate::{
-  components::{children::Children, AnyComponent, Component},
+  components::{
+    children::Children,
+    element::{Any as AnyElement, Element},
+    AnyComponent, Component,
+  },
   event::KeyEvent,
   state::{use_state, State},
   terminal::{Frame, Rect},
@@ -11,28 +15,28 @@ use crate::{
 #[derive(Default)]
 pub struct Modal {
   pub children: Children<1>,
-  pub modal: State<Option<AnyComponent>>,
 }
 
 impl Component for Modal {
-  fn render(&self) -> AnyComponent {
-    let funcs = use_state(|| Funcs::new(self.modal.clone()));
+  fn render(&self) -> AnyElement {
+    let modal: State<Option<AnyComponent>> = use_state(|| None);
+    let funcs = use_state(|| Funcs::new(modal.clone()));
+
     hook::set_modal_funcs(funcs.get());
 
-    Frozen {
+    AnyElement::new(Frozen {
       content: self.children[0].render(),
-      modal: self.modal.get().map(|modal| modal.render()),
-    }
-    .into()
+      modal: modal.get().map(|modal| modal.render()),
+    })
   }
 }
 
 struct Frozen {
-  content: AnyComponent,
-  modal: Option<AnyComponent>,
+  content: AnyElement,
+  modal: Option<AnyElement>,
 }
 
-impl Component for Frozen {
+impl Element for Frozen {
   fn on_key(&self, event: KeyEvent) {
     self.content.on_key(event);
   }

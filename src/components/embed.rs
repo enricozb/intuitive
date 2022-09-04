@@ -1,4 +1,4 @@
-use crate::components::{AnyComponent, Component};
+use crate::components::{element::Any as AnyElement, AnyComponent, Component};
 
 #[derive(Default)]
 pub struct Embed {
@@ -6,7 +6,7 @@ pub struct Embed {
 }
 
 impl Component for Embed {
-  fn render(&self) -> AnyComponent {
+  fn render(&self) -> AnyElement {
     self.component.render()
   }
 }

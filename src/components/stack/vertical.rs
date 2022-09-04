@@ -2,7 +2,11 @@ use tui::layout::{Constraint, Direction, Layout};
 
 use super::flex::{Array as FlexArray, Flex};
 use crate::{
-  components::{children::Children, AnyComponent, Component},
+  components::{
+    children::Children,
+    element::{Any as AnyElement, Element},
+    Component,
+  },
   terminal::{Frame, Rect},
 };
 
@@ -12,7 +16,21 @@ pub struct Stack<const N: usize> {
   pub children: Children<N>,
 }
 
-impl<const N: usize> Stack<N> {
+impl<const N: usize> Component for Stack<N> {
+  fn render(&self) -> AnyElement {
+    AnyElement::new(Frozen {
+      flex: self.flex,
+      children: self.children.render(),
+    })
+  }
+}
+
+struct Frozen<const N: usize> {
+  flex: FlexArray<N>,
+  children: [AnyElement; N],
+}
+
+impl<const N: usize> Frozen<N> {
   fn layout(&self, rect: Rect) -> Vec<Rect> {
     let total_grow: u16 = self
       .flex
@@ -44,15 +62,7 @@ impl<const N: usize> Stack<N> {
   }
 }
 
-impl<const N: usize> Component for Stack<N> {
-  fn render(&self) -> AnyComponent {
-    Self {
-      flex: self.flex,
-      children: self.children.render(),
-    }
-    .into()
-  }
-
+impl<const N: usize> Element for Frozen<N> {
   fn draw(&self, rect: Rect, frame: &mut Frame) {
     let layout = self.layout(rect);
 
