@@ -1,11 +1,13 @@
 [package]
 name = "intuitive"
 version = "0.1.0"
+description = "a react-like library for building text-based user interfaces"
 edition = "2021"
+license = "CC0-1.0"
 
 [dependencies]
 crossterm = "0.25.0"
-intuitive_macros = { path = "../intuitive_macros" }
+intuitive_macros = { path = "../intuitive_macros", version = "0.1" }
 ctrlc = { version = "3.2.3", features = [ "termination" ] }
 lazy_static = "1.4.0"
 parking_lot = "0.12.1"

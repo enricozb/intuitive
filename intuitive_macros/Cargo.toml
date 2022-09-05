@@ -1,7 +1,9 @@
 [package]
 name = "intuitive_macros"
 version = "0.1.0"
+description = "the component proc-macro for the intuitive crate"
 edition = "2021"
+license = "CC0-1.0"
 
 [lib]
 proc-macro = true
