@@ -37,7 +37,7 @@
 //!         Text(text: text.get())
 //!       }
 //!
-//!       HStack() {
+//!       HStack(flex: [1, 2, 3]) {
 //!         Section(title: "Column 1")
 //!         Section(title: "Column 2")
 //!         Section(title: "Column 3")
