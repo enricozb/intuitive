@@ -2,11 +2,11 @@
 Intuitive is a component-based library for creating text-based user interfaces
 (TUIs) easily.
 
-TODO(enricozb): put a gif here?
-
 It is heavily inspired by [React](https://developer.apple.com/xcode/swiftui/) and
 [SwiftUI](https://developer.apple.com/xcode/swiftui/), containing features that
 resemble functional components, hooks, and a (mostly) declarative DSL.
+
+[Documentation](https://docs.rs/intuitive).
 
 ## Design
 The main focus of Intuitive is to simplify the implementation of section-based TUIs,
