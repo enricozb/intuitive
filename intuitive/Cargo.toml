@@ -1,11 +1,11 @@
 [package]
-name = "crusty"
+name = "intuitive"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 crossterm = "0.25.0"
-crusty_macros = { path = "../crusty_macros" }
+intuitive_macros = { path = "../intuitive_macros" }
 ctrlc = { version = "3.2.3", features = [ "termination" ] }
 lazy_static = "1.4.0"
 parking_lot = "0.12.1"

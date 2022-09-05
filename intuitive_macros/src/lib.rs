@@ -24,15 +24,15 @@ pub fn component(attr: TokenStream, item: TokenStream) -> TokenStream {
     }
 
     impl #component_name {
-      fn new(#(#params),*) -> crusty::components::AnyComponent {
+      fn new(#(#params),*) -> intuitive::components::AnyComponent {
         Self {
           #(#param_names),*
         }.into()
       }
     }
 
-    impl crusty::components::Component for #component_name {
-      fn render(&self) -> crusty::element::Any {
+    impl intuitive::components::Component for #component_name {
+      fn render(&self) -> intuitive::element::Any {
         let #component_name { #(#param_names),* } = self;
 
         #block

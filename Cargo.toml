@@ -1,6 +1,6 @@
 [workspace]
 
 members = [
-  "crusty",
-  "crusty_macros",
+  "intuitive",
+  "intuitive_macros",
 ]
