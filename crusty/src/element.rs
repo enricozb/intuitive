@@ -6,10 +6,11 @@ use crate::{
   terminal::{Frame, Rect},
 };
 
-pub struct Any(Arc<dyn Element>);
+#[derive(Clone)]
+pub struct Any(Arc<dyn Element + Send + Sync>);
 
 impl Any {
-  pub fn new<C: Element + 'static>(element: C) -> Self {
+  pub fn new<C: Element + 'static + Send + Sync>(element: C) -> Self {
     Self(Arc::new(element))
   }
 }
@@ -21,7 +22,7 @@ impl<'a> Default for Any {
 }
 
 impl Deref for Any {
-  type Target = Arc<dyn Element>;
+  type Target = Arc<dyn Element + Send + Sync>;
 
   fn deref(&self) -> &Self::Target {
     &self.0

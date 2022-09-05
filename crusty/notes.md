@@ -9,3 +9,5 @@
 
 # todo
 - ensure standard components take in `on_key` parameter as `Option<KeyHandler>` with sane default behavior
+- make `Component(prop1: value1, prop2: value2)` syntax where we don't need to specify the prop name if the value name matches,
+  like `Component(prop1, prop2)`

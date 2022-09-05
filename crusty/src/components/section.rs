@@ -10,32 +10,20 @@ use crate::{
   terminal::{Frame, Rect},
 };
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct Section {
   pub title: String,
-  pub color: Color,
+  pub color: Option<Color>,
 
   pub children: Children<1>,
   pub on_key: KeyHandler,
-}
-
-impl Default for Section {
-  fn default() -> Self {
-    Self {
-      title: String::default(),
-      color: Color::White,
-
-      children: Children::default(),
-      on_key: KeyHandler::default(),
-    }
-  }
 }
 
 impl Component for Section {
   fn render(&self) -> AnyElement {
     AnyElement::new(Frozen {
       title: self.title.clone(),
-      color: self.color,
+      color: self.color.unwrap_or(Color::White),
 
       content: self.children[0].render(),
       on_key: self.on_key.clone(),
