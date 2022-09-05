@@ -13,24 +13,36 @@
 //! such as [lazygit](https://github.com/jesseduffield/lazygit)'s. Resizing is handled
 //! automatically, and keyboard events can be handled easily.
 //!
-//! For example, in order to roughly replicate lazygit's 7-panel layout, it would only
-//! take the following code (ignoring `use` statements):
+//! For example, a complex layout with an input box:
 //! ```rust
+//! use intuitive::{
+//!   component,
+//!   components::{Centered, Flex::*, Section, Text, VStack, HStack},
+//!   error::Result,
+//!   on_key, render,
+//!   state::use_state,
+//!   terminal::Terminal,
+//! };
+//!
 //! #[component(Root)]
 //! fn render() {
+//!   let text = use_state(|| String::new());
+//!   let on_key = on_key! { [text]
+//!     KeyEvent { code: Char(c), .. } => text.mutate(|text| text.push(c)),
+//!     KeyEvent { code: Backspace, .. } => text.mutate(|text| text.pop()),
+//!     KeyEvent { code: Esc, .. } => event::quit(),
+//!   };
+//!
 //!   render! {
-//!     HStack(flex: [1, 2]) {
-//!       VStack(flex: [Block(3), Grow(1), Grow(1), Grow(1), Block(3)]) {
-//!         Section(title: "Status")
-//!         Section(title: "Files - Submodules")
-//!         Section(title: "Local Branches")
-//!         Section(title: "Commits - Reflog")
-//!         Section(title: "Stash")
+//!     VStack(flex: [Block(3), Grow(1)], on_key: on_key) {
+//!       Section(title: "Input") {
+//!         Text(text: text.get())
 //!       }
 //!
-//!       VStack(flex: [Grow(1), Block(10)]) {
-//!         Section(title: "Unstaged Changes")
-//!         Section(title: "Command Log")
+//!       HStack() {
+//!         Section(title: "Column 1")
+//!         Section(title: "Column 2")
+//!         Section(title: "Column 3")
 //!       }
 //!     }
 //!   }
