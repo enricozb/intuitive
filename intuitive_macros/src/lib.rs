@@ -35,6 +35,10 @@ use syn::{FnArg, Ident, ItemFn, Pat, PatType};
 /// component in a `render!` macro. The provided parameters **must** implement `Default`,
 /// as the generated component derives `Default`.
 ///
+/// # Generated Component
+/// The generated component has a `new() -> component::Any` associated function that can
+/// be used to create the component when passing it to `Terminal::new()`.
+///
 /// # Nuances
 /// There are a couple of nuances with this macro:
 /// - The visibility of the generated component will be the same as that of the
