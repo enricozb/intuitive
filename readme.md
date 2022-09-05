@@ -8,7 +8,7 @@ It is heavily inspired by [React](https://developer.apple.com/xcode/swiftui/) an
 [SwiftUI](https://developer.apple.com/xcode/swiftui/), containing features that
 resemble functional components, hooks, and a (mostly) declarative DSL.
 
-# Design
+## Design
 The main focus of Intuitive is to simplify the implementation of section-based TUIs,
 such as [lazygit](https://github.com/jesseduffield/lazygit)'s. Resizing is handled
 automatically, and keyboard events can be handled easily.
