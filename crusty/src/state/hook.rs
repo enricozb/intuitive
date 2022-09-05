@@ -10,12 +10,16 @@ pub fn render_done() {
   MANAGER.lock().reset().map_err(|err| Error::UseState(err.to_string())).unwrap();
 }
 
-pub fn use_state<T, F>(f: F) -> State<T>
+pub fn use_state<T, F>(initializer: F) -> State<T>
 where
   T: 'static + Send,
   F: FnOnce() -> T,
 {
-  MANAGER.lock().next(f).map_err(|err| Error::UseState(err.to_string())).unwrap()
+  MANAGER
+    .lock()
+    .next(initializer)
+    .map_err(|err| Error::UseState(err.to_string()))
+    .unwrap()
 }
 
 #[cfg(test)]
