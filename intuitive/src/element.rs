@@ -1,3 +1,5 @@
+//! Types describing rendered components.
+
 use std::{ops::Deref, sync::Arc};
 
 use crate::{

@@ -1,3 +1,5 @@
+//! Primitives for handling and sending events.
+
 mod channel;
 mod handler;
 

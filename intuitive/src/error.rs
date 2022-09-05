@@ -1,3 +1,5 @@
+//! The crate's `Error` type.
+
 use std::{
   io,
   sync::mpsc::{RecvError, SendError},

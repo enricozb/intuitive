@@ -1,5 +1,5 @@
 use crate::{
-  components::{AnyComponent, Component},
+  components::{Any as AnyComponent, Component},
   element::Any as AnyElement,
 };
 

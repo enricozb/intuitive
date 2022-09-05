@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use parking_lot::Mutex;
 
-use crate::{components::AnyComponent, state::State};
+use crate::{components::Any as AnyComponent, state::State};
 
 static FUNCS: Mutex<Option<Funcs>> = Mutex::new(None);
 

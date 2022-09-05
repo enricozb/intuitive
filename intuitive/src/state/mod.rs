@@ -1,3 +1,5 @@
+//! Primitives for handling state.
+
 mod hook;
 mod manager;
 

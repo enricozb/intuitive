@@ -1,6 +1,6 @@
 use std::ops::Deref;
 
-use super::AnyComponent;
+use super::Any as AnyComponent;
 use crate::element::Any as AnyElement;
 
 #[derive(Clone)]

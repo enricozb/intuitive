@@ -1,3 +1,5 @@
+//! Contains the `Terminal` type used to run the UI.
+
 use std::io::{self, Stdout};
 
 use crossterm::{
@@ -9,7 +11,7 @@ pub use tui::layout::Rect;
 use tui::{backend::CrosstermBackend, terminal::Frame as TuiFrame, Terminal as TuiTerminal};
 
 use crate::{
-  components::AnyComponent,
+  components::Any as AnyComponent,
   element::Any as AnyElement,
   error::Result,
   event::{self, Event},

@@ -1,3 +1,5 @@
+//! A collection of basic components.
+
 pub mod any;
 pub mod children;
 pub mod modal;
@@ -11,7 +13,7 @@ mod table;
 mod text;
 
 pub use self::{
-  any::Any as AnyComponent,
+  any::Any,
   centered::Centered,
   embed::Embed,
   empty::Empty,
