@@ -2,8 +2,6 @@
 //! Intuitive is a component-based library for creating text-based user interfaces
 //! (TUIs) easily.
 //!
-//! TODO(enricozb): put a gif here?
-//!
 //! It is heavily inspired by [React](https://developer.apple.com/xcode/swiftui/) and
 //! [SwiftUI](https://developer.apple.com/xcode/swiftui/), containing features that
 //! resemble functional components, hooks, and a (mostly) declarative DSL.
@@ -54,7 +52,7 @@
 //! ```
 //! And the output would look like this:
 //!
-//! TODO(enricozb): add image here
+//! ![demo](https://raw.githubusercontent.com/enricozb/intuitive/main/assets/demo.png)
 
 pub mod components;
 pub mod element;

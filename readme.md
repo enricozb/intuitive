@@ -54,4 +54,4 @@ fn main() -> Result<()> {
 ```
 And the output would look like this:
 
-![demo image](./assets/demo.png)
+![demo](./assets/demo.png)
