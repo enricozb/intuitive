@@ -10,5 +10,6 @@ repository = "https://github.com/enricozb/intuitive"
 proc-macro = true
 
 [dependencies]
+proc-macro2 = "1.0.43"
 quote = "1.0"
 syn = { version = "1.0", features = ["full"] }

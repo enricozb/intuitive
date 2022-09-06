@@ -62,4 +62,4 @@ pub mod macros;
 pub mod state;
 pub mod terminal;
 
-pub use intuitive_macros::component;
+pub use intuitive_macros::{component, on_key};

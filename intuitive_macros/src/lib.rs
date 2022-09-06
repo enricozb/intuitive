@@ -1,6 +1,7 @@
+mod component;
+mod on_key;
+
 use proc_macro::TokenStream;
-use quote::quote;
-use syn::{FnArg, Ident, ItemFn, Pat, PatType};
 
 /// Helper attribute macro for creating functional components.
 ///
@@ -48,40 +49,52 @@ use syn::{FnArg, Ident, ItemFn, Pat, PatType};
 ///   is called `render` and the return type is left empty.
 #[proc_macro_attribute]
 pub fn component(attr: TokenStream, item: TokenStream) -> TokenStream {
-  let component_name: Ident = syn::parse(attr).unwrap();
+  component::parse(attr, item)
+}
 
-  let ItemFn { vis, sig, block, .. } = syn::parse(item).unwrap();
-  let params: Vec<_> = sig.inputs.iter().collect();
-  let param_names: Vec<Box<Pat>> = params
-    .iter()
-    .map(|input| match input {
-      FnArg::Receiver { .. } => panic!("receivers not allowed in functional component"),
-      FnArg::Typed(PatType { pat, .. }) => pat,
-    })
-    .cloned()
-    .collect();
-
-  quote! {
-    #[derive(Default)]
-    #vis struct #component_name {
-      #(#params),*
-    }
-
-    impl #component_name {
-      fn new(#(#params),*) -> intuitive::components::Any {
-        Self {
-          #(#param_names),*
-        }.into()
-      }
-    }
-
-    impl intuitive::components::Component for #component_name {
-      fn render(&self) -> intuitive::element::Any {
-        let #component_name { #(#param_names),* } = self;
-
-        #block
-      }
-    }
-  }
-  .into()
+/// Helper macro for creating key handlers.
+///
+/// # Details
+/// This macro is used to simplify a common pattern of key handlers where:
+/// - `event`, `event::KeyEvent` and `event::KeyCode::*` are brought into scope
+/// - `State`s need to be cloned before being moved into the key handler
+/// - The event is immediately `match`ed
+///
+/// In addition to the above, this macro also:
+/// - implicitly introduces the `|event|` closure parameter
+/// - adds the catch-all `_ => ()` case to the `match` expression
+///
+/// # Usage
+/// An example usage looks like the following:
+/// ```rust
+/// let text = use_state(String::new);
+///
+/// let on_key = on_key! { [text]
+///   KeyEvent { code: Char(c), .. } => text.update(|text| text.push(c)),
+///   KeyEvent { code: Char(c), .. } => text.update(|text| text.pop()),
+/// };
+/// ```
+/// and expands to the following:
+/// ```rust
+/// let text = use_state(String::new);
+///
+/// let on_key = {
+///   let text = text.clone();
+///
+///   move |event| {
+///     use intuitive::event::{self, KeyEvent, KeyCode::*};
+///
+///     match event {
+///       KeyEvent { code: Char(c), .. } => text.update(|text| text.push(c)),
+///       KeyEvent { code: Char(c), .. } => text.update(|text| text.pop()),
+///       _ => (),
+///     };
+///   };
+/// };
+/// ```
+/// Notice that a trailing comma is required in this macro, as `_ => ()` is
+/// always added as the last arm of the match expression.
+#[proc_macro]
+pub fn on_key(item: TokenStream) -> TokenStream {
+  on_key::parse(item)
 }
