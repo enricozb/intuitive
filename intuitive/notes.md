@@ -8,6 +8,4 @@
 - custom components must implement `Default`
 
 # todo
-- how does conditional components work??
-- make `Component(prop1: value1, prop2: value2)` syntax where we don't need to specify the prop name if the value name matches,
-  like `Component(prop1, prop2)`
+- add a conditional component
