@@ -77,9 +77,11 @@ pub fn component(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// child components are `Section`s, each with their own `Text` child components.
 ///
 /// # Parameters
-/// Parameters passed to components are passed like function arguments, but they
-/// must have the parameter name attached to them. They can also be passed in any order.
-/// Components are required to implement `Default`, so all parameters are optional.
+/// Parameters passed to components look like function arguments but are actually much
+/// closer to structure initialization. Like struct fields, they can be passed in any
+/// order, and they require the field name, unless the parameter and value are the same
+/// identifier. Unlike struct fields, you can omit parameters, as any omitted parameters
+/// are implicitly passed in with their default values.
 ///
 /// # Children
 /// Children to a component come after the component surrounded by braces (`{ ... }`).
