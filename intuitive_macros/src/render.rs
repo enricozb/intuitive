@@ -64,7 +64,7 @@ impl Parse for Component {
 
 enum Param {
   Field(Ident),
-  Pair(Ident, Expr),
+  Pair(Ident, Box<Expr>),
 }
 
 impl ToTokens for Param {
