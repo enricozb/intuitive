@@ -1,3 +1,4 @@
+use proc_macro::TokenStream;
 use quote::quote;
 use syn::{
   bracketed,
@@ -48,7 +49,7 @@ fn parse_arms(input: ParseStream) -> Result<Vec<Arm>> {
 
 /// The implementation of the `on_key` function-like macro. See the
 /// docs at the root of the crate for details.
-pub fn parse(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
+pub fn parse(input: TokenStream) -> TokenStream {
   let OnKey { capture, arms } = parse_macro_input!(input as OnKey);
   let arms = arms.iter();
   let capture = capture.iter();

@@ -1,5 +1,6 @@
 mod component;
 mod on_key;
+mod render;
 
 use proc_macro::TokenStream;
 
@@ -50,6 +51,48 @@ use proc_macro::TokenStream;
 #[proc_macro_attribute]
 pub fn component(attr: TokenStream, item: TokenStream) -> TokenStream {
   component::parse(attr, item)
+}
+
+/// Macro for rendering components.
+///
+/// # Usage
+/// This macro is meant to be used when returning from `Component::render`,
+/// and uses a [SwiftUI](https://developer.apple.com/xcode/swiftui/)-like syntax.
+///
+/// For example:
+/// ```
+/// render! {
+///   VStack() {
+///     Section(title: "Top Section") {
+///       Text(text: "Hello")
+///     }
+///
+///     Section(title: "Bottom Section") {
+///       Text(text: "World")
+///     }
+///   }
+/// }
+/// ```
+/// is rendering a `VStack` (with default parameters), and two children. The
+/// child components are `Section`s, each with their own `Text` child components.
+///
+/// # Parameters
+/// Parameters passed to components are passed like function arguments, but they
+/// must have the parameter name attached to them. They can also be passed in any order.
+/// Components are required to implement `Default`, so all parameters are optional.
+///
+/// # Children
+/// Children to a component come after the component surrounded by braces (`{ ... }`).
+/// Like parameters, children are optional, but are only valid for components that
+/// accept them (for example `Text` accepts no children, but `Section` does).
+///
+/// Children are passed as arrays (`[AnyComponent; N]`), so components specify exactly
+/// how many children they take in. Some components, like `VStack` and `HStack` take
+/// in a variable number of children, while some, like `Section`, only accept a single
+/// child component.
+#[proc_macro]
+pub fn render(item: TokenStream) -> TokenStream {
+  render::parse(item)
 }
 
 /// Helper macro for creating key handlers.
