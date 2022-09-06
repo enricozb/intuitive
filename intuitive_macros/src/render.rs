@@ -85,7 +85,7 @@ impl ToTokens for Param {
 impl Parse for Param {
   fn parse(input: ParseStream) -> Result<Self> {
     let ident: Ident = input.parse()?;
-    if input.lookahead1().peek(Token![,]) {
+    if !input.lookahead1().peek(Token![:]) {
       Ok(Self::Field(ident))
     } else {
       input.parse::<Token![:]>()?;
