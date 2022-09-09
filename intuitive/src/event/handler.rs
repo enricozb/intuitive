@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use super::KeyEvent;
 
+/// TODO(enricozb): docs
 #[derive(Clone, Default)]
 pub struct Handler {
   handler: Option<Arc<dyn Fn(KeyEvent) + 'static + Send + Sync>>,

@@ -7,11 +7,11 @@ use proc_macro::TokenStream;
 /// Helper attribute macro for creating functional components.
 ///
 /// # Usage
-/// This macro is used when creating function components, where the name of
+/// This macro is used when creating functional components, where the name of
 /// the generated component is the item in the attribute. For example,
 /// ```rust
 /// #[component(Root)]
-/// pub fn render() {
+/// pub fn render(title: String) {
 ///   let text = use_state(String::new);
 ///
 ///   let on_key = on_key! { [text]
@@ -22,24 +22,41 @@ use proc_macro::TokenStream;
 ///
 ///   render! {
 ///     Centered() {
-///       Section(title: "Input") {
-///         Text(text: text.get())
+///       Section(title) {
+///         Text(text: text.get(), on_key)
 ///       }
 ///     }
 ///   }
 /// }
 /// ```
-/// constructs a `Root` component, that can be used in a `render!` macro.
+/// constructs a `Root` component, that can be used in a [`render!`] macro.
 ///
 /// # Parameters
 /// If the `render` function contains parameters, these will become parameters to the
 /// generated component. These parameters can later be supplied when using the generated
-/// component in a `render!` macro. The provided parameters **must** implement `Default`,
-/// as the generated component derives `Default`.
+/// component in a [`render!`] macro. The parameters' types **must** implement [`Default`],
+/// as the generated component derives [`Default`]. If you need more control over the
+/// default values of the parameters, consider implementing the [`Component`] trait instead
+/// of using the `#[component(..)]` attribute macro.
+///
+/// # Managing State
+/// State in functional components is managed similarly to how they are in [React],
+/// using the [`use_state`] hook. Refer to the [`use_state`] documentation for details.
+///
+/// # Handling Key Events
+/// In functional components, key events are sent to the component at the root of the
+/// returned [`render!`] macro invocation. This means that in the example above, the
+/// key event will be sent to an instance of the [`Centered`] component. However,
+/// most components forward their key events to their children (especially those that
+/// have only a single child), and therefore the `on_key` handler could have been
+/// provided to any of the [`Centered`], [`Section`], or [`Text`] components above.
 ///
 /// # Generated Component
-/// The generated component has a `new() -> component::Any` associated function that can
-/// be used to create the component when passing it to `Terminal::new()`.
+/// The generated component is a structure that implements the [`Component`] trait. It
+/// also has a an associated function `new() -> component::Any` that is used to create the
+/// component when passing it to `Terminal::new()`. If the component has parameters,
+/// they will also be parameters to the associated function `new()`in the same order
+/// they were specified in the `render` function.
 ///
 /// # Nuances
 /// There are a couple of nuances with this macro:
@@ -48,6 +65,15 @@ use proc_macro::TokenStream;
 /// - The return type to `render` (and even the function name itself) are completely
 ///   ignored. In order to keep things consistent, it's recommended that the function
 ///   is called `render` and the return type is left empty.
+///
+/// [`Centered`]: components/struct.Centered.html
+/// [`Component`]: components/trait.Component.html
+/// [`Default`]: https://doc.rust-lang.org/std/default/trait.Default.html
+/// [React]: https://reactjs.org/
+/// [`render!`]: macro.render.html
+/// [`Section`]: components/struct.Section.html
+/// [`Text`]: components/struct.Text.html
+/// [`use_state`]: state/fn.use_state.html
 #[proc_macro_attribute]
 pub fn component(attr: TokenStream, item: TokenStream) -> TokenStream {
   component::parse(attr, item)

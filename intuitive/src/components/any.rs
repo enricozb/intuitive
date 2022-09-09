@@ -2,6 +2,20 @@ use std::{ops::Deref, sync::Arc};
 
 use super::{Component, Empty};
 
+/// An opaque type holding a struct that implements [`Component`].
+///
+/// `Any` is rarely used directly, even when implementing [`Component`].
+/// It is typically indirectly used when a component receives children,
+/// through [`Children<N>`].
+///
+/// An example of a component that requires `Any` is [`Modal`]. This is
+/// because it provides a function, [`Funcs::show`], that receives a component
+/// and presents it.
+///
+/// [`Children<N>`]: children/struct.Children.html
+/// [`Component`]: trait.Component.html
+/// [`Funcs::show`]: modal/struct.Funcs.html#method.show
+/// [`Modal`]: modal/struct.Modal.html
 #[derive(Clone)]
 pub struct Any(Arc<dyn Component + 'static + Send + Sync>);
 
