@@ -3,23 +3,39 @@ use crate::{
   element::Any as AnyElement,
 };
 
+pub enum Content {
+  Component(AnyComponent),
+  Element(AnyElement),
+}
+
+impl From<AnyComponent> for Content {
+  fn from(component: AnyComponent) -> Self {
+    Self::Component(component)
+  }
+}
+
+impl From<AnyElement> for Content {
+  fn from(element: AnyElement) -> Self {
+    Self::Element(element)
+  }
+}
+
+impl Default for Content {
+  fn default() -> Self {
+    Self::Element(AnyElement::default())
+  }
+}
+
 #[derive(Default)]
 pub struct Embed {
-  // TODO(enricozb): make this a single enum field with variants for each,
-  //                 and implement Into for the enum from both Any's.
-  pub component: Option<AnyComponent>,
-  pub element: Option<AnyElement>,
+  pub content: Content,
 }
 
 impl Component for Embed {
   fn render(&self) -> AnyElement {
-    match (&self.component, &self.element) {
-      (Some(_), Some(_)) => panic!("Embed can only take one of its arguments"),
-
-      (Some(component), _) => component.render(),
-      (_, Some(element)) => Clone::clone(element),
-
-      _ => AnyElement::default(),
+    match &self.content {
+      Content::Component(component) => component.render(),
+      Content::Element(element) => Clone::clone(element),
     }
   }
 }

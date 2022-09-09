@@ -205,7 +205,8 @@ use crate::element::Any as AnyElement;
 /// 2. [`Component::render`] must never be called outside of [`Component::render`]. This is to
 ///    continue the assurances made in the previous point.
 /// 3. Structures implementing `Component`, must also implement `Default`.
-/// 4. Structures implementing `Component` _should_ have an `on_key` parameter if they also
+/// 4. Structures implementing `Component` must have all of their fields public.
+/// 5. Structures implementing `Component` _should_ have an `on_key` parameter if they also
 ///    take in `children`. This `on_key` parameter should be of type [`KeyHandler`] and
 ///    should default to forwarding the key events to the children.
 ///

@@ -4,6 +4,16 @@ use crate::{
   render,
 };
 
+/// A component for centering its contents.
+///
+/// For example,
+/// ```rust
+/// render! {
+///   Centered() {
+///     Section(title: "I'm centered")
+///   }
+/// }
+/// ```
 #[derive(Clone, Default)]
 pub struct Centered {
   pub children: Children<1>,
@@ -16,7 +26,7 @@ impl Component for Centered {
         Empty()
         HStack() {
           Empty()
-          Embed(component: self.children[0].clone())
+          Embed(content: self.children[0].clone())
           Empty()
         }
         Empty()
