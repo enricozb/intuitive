@@ -1,6 +1,6 @@
 use crate::{
-  components::{children::Children, Component, Embed, Empty, HStack, VStack},
-  element::Any as AnyElement,
+  component,
+  components::{children::Children, Embed, Empty, HStack, VStack},
   render,
 };
 
@@ -14,23 +14,17 @@ use crate::{
 ///   }
 /// }
 /// ```
-#[derive(Clone, Default)]
-pub struct Centered {
-  pub children: Children<1>,
-}
-
-impl Component for Centered {
-  fn render(&self) -> AnyElement {
-    render! {
-      VStack() {
+#[component(crate::Centered)]
+pub fn render(children: Children<1>) -> AnyElement {
+  render! {
+    VStack() {
+      Empty()
+      HStack() {
         Empty()
-        HStack() {
-          Empty()
-          Embed(content: self.children[0].clone())
-          Empty()
-        }
+        Embed(content: children[0].clone())
         Empty()
       }
+      Empty()
     }
   }
 }

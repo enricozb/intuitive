@@ -1,13 +1,44 @@
 use proc_macro::TokenStream;
+use proc_macro2::Span;
 use quote::quote;
-use syn::{FnArg, Ident, ItemFn, Pat, PatType};
+use syn::{
+  parse::{Parse, ParseStream},
+  parse_macro_input, FnArg, Ident, ItemFn, Pat, PatType, Result, Token,
+};
+
+struct Name {
+  component: Ident,
+  crate_name: Ident,
+}
+
+impl Parse for Name {
+  fn parse(input: ParseStream) -> Result<Self> {
+    // if a component name begins with crate::, use `crate` instead of `intuitive` in paths.
+    // this is needed for components that use this macro inside of `intuitive`
+    let crate_name = if input.lookahead1().peek(Token![crate]) {
+      input.parse::<Token![crate]>()?;
+      input.parse::<Token![::]>()?;
+
+      Ident::new("crate", Span::call_site())
+    } else {
+      Ident::new("intuitive", Span::call_site())
+    };
+
+    Ok(Self {
+      component: input.parse()?,
+      crate_name,
+    })
+  }
+}
 
 /// The implementation of the `component` attribute macro. See the
 /// docs at the root of the crate for details.
 pub fn parse(attr: TokenStream, item: TokenStream) -> TokenStream {
-  let component_name: Ident = syn::parse(attr).unwrap();
+  let Name { component, crate_name } = parse_macro_input!(attr as Name);
 
-  let ItemFn { vis, sig, block, .. } = syn::parse(item).unwrap();
+  let ItemFn {
+    attrs, vis, sig, block, ..
+  } = syn::parse(item).unwrap();
   let params: Vec<_> = sig.inputs.iter().collect();
   let param_names: Vec<Box<Pat>> = params
     .iter()
@@ -19,22 +50,23 @@ pub fn parse(attr: TokenStream, item: TokenStream) -> TokenStream {
     .collect();
 
   quote! {
+    #(#attrs)*
     #[derive(Default)]
-    #vis struct #component_name {
+    #vis struct #component {
       #(#params),*
     }
 
-    impl #component_name {
-      fn new(#(#params),*) -> intuitive::components::Any {
+    impl #component {
+      fn new(#(#params),*) -> #crate_name::components::Any {
         Self {
           #(#param_names),*
         }.into()
       }
     }
 
-    impl intuitive::components::Component for #component_name {
-      fn render(&self) -> intuitive::element::Any {
-        let #component_name { #(#param_names),* } = self;
+    impl #crate_name::components::Component for #component {
+      fn render(&self) -> #crate_name::element::Any {
+        let #component { #(#param_names),* } = self;
 
         #block
       }
