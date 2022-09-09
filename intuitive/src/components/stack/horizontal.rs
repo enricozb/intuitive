@@ -8,6 +8,20 @@ use crate::{
   terminal::{Frame, Rect},
 };
 
+/// A componened used for rendering horizontal stacks of components.
+///
+/// For example,
+/// ```rust
+/// render! {
+///   HStack() {
+///     Section(title: "Left")
+///     Section(title: "Middle")
+///     Section(title: "Right")
+///   }
+/// }
+/// ```
+/// Will render the following:
+/// ![hstack](https://raw.githubusercontent.com/enricozb/intuitive/main/assets/hstack.png)
 #[derive(Clone, Default)]
 pub struct Stack<const N: usize> {
   pub flex: FlexArray<N>,
