@@ -8,6 +8,27 @@ use crate::{
   terminal::{Frame, Rect},
 };
 
+/// A component used for rendering a vertical stack of components.
+///
+/// The `flex` argument specifies the amount of space allocated to each child, similar
+/// to the [`flex` css property]. See the [`FlexArray`] documentation for details.
+///
+/// An example usage would be,
+/// ```rust
+/// render! {
+///   VStack(flex: [1, 2, 3]) {
+///     Section(title: "Top")
+///     Section(title: "Middle")
+///     Section(title: "Bottom")
+///   }
+/// }
+/// ```
+/// Will render the following:
+///
+/// ![vstack](https://raw.githubusercontent.com/enricozb/intuitive/main/assets/vstack.png)
+///
+/// [`flex` css property]: https://developer.mozilla.org/en-US/docs/Web/CSS/flex
+/// [`FlexArray`]: struct.FlexArray.html
 #[derive(Clone, Default)]
 pub struct Stack<const N: usize> {
   pub flex: FlexArray<N>,

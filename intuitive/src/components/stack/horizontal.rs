@@ -8,7 +8,7 @@ use crate::{
   terminal::{Frame, Rect},
 };
 
-/// A component used for rendering horizontal stacks of components.
+/// A component used for rendering a horizontal stack of components.
 ///
 /// The `flex` argument specifies the amount of space allocated to each child, similar
 /// to the [`flex` css property]. See the [`FlexArray`] documentation for details.
@@ -26,6 +26,7 @@ use crate::{
 /// Will render the following:
 ///
 /// ![hstack](https://raw.githubusercontent.com/enricozb/intuitive/main/assets/hstack.png)
+///
 /// [`flex` css property]: https://developer.mozilla.org/en-US/docs/Web/CSS/flex
 /// [`FlexArray`]: struct.FlexArray.html
 #[derive(Clone, Default)]
