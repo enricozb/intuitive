@@ -10,6 +10,22 @@ use crate::{
   terminal::{Frame, Rect},
 };
 
+/// A component with a border and a title.
+///
+/// `Section` is used to wrap a component with a border and a title.
+/// For example,
+/// ```rust
+/// render! {
+///   Section(title: "Input Box") {
+///     Text(text: "Hi there!")
+///   }
+/// }
+/// ```
+/// Will render the following:
+///
+/// ![section](https://raw.githubusercontent.com/enricozb/intuitive/main/assets/section.png)
+///
+/// `Section` also optionally accepts a color, which will be applied to the title and border.
 #[derive(Clone, Default)]
 pub struct Section {
   pub title: String,
