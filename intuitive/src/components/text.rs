@@ -7,6 +7,9 @@ use crate::{
   terminal::{Frame, Rect},
 };
 
+/// A component to display text.
+///
+/// `Text` renders the `String` passed into it.
 #[derive(Default)]
 pub struct Text {
   pub text: String,
