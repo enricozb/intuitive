@@ -14,12 +14,12 @@
 //! [`component` attribute macro]: ../attr.component.html
 //!
 //! # Recipes
-//! The examples below are recipes for commonly constructed components. Also be sure
-//! to refer to the [examples] directory in the repository. These recipes exclude the
-//! `use` statements in order to shorten the code samples.
-//! - [Input Box]: An input box
-//! - [Input Box With Cursor]: An input box with a cursor
-//! - [Focus]: How to focus on different sections
+//! The examples below are a few recipes for commonly constructed components. Also be
+//! sure to refer to the [examples] directory in the repository. These recipes exclude
+//! the `use` statements in order to shorten the code samples.
+//! - [Input Box] -- An input box
+//! - [Input Box With Cursor] -- An input box with a cursor
+//! - [Focus] -- How to focus on different sections
 //!
 //! ## Input Box
 //! An input box with state can easily be created with a functional component:
@@ -85,7 +85,7 @@
 //! ## Focus
 //! In order to implement focusing on specific sections, we need to construct the components
 //! to be focused on, specifically the three `Input`s manually, when rendering our `Root` component.
-//! Notice that we also call `Component::render` on those `Input`s, because we want to be
+//! Notice that we also call [`Component::render`] on those `Input`s, because we want to be
 //! able to delegate key events to them, depending on which is focused. Lastly, we use [`Embed`]
 //! in order to make use of a rendered component inside of the [`render!`] macro.
 //!
@@ -157,7 +157,7 @@
 //! [Input Box]: #input-box
 //! [Input Box With Cursor]: #input-box-with-cursor
 //! [`render!`]: ../macro.render.html
-
+/// [`Component::render`]: #tymethod.render
 pub mod children;
 pub mod modal;
 
