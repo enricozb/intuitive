@@ -1,6 +1,6 @@
 use tui::layout::{Constraint, Direction, Layout};
 
-use super::flex::{Array as FlexArray, Flex};
+use super::{Flex, FlexArray};
 use crate::{
   components::{children::Children, Component},
   element::{Any as AnyElement, Element},

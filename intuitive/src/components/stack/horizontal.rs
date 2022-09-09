@@ -1,6 +1,6 @@
 use tui::layout::{Constraint, Direction, Layout};
 
-use super::flex::{Array as FlexArray, Flex};
+use super::{Flex, FlexArray};
 use crate::{
   components::{children::Children, Component},
   element::{Any as AnyElement, Element},
@@ -8,12 +8,15 @@ use crate::{
   terminal::{Frame, Rect},
 };
 
-/// A componened used for rendering horizontal stacks of components.
+/// A component used for rendering horizontal stacks of components.
 ///
-/// For example,
+/// The `flex` argument specifies the amount of space allocated to each child, similar
+/// to the [`flex` css property]. See the [`FlexArray`] documentation for details.
+///
+/// An example usage would be,
 /// ```rust
 /// render! {
-///   HStack() {
+///   HStack(flex: [1, 2, 3]) {
 ///     Section(title: "Left")
 ///     Section(title: "Middle")
 ///     Section(title: "Right")
@@ -21,7 +24,10 @@ use crate::{
 /// }
 /// ```
 /// Will render the following:
+///
 /// ![hstack](https://raw.githubusercontent.com/enricozb/intuitive/main/assets/hstack.png)
+/// [`flex` css property]: https://developer.mozilla.org/en-US/docs/Web/CSS/flex
+/// [`FlexArray`]: struct.FlexArray.html
 #[derive(Clone, Default)]
 pub struct Stack<const N: usize> {
   pub flex: FlexArray<N>,

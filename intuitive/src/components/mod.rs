@@ -160,13 +160,13 @@
 /// [`Component::render`]: #tymethod.render
 pub mod children;
 pub mod modal;
+pub mod stack;
 
 mod any;
 mod centered;
 mod embed;
 mod empty;
 mod section;
-mod stack;
 mod table;
 mod text;
 
@@ -176,7 +176,7 @@ pub use self::{
   embed::Embed,
   empty::Empty,
   section::Section,
-  stack::{Flex, Horizontal as HStack, Vertical as VStack},
+  stack::{Horizontal as HStack, Vertical as VStack},
   table::Table,
   text::Text,
 };
