@@ -13,7 +13,150 @@
 //! [`Component`]: trait.Component.html
 //! [`component` attribute macro]: ../attr.component.html
 //!
-//! TODO(enricozb): recipes section
+//! # Recipes
+//! The examples below are recipes for commonly constructed components. Also be sure
+//! to refer to the [examples] directory in the repository. These recipes exclude the
+//! `use` statements in order to shorten the code samples.
+//! - [Input Box]: An input box
+//! - [Input Box With Cursor]: An input box with a cursor
+//! - [Focus]: How to focus on different sections
+//!
+//! ## Input Box
+//! An input box with state can easily be created with a functional component:
+//! ```rust
+//! #[component(Input)]
+//! fn render(title: String) {
+//!   let text = use_state(|| String::new());
+//!   let on_key = on_key! { [text]
+//!     KeyEvent { code: Char(c), .. } => text.mutate(|text| text.push(c)),
+//!     KeyEvent { code: Backspace, .. } => text.mutate(|text| text.pop()),
+//!   };
+//!
+//!   render! {
+//!     Section(title) {
+//!       Text(text: text.get(), on_key)
+//!     }
+//!   }
+//! }
+//! ```
+//!
+//! ## Input Box With Cursor
+//! Drawing a cursor requires us to implement a custom [`Element`],
+//! specifically so we can control the drawing of the cursor. Notice that
+//! we use a functional component to return a custom [`element::Any`], instead
+//! of returning a [`render!`] invocation.
+//! ```rust
+//! #[component(Input)]
+//! fn render(title: String) -> element::Any {
+//!   let text = use_state(|| String::new());
+//!
+//!   let on_key = on_key! { [text]
+//!     KeyEvent { code: Char(c), .. } => text.mutate(|text| text.push(c)),
+//!     KeyEvent { code: Backspace, .. } => text.mutate(|text| text.pop()),
+//!   };
+//!
+//!   element::Any::new(Frozen {
+//!     cursor: text.get().len() as u16,
+//!     content: render! {
+//!       Section(title: title.clone(), on_key) {
+//!         Text(text: text.get())
+//!       }
+//!     },
+//!   })
+//! }
+//!
+//! struct Frozen {
+//!   cursor: u16,
+//!   content: element::Any,
+//! }
+//!
+//! impl Element for Frozen {
+//!   fn on_key(&self, event: KeyEvent) {
+//!     self.content.on_key(event);
+//!   }
+//!
+//!   fn draw(&self, rect: Rect, frame: &mut Frame) {
+//!     self.content.draw(rect, frame);
+//!     frame.set_cursor(rect.x + self.cursor + 1, rect.y + 1);
+//!   }
+//! }
+//! ```
+//!
+//! ## Focus
+//! In order to implement focusing on specific sections, we need to construct the components
+//! to be focused on, specifically the three `Input`s manually, when rendering our `Root` component.
+//! Notice that we also call `Component::render` on those `Input`s, because we want to be
+//! able to delegate key events to them, depending on which is focused. Lastly, we use [`Embed`]
+//! in order to make use of a rendered component inside of the [`render!`] macro.
+//!
+//! ```rust
+//! #[derive(Clone, Copy, PartialEq, Eq, Debug)]
+//! enum Focus {
+//!   A,
+//!   B,
+//!   C,
+//! }
+//!
+//! #[component(Input)]
+//! fn render(title: String, focused: bool) {
+//!   let text = use_state(|| String::new());
+//!
+//!   let color = if *focused { Color::Blue } else { Color::Gray };
+//!
+//!   let on_key = on_key! { [text]
+//!     KeyEvent { code: Char(c), .. } => text.mutate(|text| text.push(c)),
+//!     KeyEvent { code: Backspace, .. } => text.mutate(|text| text.pop()),
+//!   };
+//!
+//!   render! {
+//!     Section(title, color) {
+//!       Text(text: text.get(), on_key)
+//!     }
+//!   }
+//! }
+//!
+//! #[component(Root)]
+//! fn render() {
+//!   let focus = use_state(|| Focus::A);
+//!
+//!   let input_a = Input::new("A".to_string(), focus.get() == Focus::A).render();
+//!   let input_b = Input::new("B".to_string(), focus.get() == Focus::B).render();
+//!   let input_c = Input::new("C".to_string(), focus.get() == Focus::C).render();
+//!
+//!   let on_key = on_key! { [focus, input_a, input_b, input_c]
+//!     KeyEvent { code: Tab, .. } => focus.update(|focus| match focus {
+//!       Focus::A => Focus::B,
+//!       Focus::B => Focus::C,
+//!       Focus::C => Focus::A,
+//!     }),
+//!
+//!     event if focus.get() == Focus::A => input_a.on_key(event),
+//!     event if focus.get() == Focus::B => input_b.on_key(event),
+//!     event if focus.get() == Focus::C => input_c.on_key(event),
+//!
+//!     KeyEvent { code: Esc, .. } => event::quit(),
+//!   };
+//!
+//!   render! {
+//!     VStack(on_key) {
+//!       Embed(element: input_a)
+//!       Embed(element: input_b)
+//!       Embed(element: input_c)
+//!     }
+//!   }
+//! }
+//! ```
+//!
+//! [examples]: TODO(enricozb):-link-to-examples
+//! [`Component`]: trait.Component.html
+//! [`Default`]: https://doc.rust-lang.org/std/default/trait.Default.html
+//! [`element::Any`]: ../element/struct.Any.html
+//! [`Element`]: ../element/trait.Element.html
+//! [`Embed`]: struct.Embed.html
+//! [Focus]: #focus
+//! [Input Box]: #input-box
+//! [Input Box With Cursor]: #input-box-with-cursor
+//! [`render!`]: ../macro.render.html
 
 pub mod children;
 pub mod modal;
@@ -53,18 +196,16 @@ use crate::element::Any as AnyElement;
 /// expectations that Intuitive makes when rendering components.
 ///
 /// ## Invariants & Expectations
-/// 1. All structures implementing `Component` that will ever be rendered must be
-///    constructed before calling `Terminal::run()`.
-/// 2. When rendering a frame, [`Component::render`] must be called on every `Component`, even if it
+/// 1. When rendering a frame, [`Component::render`] must be called on every `Component`, even if it
 ///    is not being drawn this frame.
 ///    - This is to ensure that hooks, such as [`use_state`], are always called in the
 ///      same order.
 ///    - This can typically be guaranteed by always calling [`Component::render`]
 ///      on your component's children.
-/// 3. [`Component::render`] must never be called outside of [`Component::render`]. This is to
+/// 2. [`Component::render`] must never be called outside of [`Component::render`]. This is to
 ///    continue the assurances made in the previous point.
-/// 4. Structures implementing `Component`, must also implement `Default`.
-/// 5. Structures implementing `Component` _should_ have an `on_key` parameter if they also
+/// 3. Structures implementing `Component`, must also implement `Default`.
+/// 4. Structures implementing `Component` _should_ have an `on_key` parameter if they also
 ///    take in `children`. This `on_key` parameter should be of type [`KeyHandler`] and
 ///    should default to forwarding the key events to the children.
 ///

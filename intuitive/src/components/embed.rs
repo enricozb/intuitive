@@ -5,6 +5,8 @@ use crate::{
 
 #[derive(Default)]
 pub struct Embed {
+  // TODO(enricozb): make this a single enum field with variants for each,
+  //                 and implement Into for the enum from both Any's.
   pub component: Option<AnyComponent>,
   pub element: Option<AnyElement>,
 }
