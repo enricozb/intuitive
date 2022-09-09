@@ -1,15 +1,12 @@
 use crate::{
-  components::Component,
+  component,
   element::{Any as AnyElement, Element},
 };
 
-#[derive(Clone, Default)]
-pub struct Empty;
-
-impl Component for Empty {
-  fn render(&self) -> AnyElement {
-    AnyElement::new(Empty)
-  }
+/// A component that renders nothing.
+#[component(crate::Empty)]
+pub fn render() -> AnyElement {
+  AnyElement::new(Self {})
 }
 
 impl Element for Empty {}

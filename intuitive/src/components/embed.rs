@@ -1,7 +1,4 @@
-use crate::{
-  components::{Any as AnyComponent, Component},
-  element::Any as AnyElement,
-};
+use crate::{component, components::Any as AnyComponent, element::Any as AnyElement};
 
 pub enum Content {
   Component(AnyComponent),
@@ -26,7 +23,7 @@ impl Default for Content {
   }
 }
 
-/// A component renders an [`element::Any`] or a [`component::Any`].
+/// A component that renders an [`element::Any`] or a [`component::Any`].
 ///
 /// This is often needed when rendering children. More generally, `Embed` is
 /// useful when you have a variable that contains an [`element::Any`] or
@@ -53,16 +50,10 @@ impl Default for Content {
 /// [`component::Any`]: struct.Any.html
 /// [`element::Any`]: ../element/struct.Any.html
 /// [`render!`]: ../macro.render.html
-#[derive(Default)]
-pub struct Embed {
-  pub content: Content,
-}
-
-impl Component for Embed {
-  fn render(&self) -> AnyElement {
-    match &self.content {
-      Content::Component(component) => component.render(),
-      Content::Element(element) => Clone::clone(element),
-    }
+#[component(crate::Embed)]
+pub fn render(content: Content) -> AnyElement {
+  match content {
+    Content::Component(component) => component.render(),
+    Content::Element(element) => Clone::clone(element),
   }
 }

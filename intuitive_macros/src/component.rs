@@ -53,11 +53,11 @@ pub fn parse(attr: TokenStream, item: TokenStream) -> TokenStream {
     #(#attrs)*
     #[derive(Default)]
     #vis struct #component {
-      #(#params),*
+      #(pub #params),*
     }
 
     impl #component {
-      fn new(#(#params),*) -> #crate_name::components::Any {
+      pub fn new(#(#params),*) -> #crate_name::components::Any {
         Self {
           #(#param_names),*
         }.into()

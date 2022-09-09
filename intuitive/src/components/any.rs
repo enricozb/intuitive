@@ -27,7 +27,7 @@ impl Any {
 
 impl Default for Any {
   fn default() -> Self {
-    Empty.into()
+    Empty::new()
   }
 }
 

@@ -19,7 +19,7 @@ impl Any {
 
 impl<'a> Default for Any {
   fn default() -> Self {
-    Empty.render()
+    Empty {}.into()
   }
 }
 
