@@ -4,7 +4,7 @@ use crate::{
 };
 
 /// A component that renders nothing.
-#[component(crate::Empty)]
+#[component(Empty)]
 pub fn render() -> AnyElement {
   AnyElement::new(Self {})
 }

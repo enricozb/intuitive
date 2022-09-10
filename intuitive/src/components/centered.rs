@@ -2,7 +2,7 @@ use crate::{
   component,
   components::{children::Children, Embed, Empty, HStack, VStack},
   event::KeyHandler,
-  render,
+  on_key, render,
 };
 
 /// A component for centering its contents.
@@ -15,14 +15,12 @@ use crate::{
 ///   }
 /// }
 /// ```
-#[component(crate::Centered)]
+#[component(Centered)]
 pub fn render(children: Children<1>, on_key: KeyHandler) {
   let child = children[0].render();
-  let child_clone = child.clone();
-  let on_key_clone = on_key.clone();
 
-  let on_key = move |event| {
-    on_key_clone.handle_or(event, |event| child_clone.on_key(event));
+  let on_key = on_key! { [child, on_key]
+    event => on_key.handle_or(event, |event| child.on_key(event))
   };
 
   render! {

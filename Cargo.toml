@@ -2,5 +2,5 @@
 
 members = [
   "intuitive",
-  "intuitive_macros",
+  "macros",
 ]

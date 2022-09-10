@@ -2,6 +2,8 @@ mod component;
 mod on_key;
 mod render;
 
+mod utils;
+
 use proc_macro::TokenStream;
 
 /// Helper attribute macro for creating functional components.

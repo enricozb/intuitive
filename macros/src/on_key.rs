@@ -9,6 +9,8 @@ use syn::{
   Arm, Ident, Result, Token,
 };
 
+use crate::utils;
+
 struct OnKey {
   capture: Punctuated<Ident, Token![,]>,
   arms: Vec<Arm>,
@@ -53,13 +55,14 @@ pub fn parse(input: TokenStream) -> TokenStream {
   let OnKey { capture, arms } = parse_macro_input!(input as OnKey);
   let arms = arms.iter();
   let capture = capture.iter();
+  let crate_name = utils::crate_name();
 
   quote! {
     {
       #(let #capture = #capture.clone();)*
 
       move |event| {
-        use intuitive::event::{self, KeyCode::*, KeyEvent};
+        use #crate_name::event::{self, KeyCode::*, KeyEvent};
 
         match event {
           #(#arms,)*

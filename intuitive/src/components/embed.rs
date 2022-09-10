@@ -50,7 +50,7 @@ impl Default for Content {
 /// [`component::Any`]: struct.Any.html
 /// [`element::Any`]: ../element/struct.Any.html
 /// [`render!`]: ../macro.render.html
-#[component(crate::Embed)]
+#[component(Embed)]
 pub fn render(content: Content) -> AnyElement {
   match content {
     Content::Component(component) => component.render(),
