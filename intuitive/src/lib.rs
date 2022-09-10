@@ -1,3 +1,5 @@
+#![feature(doc_auto_cfg)]
+
 //! # Intuitive
 //! Intuitive is a component-based library for creating text-based user interfaces
 //! (TUIs) easily.

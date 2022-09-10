@@ -3,6 +3,7 @@ mod widget;
 
 use tui::text::Spans;
 
+pub use self::alignment::Alignment;
 use self::{alignment::Array as AlignmentArray, widget::Table as TableWidget};
 use crate::{
   components::Component,
@@ -12,6 +13,7 @@ use crate::{
   terminal::{Frame, Rect},
 };
 
+/// A component to render tabular data.
 #[derive(Default)]
 pub struct Table<const N: usize> {
   pub alignments: AlignmentArray<N>,

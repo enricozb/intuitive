@@ -15,3 +15,6 @@ parking_lot = "0.12.1"
 serial_test = "0.9"
 thiserror = "1.0.32"
 tui = "0.18.0"
+
+[features]
+experimental = []

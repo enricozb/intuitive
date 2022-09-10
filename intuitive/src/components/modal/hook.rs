@@ -6,6 +6,9 @@ use crate::{components::Any as AnyComponent, state::State};
 
 static FUNCS: Mutex<Option<Funcs>> = Mutex::new(None);
 
+/// A structure returned by [`use_modal`] that controls the hiding/showing of a modal.
+///
+/// [`use_modal`]: fn.use_modal.html
 #[derive(Clone)]
 pub struct Funcs {
   modal: State<Option<AnyComponent>>,
@@ -39,7 +42,14 @@ impl Funcs {
   }
 }
 
-pub fn use_modal_funcs() -> Funcs {
+/// A hook that can control the hiding/showing of a modal.
+///
+/// Like [`use_state`], calls to `use_modal` may only happen within a call to
+/// [`Component::render`].
+///
+/// [`use_state`]: ../../state/fn.use_state.html
+/// [`Component::render`]: trait.Component.html#tymethod.render
+pub fn use_modal() -> Funcs {
   FUNCS
     .lock()
     .clone()

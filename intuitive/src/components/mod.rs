@@ -162,12 +162,14 @@ pub mod children;
 pub mod modal;
 pub mod stack;
 
+#[cfg(any(feature = "experimental", doc))]
+pub mod experimental;
+
 mod any;
 mod centered;
 mod embed;
 mod empty;
 mod section;
-mod table;
 mod text;
 
 pub use self::{
@@ -177,7 +179,6 @@ pub use self::{
   empty::Empty,
   section::Section,
   stack::{Horizontal as HStack, Vertical as VStack},
-  table::Table,
   text::Text,
 };
 use crate::element::Any as AnyElement;

@@ -1,6 +1,14 @@
+//! A module containing the [`Modal`] component and related hooks.
+//!
+//! The [`Modal`] component allows a user to present a [`Component`] on top of
+//! the children of the modal, from anywhere inside it. This is useful for popups such
+//! as input boxes, or error messages. See the [`Modal`] structure ocumentation for details.
+//!
+//! [`Modal`]: struct.Modal.html
+
 mod hook;
 
-pub use self::hook::{use_modal_funcs, Funcs};
+pub use self::hook::{use_modal, Funcs};
 use crate::{
   components::{children::Children, Component},
   element::{Any as AnyElement, Element},
@@ -9,6 +17,59 @@ use crate::{
   terminal::{Frame, Rect},
 };
 
+/// A component supporting modal-style overlays.
+///
+/// The [`Modal`] component allows a user to present a [`Component`] on top of
+/// the children of the modal, from anywhere inside it. This is useful for popups such
+/// as input boxes, or error messages.
+///
+/// For example, if we wanted to show an error message
+/// whenever the `Enter` key is pressed, we can do something like this:
+/// ```rust
+/// #[component(MyComponent)]
+/// fn render() {
+///   let modal = use_modal();
+///
+///   let on_key = on_key! {
+///     KeyEvent { code: Enter, .. } => modal.show(render! {
+///       Centered() {
+///         Section(title: "Error", color: Color::Red) {
+///           Text(text: "Enter was pressed!")
+///         }
+///       }
+///     }),
+///
+///     KeyEvent { code: Esc, .. } if modal.is_shown() => modal.hide(),
+///     KeyEvent { code: Esc, .. } => event::quit(),
+///   };
+///
+///   render! {
+///     Section(title: "Some Example UI", on_key)
+///   }
+/// }
+///
+/// #[component(Root)]
+/// fn render() -> AnyElement {
+///   render! {
+///     Modal() {
+///       MyComponent()
+///     }
+///   }
+/// }
+///
+/// ```
+/// In order to overlay an error message on top of `MyComponent`, we render it
+/// as a child of a [`Modal`]. Then, in any descendant of this [`Modal`], we can call
+/// [`use_modal`] to mutate the state of that [`Modal`].
+///
+/// # Internals
+/// The [`Modal`] is somewhat special in that it does not (yet) use the built-in
+/// [`use_state`] hooks, but instead has its own internal `static` hook manager.
+///
+/// [`Modal`]: struct.Modal.html
+/// [`Component`]: trait.Component.html
+/// [`use_state`]: ../../state/fn.use_state.html
+/// [`use_modal`]: fn.use_modal.html
 #[derive(Default)]
 pub struct Modal {
   pub children: Children<1>,
