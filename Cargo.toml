@@ -3,4 +3,5 @@
 members = [
   "intuitive",
   "macros",
+  "examples"
 ]
