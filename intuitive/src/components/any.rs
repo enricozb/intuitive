@@ -14,8 +14,8 @@ use super::{Component, Empty};
 ///
 /// [`Children<N>`]: children/struct.Children.html
 /// [`Component`]: trait.Component.html
-/// [`Funcs::show`]: modal/struct.Funcs.html#method.show
-/// [`Modal`]: modal/struct.Modal.html
+/// [`Funcs::show`]: experimental/modal/struct.Funcs.html#method.show
+/// [`Modal`]: experimental/modal/struct.Modal.html
 #[derive(Clone)]
 pub struct Any(Arc<dyn Component + 'static + Send + Sync>);
 
