@@ -1,10 +1,8 @@
 use crate::{
   component,
   components::{children::Children, Embed, Empty, HStack, VStack},
-  element::{Any as AnyElement, Element},
-  event::{KeyEvent, KeyHandler},
+  event::KeyHandler,
   render,
-  terminal::{Frame, Rect},
 };
 
 /// A component for centering its contents.
@@ -43,7 +41,7 @@ pub fn render(children: Children<1>, on_key: KeyHandler) {
 #[cfg(test)]
 mod tests {
   use super::*;
-  use crate::{components::Text, state::State};
+  use crate::{components::Text, element::Any as AnyElement, state::State};
 
   #[test]
   fn centered_forwards_keys() {
