@@ -1,6 +1,7 @@
 use crate::{
   component,
   components::{children::Children, Embed, Empty, HStack, VStack},
+  event::KeyHandler,
   render,
 };
 
@@ -15,9 +16,9 @@ use crate::{
 /// }
 /// ```
 #[component(crate::Centered)]
-pub fn render(children: Children<1>) -> AnyElement {
+pub fn render(children: Children<1>, on_key: KeyHandler) -> AnyElement {
   render! {
-    VStack() {
+    VStack(on_key) {
       Empty()
       HStack() {
         Empty()

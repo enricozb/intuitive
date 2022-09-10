@@ -35,3 +35,9 @@ where
     }
   }
 }
+
+impl From<&Handler> for Handler {
+  fn from(handler: &Handler) -> Self {
+    handler.clone()
+  }
+}
