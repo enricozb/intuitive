@@ -20,9 +20,15 @@ use crate::{
 #[component(crate::Centered)]
 pub fn render(children: Children<1>, on_key: KeyHandler) {
   let child = children[0].render();
+  let child_clone = child.clone();
+  let on_key_clone = on_key.clone();
 
-  let content: AnyElement = render! {
-    VStack() {
+  let on_key = move |event| {
+    on_key_clone.handle_or(event, |event| child_clone.on_key(event));
+  };
+
+  render! {
+    VStack(on_key) {
       Empty()
       HStack() {
         Empty()
@@ -31,28 +37,6 @@ pub fn render(children: Children<1>, on_key: KeyHandler) {
       }
       Empty()
     }
-  };
-
-  AnyElement::new(Frozen {
-    child,
-    content,
-    on_key: on_key.clone(),
-  })
-}
-
-struct Frozen {
-  child: AnyElement,
-  content: AnyElement,
-  on_key: KeyHandler,
-}
-
-impl Element for Frozen {
-  fn on_key(&self, event: KeyEvent) {
-    self.on_key.handle_or(event, |event| self.child.on_key(event));
-  }
-
-  fn draw(&self, rect: Rect, frame: &mut Frame) {
-    self.content.draw(rect, frame);
   }
 }
 
