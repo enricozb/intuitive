@@ -1,3 +1,4 @@
+/// The alignment of a column within a table.
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum Alignment {
   Left,

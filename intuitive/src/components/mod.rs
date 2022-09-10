@@ -159,7 +159,6 @@
 //! [`render!`]: ../macro.render.html
 /// [`Component::render`]: #tymethod.render
 pub mod children;
-pub mod modal;
 pub mod stack;
 
 #[cfg(any(feature = "experimental", doc))]

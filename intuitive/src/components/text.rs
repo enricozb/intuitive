@@ -7,7 +7,7 @@ use crate::{
   terminal::{Frame, Rect},
 };
 
-/// A component to display text.
+/// A component that displays text.
 ///
 /// `Text` renders the `String` passed into it.
 #[derive(Default)]

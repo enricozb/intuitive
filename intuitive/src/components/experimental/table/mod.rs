@@ -1,3 +1,5 @@
+//! A module containing the `Table` component and related structures.
+
 mod alignment;
 mod widget;
 

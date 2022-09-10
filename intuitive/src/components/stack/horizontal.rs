@@ -8,7 +8,7 @@ use crate::{
   terminal::{Frame, Rect},
 };
 
-/// A component used for rendering a horizontal stack of components.
+/// A component that for renders a horizontal stack of components.
 ///
 /// The `flex` argument specifies the amount of space allocated to each child, similar
 /// to the [`flex` css property]. See the [`FlexArray`] documentation for details.

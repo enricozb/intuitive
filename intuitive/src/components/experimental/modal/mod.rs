@@ -1,4 +1,4 @@
-//! A module containing the [`Modal`] component and related hooks.
+//! A module containing the `Modal` component and related hooks.
 //!
 //! The [`Modal`] component allows a user to present a [`Component`] on top of
 //! the children of the modal, from anywhere inside it. This is useful for popups such
