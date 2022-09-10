@@ -1,10 +1,11 @@
 [package]
 name = "intuitive"
-version = "0.4.0"
+version = "0.4.1"
 description = "a library for building declarative text-based user interfaces"
 edition = "2021"
 license = "CC0-1.0"
 repository = "https://github.com/enricozb/intuitive"
+readme = "readme.md"
 
 [dependencies]
 crossterm = "0.25.0"
