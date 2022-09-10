@@ -5,8 +5,8 @@ mod widget;
 
 use tui::text::Spans;
 
-pub use self::alignment::Alignment;
-use self::{alignment::Array as AlignmentArray, widget::Table as TableWidget};
+pub use self::alignment::{Alignment, Array as AlignmentArray};
+use self::widget::Table as TableWidget;
 use crate::{
   components::Component,
   element::{Any as AnyElement, Element},

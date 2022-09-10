@@ -1,7 +1,7 @@
 //! A collection of basic components.
 //!
 //! This module contains two main things:
-//! - A collection of commonly used components
+//! - A [collection of commonly used components]
 //! - The [`Component`] trait
 //!
 //! # Components
@@ -147,6 +147,7 @@
 //! }
 //! ```
 //!
+//! [collection of commonly used components]: #structs
 //! [examples]: TODO(enricozb):-link-to-examples
 //! [`Component`]: trait.Component.html
 //! [`Default`]: https://doc.rust-lang.org/std/default/trait.Default.html
@@ -177,7 +178,7 @@ pub use self::{
   embed::Embed,
   empty::Empty,
   section::Section,
-  stack::{Horizontal as HStack, Vertical as VStack},
+  stack::{horizontal::Stack as HStack, vertical::Stack as VStack},
   text::Text,
 };
 use crate::element::Any as AnyElement;
