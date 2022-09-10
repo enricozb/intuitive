@@ -18,7 +18,7 @@ pub struct Funcs {
 }
 
 impl Funcs {
-  pub fn new(modal: State<Option<AnyComponent>>) -> Self {
+  pub(crate) fn new(modal: State<Option<AnyComponent>>) -> Self {
     let show_modal = modal.clone();
     let hide_modal = modal.clone();
 
@@ -29,14 +29,17 @@ impl Funcs {
     }
   }
 
+  /// Return whether if the modal is shown.
   pub fn is_shown(&self) -> bool {
     self.modal.inspect(Option::is_some)
   }
 
+  /// Set `component` to be shown by the modal.
   pub fn show(&self, component: AnyComponent) {
     (self.show)(component);
   }
 
+  /// Hide the showing modal, if any.
   pub fn hide(&self) {
     (self.hide)();
   }
@@ -44,11 +47,29 @@ impl Funcs {
 
 /// A hook that can control the hiding/showing of a modal.
 ///
-/// Like [`use_state`], calls to `use_modal` may only happen within a call to
-/// [`Component::render`].
+/// Like [`use_state`], calls to `use_modal` may only be within a call to
+/// [`Component::render`]. Unlike [`use_state`], calls to `use_modal` may only be within
+/// a component that is a child component of some [`Modal`]. The [`Funcs`] returned by
+/// `use_modal` will then refer to the nearest ancestor [`Modal`]. For example, if we
+/// have the following layout:
+/// ```rust
+/// render! {
+///   Modal() {     // modal 1
+///     Modal() {   // modal 2
+///       Modal() { // modal 3
+///         MyComponent()
+///       }
+///     }
+///   }
+/// }
+/// ```
+/// and `use_modal` is called within `MyComponent`, then it will return a [`Funcs`] struct
+/// that acts on `modal 3`. The other two ancestor modals are inaccessible.
 ///
-/// [`use_state`]: ../../state/fn.use_state.html
 /// [`Component::render`]: trait.Component.html#tymethod.render
+/// [`Modal`]: struct.Modal.html
+/// [`Funcs`]: struct.Funcs.html
+/// [`use_state`]: ../../state/fn.use_state.html
 pub fn use_modal() -> Funcs {
   FUNCS
     .lock()
