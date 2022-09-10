@@ -73,7 +73,15 @@
 //! - The [examples] directory in the repository, which contains complete examples of simple
 //!   applications.
 //!
+//! # Disclaimer
+//! Intuitive is really new and is missing some core features, such as a good story
+//! around styling components, and coloring text in general. There may also be some
+//! bugs in the library of components, please [raise an issue] if you find any.
+//! Furthermore, since a large and complex application has yet to be built using
+//! Intuitive, it is not a guarantee that it does not have some major flaw
+//! making such development difficult.
 //!
+//! [raise an issue]: https://github.com/enricozb/intuitive/issues
 //! [`component` attribute macro]: attr.component.html
 //! [`Component`]: components/trait.Component.html
 //! [`components`]: components/index.html
