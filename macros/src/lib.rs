@@ -128,9 +128,9 @@ pub fn render(item: TokenStream) -> TokenStream {
 /// Helper macro for creating key handlers.
 ///
 /// # Details
-/// This macro is used to simplify a common pattern of key handlers where:
-/// - `event`, `event::KeyEvent` and `event::KeyCode::*` are brought into scope
-/// - `State`s need to be cloned before being moved into the key handler
+/// This macro is used to simplify a common pattern constructing a [`KeyHandler`] where:
+/// - [`event`], [`event::KeyEvent`] and [`event::KeyCode::*`] are brought into scope
+/// - [`State`]s need to be cloned before being moved into the key handler
 /// - The event is immediately `match`ed
 ///
 /// In addition to the above, this macro also:
@@ -165,8 +165,12 @@ pub fn render(item: TokenStream) -> TokenStream {
 ///   };
 /// };
 /// ```
-/// Notice that a trailing comma is required in this macro, as `_ => ()` is
-/// always added as the last arm of the match expression.
+///
+/// [`event`]: event/index.html
+/// [`event::KeyEvent`]: event/struct.KeyEvent.html
+/// [`event::KeyCode::*`]: event/enum.KeyCode.html
+/// [`State`]: state/struct.State.html
+/// [`KeyHandler`]: event/struct.KeyHandler.html
 #[proc_macro]
 pub fn on_key(item: TokenStream) -> TokenStream {
   on_key::parse(item)

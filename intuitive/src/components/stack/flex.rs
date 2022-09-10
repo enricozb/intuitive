@@ -1,6 +1,6 @@
 use std::ops::Deref;
 
-/// Control how much each child of a stack component grows
+/// Control how much each child of a stack component grows.
 ///
 /// For example:
 /// ```rust

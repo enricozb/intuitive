@@ -13,7 +13,7 @@ use crate::event;
 
 /// A struct that triggers a re-render upon mutation.
 ///
-/// `State<T>`'s have interior mutability, and can be [`clone`]d. `State<T>`s cloned
+/// `State`'s have interior mutability, and can be cloned. `State`s cloned
 /// from one another share the inner reference to a `T`, and therefore mutating one of
 /// them will be reflected across all of the cloned states. For example,
 /// ```rust
@@ -26,10 +26,8 @@ use crate::event;
 /// assert_eq!(count.get(), other_count.get());
 /// ```
 ///
-/// This is useful when receiving a `State<T>` as a parameter from a parent component,
+/// This is useful when receiving a `State` as a parameter from a parent component,
 /// as it must be cloned, and then may be mutated by both the child and parent components.
-///
-/// [`clone`]: https://doc.rust-lang.org/std/clone/trait.Clone.html
 #[derive(Default)]
 pub struct State<T> {
   inner: Arc<Mutex<T>>,

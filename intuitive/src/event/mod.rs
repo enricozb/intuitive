@@ -5,12 +5,13 @@ mod handler;
 
 pub use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 
+pub(crate) use self::channel::{read, send, start_crossterm_events};
 pub use self::{
-  channel::{quit, re_render, read, send, start_crossterm_events},
+  channel::{quit, re_render},
   handler::Handler as KeyHandler,
 };
 
-pub enum Event {
+pub(crate) enum Event {
   Key(KeyEvent),
   Render,
   Quit,

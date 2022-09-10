@@ -66,20 +66,24 @@
 //! - Functional components using the [`component` attribute macro]
 //! - Custom components by implementing [`Component`] and (potentially [`Element`])
 //!
-//! Both of these are discussed in depth in the [`components`] module documentation. Another
-//! useful resource is the [recipes] section of the [`components`] module documentation,
-//! describing ways to achieve common UI interactions.
+//! Both of these are discussed in depth in the [`components`] module documentation. Other
+//! useful resources are:
+//! - The [recipes] section of the [`components`] module documentation, describing ways to
+//!   achieve common UI interactions.
+//! - The [examples] directory in the repository, which contains complete examples of simple
+//!   applications.
 //!
 //!
+//! [`component` attribute macro]: attr.component.html
+//! [`Component`]: components/trait.Component.html
+//! [`components`]: components/index.html
+//! [`Element`]: element/trait.Element.html
+//! [examples]: https://github.com/enricozb/intuitive/tree/main/examples
 //! [Getting Started]: #getting-started
 //! [React]: https://reactjs.org/
+//! [recipes]: components/index.html#recipes
 //! [SwiftUI]: https://developer.apple.com/xcode/swiftui/
 //! [`Terminal::new()`]: terminal/struct.Terminal.html#method.new
-//! [`Component`]: components/trait.Component.html
-//! [`component` attribute macro]: attr.component.html
-//! [`Element`]: element/trait.Element.html
-//! [`components`]: components/index.html
-//! [recipes]: components/index.html#recipes
 
 pub mod components;
 pub mod element;

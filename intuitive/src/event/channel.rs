@@ -17,18 +17,29 @@ lazy_static! {
   static ref CHANNEL: Channel = Channel::new();
 }
 
-pub fn read() -> Result<Event> {
+pub(crate) fn read() -> Result<Event> {
   Ok(CHANNEL.receiver.lock().recv()?)
 }
 
-pub fn send(event: Event) -> Result<()> {
+pub(crate) fn send(event: Event) -> Result<()> {
   Ok(CHANNEL.sender.lock().send(event)?)
 }
 
+/// Triggers a re-render.
 pub fn re_render() -> Result<()> {
   Ok(CHANNEL.sender.lock().send(Event::Render)?)
 }
 
+/// Quits the application.
+///
+/// This is often used in [`KeyHandler`]s like so:
+/// ```rust
+/// let on_key = on_key! {
+///   KeyEvent { code: Char('q'), .. } => event::quit(),
+/// }
+/// ```
+///
+/// [`KeyHandler`]: struct.KeyHandler.html
 pub fn quit() {
   CHANNEL.sender.lock().send(Event::Quit).expect("quit")
 }

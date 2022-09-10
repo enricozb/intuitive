@@ -148,7 +148,7 @@
 //! ```
 //!
 //! [collection of commonly used components]: #structs
-//! [examples]: TODO(enricozb):-link-to-examples
+//! [examples]: https://github.com/enricozb/intuitive/tree/main/examples
 //! [`Component`]: trait.Component.html
 //! [`Default`]: https://doc.rust-lang.org/std/default/trait.Default.html
 //! [`element::Any`]: ../element/struct.Any.html
