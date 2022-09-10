@@ -5,6 +5,7 @@ mod manager;
 
 use std::sync::Arc;
 
+// TODO(enricozb): `render_done` should not be public
 pub use hook::{render_done, use_state};
 use parking_lot::Mutex;
 
