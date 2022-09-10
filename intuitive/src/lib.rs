@@ -18,7 +18,7 @@
 //! ```rust
 //! use intuitive::{
 //!   component,
-//!   components::{Centered, Flex::*, Section, Text, VStack, HStack},
+//!   components::{stack::Flex::*, HStack, Section, Text, VStack},
 //!   error::Result,
 //!   on_key, render,
 //!   state::use_state,
@@ -28,6 +28,7 @@
 //! #[component(Root)]
 //! fn render() {
 //!   let text = use_state(|| String::new());
+//!
 //!   let on_key = on_key! { [text]
 //!     KeyEvent { code: Char(c), .. } => text.mutate(|text| text.push(c)),
 //!     KeyEvent { code: Backspace, .. } => text.mutate(|text| text.pop()),
