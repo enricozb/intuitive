@@ -5,7 +5,7 @@ mod handler;
 
 pub use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 
-pub(crate) use self::channel::{read, send, start_crossterm_events};
+pub(crate) use self::channel::{read, start_crossterm_events};
 pub use self::{
   channel::{quit, re_render},
   handler::Handler as KeyHandler,

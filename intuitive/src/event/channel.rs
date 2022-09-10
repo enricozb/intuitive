@@ -11,23 +11,23 @@ use lazy_static::lazy_static;
 use parking_lot::Mutex;
 
 use super::Event;
-use crate::error::Result;
+use crate::error::{Error, Result};
 
 lazy_static! {
   static ref CHANNEL: Channel = Channel::new();
 }
 
 pub(crate) fn read() -> Result<Event> {
-  Ok(CHANNEL.receiver.lock().recv()?)
+  CHANNEL.recv()
 }
 
-pub(crate) fn send(event: Event) -> Result<()> {
-  Ok(CHANNEL.sender.lock().send(event)?)
+fn send(event: Event) -> Result<()> {
+  CHANNEL.send(event)
 }
 
 /// Triggers a re-render.
 pub fn re_render() -> Result<()> {
-  Ok(CHANNEL.sender.lock().send(Event::Render)?)
+  send(Event::Render)
 }
 
 /// Quits the application.
@@ -41,12 +41,10 @@ pub fn re_render() -> Result<()> {
 ///
 /// [`KeyHandler`]: struct.KeyHandler.html
 pub fn quit() {
-  CHANNEL.sender.lock().send(Event::Quit).expect("quit")
+  send(Event::Quit).expect("quit")
 }
 
 pub fn start_crossterm_events() {
-  let sender = CHANNEL.sender();
-
   thread::spawn(move || loop {
     let event = match crossterm_event::read().expect("read") {
       CrosstermEvent::Key(event) => Event::Key(event),
@@ -55,7 +53,7 @@ pub fn start_crossterm_events() {
       _ => continue,
     };
 
-    sender.send(event).expect("send");
+    send(event).expect("send");
   });
 }
 
@@ -74,7 +72,11 @@ impl Channel {
     }
   }
 
-  pub fn sender(&self) -> Sender<Event> {
-    self.sender.lock().clone()
+  pub fn recv(&self) -> Result<Event> {
+    Ok(self.receiver.lock().recv()?)
+  }
+
+  pub fn send(&self, event: Event) -> Result<()> {
+    self.sender.lock().send(event).map_err(|err| Error::Send(err.to_string()))
   }
 }

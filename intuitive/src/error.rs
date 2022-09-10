@@ -1,13 +1,8 @@
 //! The crate's `Error` type.
 
-use std::{
-  io,
-  sync::mpsc::{RecvError, SendError},
-};
+use std::{io, sync::mpsc::RecvError};
 
 use thiserror::Error;
-
-use crate::event::Event;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -20,7 +15,7 @@ pub enum Error {
   Recv(#[from] RecvError),
 
   #[error("send: {0}")]
-  Send(#[from] SendError<Event>),
+  Send(String),
 
   #[error("manager: {0}")]
   Manager(&'static str),
