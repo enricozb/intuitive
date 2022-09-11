@@ -1,5 +1,5 @@
 use tui::{
-  style::{Color, Style},
+  text::Spans as TuiSpans,
   widgets::{Block, Borders},
 };
 
@@ -7,6 +7,8 @@ use crate::{
   components::{children::Children, Component},
   element::{Any as AnyElement, Element},
   event::{KeyEvent, KeyHandler},
+  spans::Spans,
+  style::Style,
   terminal::{Frame, Rect},
 };
 
@@ -28,8 +30,8 @@ use crate::{
 /// `Section` also optionally accepts a color, which will be applied to the title and border.
 #[derive(Clone, Default)]
 pub struct Section {
-  pub title: String,
-  pub color: Option<Color>,
+  pub title: Spans,
+  pub border: Style,
 
   pub children: Children<1>,
   pub on_key: KeyHandler,
@@ -39,7 +41,7 @@ impl Component for Section {
   fn render(&self) -> AnyElement {
     AnyElement::new(Frozen {
       title: self.title.clone(),
-      color: self.color.unwrap_or(Color::White),
+      border: self.border,
 
       content: self.children[0].render(),
       on_key: self.on_key.clone(),
@@ -48,8 +50,8 @@ impl Component for Section {
 }
 
 struct Frozen {
-  title: String,
-  color: Color,
+  title: Spans,
+  border: Style,
 
   content: AnyElement,
   on_key: KeyHandler,
@@ -62,9 +64,9 @@ impl Element for Frozen {
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {
     let block = Block::default()
-      .title(self.title.as_ref())
+      .title::<TuiSpans>((&self.title).into())
       .borders(Borders::ALL)
-      .border_style(Style::default().fg(self.color));
+      .border_style(self.border.into());
 
     self.content.draw(block.inner(rect), frame);
     frame.render_widget(block, rect);

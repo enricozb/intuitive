@@ -1,18 +1,19 @@
-use tui::widgets::Paragraph;
+use tui::{text::Spans as TuiSpans, widgets::Paragraph};
 
 use crate::{
   components::Component,
   element::{Any as AnyElement, Element},
   event::{KeyEvent, KeyHandler},
+  spans::Spans,
   terminal::{Frame, Rect},
 };
 
 /// A component that displays text.
 ///
-/// `Text` renders the `String` passed into it.
+/// `Text` renders the `Spans` passed into it.
 #[derive(Default)]
 pub struct Text {
-  pub text: String,
+  pub text: Spans,
 
   pub on_key: KeyHandler,
 }
@@ -27,7 +28,7 @@ impl Component for Text {
 }
 
 struct Frozen {
-  text: String,
+  text: Spans,
   on_key: KeyHandler,
 }
 
@@ -37,7 +38,7 @@ impl Element for Frozen {
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {
-    let widget = Paragraph::new(self.text.clone());
+    let widget = Paragraph::new::<TuiSpans>((&self.text).into());
 
     frame.render_widget(widget, rect);
   }

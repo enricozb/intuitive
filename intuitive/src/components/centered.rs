@@ -28,7 +28,7 @@ pub fn render(children: Children<1>, on_key: KeyHandler) {
       Empty()
       HStack() {
         Empty()
-        Embed(content: child.clone())
+        Embed(content: child)
         Empty()
       }
       Empty()

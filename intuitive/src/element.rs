@@ -20,7 +20,7 @@ impl Any {
   }
 }
 
-impl<'a> Default for Any {
+impl Default for Any {
   fn default() -> Self {
     Empty {}.into()
   }

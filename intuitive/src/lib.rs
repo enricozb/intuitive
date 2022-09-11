@@ -98,7 +98,9 @@ pub mod components;
 pub mod element;
 pub mod error;
 pub mod event;
+pub mod spans;
 pub mod state;
+pub mod style;
 pub mod terminal;
 
 pub use intuitive_macros::{component, on_key, render};

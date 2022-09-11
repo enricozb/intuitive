@@ -32,7 +32,7 @@ impl Terminal {
 
     event::start_crossterm_events();
 
-    ctrlc::set_handler(|| event::quit()).expect("setting sigterm handler");
+    ctrlc::set_handler(event::quit).expect("setting sigterm handler");
 
     Ok(Self {
       root,

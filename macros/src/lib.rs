@@ -111,6 +111,13 @@ pub fn component(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// identifier. Unlike struct fields, you can omit parameters, as any omitted parameters
 /// are implicitly passed in with their default values.
 ///
+/// ## Automatic Parameter Conversion
+/// When passing parameters to components within a `render!` macro invocation, an implicit
+/// [`TryInto::try_into`] call is made for each parameter. This means that you can omit
+/// any `.into()` calls when passing parameters to components. This is very useful when
+/// working with [`Spans`] and [`Style`], as they implement [`From`] from a variety
+/// of types.
+///
 /// # Children
 /// Children to a component come after the component surrounded by braces (`{ ... }`).
 /// Like parameters, children are optional, but are only valid for components that
@@ -120,6 +127,11 @@ pub fn component(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// how many children they take in. Some components, like `VStack` and `HStack` take
 /// in a variable number of children, while some, like `Section`, only accept a single
 /// child component.
+///
+/// [`From`]: https://doc.rust-lang.org/std/convert/trait.From.html
+/// [`Spans`]: spans/struct.Spans.html
+/// [`Style`]: style/struct.Style.html
+/// [`TryInto::try_into`]: https://doc.rust-lang.org/std/convert/trait.TryInto.html#tymethod.try_into
 #[proc_macro]
 pub fn render(item: TokenStream) -> TokenStream {
   render::parse(item)
