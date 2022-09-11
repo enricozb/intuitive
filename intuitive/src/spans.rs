@@ -9,8 +9,8 @@ use crate::style::Style;
 /// Text with a specific style.
 #[derive(Default, Clone)]
 pub struct Span {
-  text: String,
-  style: Style,
+  pub text: String,
+  pub style: Style,
 }
 
 impl Span {
@@ -53,6 +53,12 @@ impl From<Span> for TuiSpan<'_> {
 #[derive(Default, Clone)]
 pub struct Spans(Vec<Span>);
 
+impl Spans {
+  pub fn new(spans: Vec<Span>) -> Self {
+    Self(spans)
+  }
+}
+
 impl From<Span> for Spans {
   fn from(span: Span) -> Self {
     Spans(vec![span])
@@ -74,6 +80,15 @@ impl<'a> From<&'a Spans> for TuiSpans<'a> {
 impl From<Spans> for TuiSpans<'_> {
   fn from(spans: Spans) -> Self {
     TuiSpans(spans.0.into_iter().map(TuiSpan::from).collect())
+  }
+}
+
+impl IntoIterator for Spans {
+  type Item = Span;
+  type IntoIter = std::vec::IntoIter<Self::Item>;
+
+  fn into_iter(self) -> Self::IntoIter {
+    self.0.into_iter()
   }
 }
 
