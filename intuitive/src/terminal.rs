@@ -70,10 +70,12 @@ impl Terminal {
     self.draw(&component)?;
 
     loop {
+      let event = event::read()?;
+
       let component = self.root.render();
       state::render_done();
 
-      match event::read()? {
+      match event {
         Event::Render => self.draw(&component)?,
         Event::Key(event) => component.on_key(event),
         Event::Quit => break,
