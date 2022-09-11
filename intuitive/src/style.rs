@@ -1,3 +1,5 @@
+//! Structures for working with colors and text modifiers.
+
 use tui::style::Style as TuiStyle;
 pub use tui::style::{Color, Modifier};
 

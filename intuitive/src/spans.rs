@@ -1,3 +1,5 @@
+//! Structures for working with styled text.
+
 use std::ops::Deref;
 
 use tui::text::{Span as TuiSpan, Spans as TuiSpans};
