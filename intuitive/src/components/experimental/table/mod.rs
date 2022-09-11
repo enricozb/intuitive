@@ -3,7 +3,7 @@
 mod alignment;
 mod widget;
 
-use tui::text::Spans;
+use tui::text::Spans as TuiSpans;
 
 pub use self::alignment::{Alignment, Array as AlignmentArray};
 use self::widget::Table as TableWidget;
@@ -11,6 +11,7 @@ use crate::{
   components::Component,
   element::{Any as AnyElement, Element},
   event::{KeyCode, KeyEvent, KeyHandler},
+  spans::Spans,
   state::{use_state, State},
   terminal::{Frame, Rect},
 };
@@ -19,7 +20,7 @@ use crate::{
 #[derive(Default)]
 pub struct Table<const N: usize> {
   pub alignments: AlignmentArray<N>,
-  pub rows: Vec<[String; N]>,
+  pub rows: Vec<[Spans; N]>,
 
   pub on_key: KeyHandler,
 }
@@ -40,7 +41,7 @@ impl<const N: usize> Component for Table<N> {
 
 struct Frozen<const N: usize> {
   alignments: AlignmentArray<N>,
-  rows: Vec<[String; N]>,
+  rows: Vec<[Spans; N]>,
   index: State<usize>,
 
   on_key: KeyHandler,
@@ -61,7 +62,7 @@ impl<const N: usize> Element for Frozen<N> {
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {
-    let rows = self.rows.iter().cloned().map(|row| row.map(Spans::from)).collect();
+    let rows = self.rows.iter().cloned().map(|row| row.map(TuiSpans::from)).collect();
     let widget = TableWidget::new(rows, self.alignments.into());
 
     frame.render_widget(widget, rect);
