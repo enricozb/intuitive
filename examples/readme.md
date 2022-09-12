@@ -6,7 +6,7 @@ They are run using `cargo run --example <name> -- [args]`.
 ## Examples
 - [Watch]
 
-## Watch
+### Watch
 Runs a program periodically, showing its output. The TUI is inspired by [viddy].
 Press `q` to quit. Example:
 ```bash
