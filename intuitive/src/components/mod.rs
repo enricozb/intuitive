@@ -185,7 +185,7 @@
 pub mod children;
 pub mod stack;
 
-#[cfg(any(feature = "experimental", doc, test, doctest))]
+#[cfg(any(feature = "experimental", doc))]
 pub mod experimental;
 
 mod any;
