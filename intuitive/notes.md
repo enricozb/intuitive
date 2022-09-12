@@ -9,3 +9,5 @@
 
 # todo
 - add a conditional component
+- make `KeyHandler` have a return type, specifically something like a `Continue`,
+  for `KeyEvent` propagation.
