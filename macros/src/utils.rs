@@ -7,10 +7,11 @@ pub fn crate_name() -> TokenStream {
   let crate_name = proc_macro_crate::crate_name("intuitive").unwrap();
 
   match crate_name {
-    FoundCrate::Itself => quote! { crate },
+    FoundCrate::Itself => quote! { ::intuitive },
+
     FoundCrate::Name(name) => {
       let ident = Ident::new(&name, Span::call_site());
-      quote! { #ident }
+      quote! { ::#ident }
     }
   }
 }

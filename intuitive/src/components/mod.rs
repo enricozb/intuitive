@@ -24,6 +24,8 @@
 //! ## Input Box
 //! An input box with state can easily be created with a functional component:
 //! ```rust
+//! # use intuitive::{component, components::{Section, Text}, on_key, state::use_state, render};
+//! #
 //! #[component(Input)]
 //! fn render(title: String) {
 //!   let text = use_state(|| String::new());
@@ -46,6 +48,16 @@
 //! we use a functional component to return a custom [`element::Any`], instead
 //! of returning a [`render!`] invocation.
 //! ```rust
+//! # use intuitive::{
+//! #   component,
+//! #   components::{Section, Text},
+//! #   element::{Any as AnyElement, Element},
+//! #   event::KeyEvent,
+//! #   on_key, render,
+//! #   state::use_state,
+//! #   terminal::{Rect, Frame},
+//! # };
+//! #
 //! #[component(Input)]
 //! fn render(title: String) -> element::Any {
 //!   let text = use_state(|| String::new());
@@ -55,7 +67,7 @@
 //!     KeyEvent { code: Backspace, .. } => text.mutate(|text| text.pop()),
 //!   };
 //!
-//!   element::Any::new(Frozen {
+//!   AnyElement::new(Frozen {
 //!     cursor: text.get().len() as u16,
 //!     content: render! {
 //!       Section(title: title.clone(), on_key) {
@@ -67,7 +79,7 @@
 //!
 //! struct Frozen {
 //!   cursor: u16,
-//!   content: element::Any,
+//!   content: AnyElement,
 //! }
 //!
 //! impl Element for Frozen {
@@ -90,6 +102,17 @@
 //! in order to make use of a rendered component inside of the [`render!`] macro.
 //!
 //! ```rust
+//! use intuitive::{
+//!   component,
+//!   components::{Section, Text, VStack, Embed},
+//!   element::{Any as AnyElement, Element},
+//!   event::KeyEvent,
+//!   on_key, render,
+//!   state::use_state,
+//!   style::Color,
+//!   terminal::{Rect, Frame},
+//! };
+//!
 //! #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 //! enum Focus {
 //!   A,
@@ -109,7 +132,7 @@
 //!   };
 //!
 //!   render! {
-//!     Section(title, color) {
+//!     Section(title, border: color) {
 //!       Text(text: text.get(), on_key)
 //!     }
 //!   }
@@ -139,9 +162,9 @@
 //!
 //!   render! {
 //!     VStack(on_key) {
-//!       Embed(element: input_a)
-//!       Embed(element: input_b)
-//!       Embed(element: input_c)
+//!       Embed(content: input_a)
+//!       Embed(content: input_b)
+//!       Embed(content: input_c)
 //!     }
 //!   }
 //! }
@@ -162,7 +185,7 @@
 pub mod children;
 pub mod stack;
 
-#[cfg(any(feature = "experimental", doc))]
+#[cfg(any(feature = "experimental", doc, test, doctest))]
 pub mod experimental;
 
 mod any;

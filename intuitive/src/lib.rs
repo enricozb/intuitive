@@ -15,7 +15,7 @@
 //! automatically, and keyboard events can be handled easily.
 //!
 //! For example, a complex layout with an input box:
-//! ```rust
+//! ```no_run
 //! use intuitive::{
 //!   component,
 //!   components::{stack::Flex::*, HStack, Section, Text, VStack},
@@ -93,6 +93,8 @@
 //! [recipes]: components/index.html#recipes
 //! [SwiftUI]: https://developer.apple.com/xcode/swiftui/
 //! [`Terminal::new()`]: terminal/struct.Terminal.html#method.new
+
+extern crate self as intuitive;
 
 pub mod components;
 pub mod element;

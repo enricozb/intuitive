@@ -16,6 +16,8 @@ pub fn render_done() {
 /// struct storing state. `use_state` returns a [`State`], which can be used to retrieve
 /// or update the value. For example,
 /// ```rust
+/// # use intuitive::{component, components::{Section, Text}, state::use_state, on_key, render};
+/// #
 /// #[component(Input)]
 /// fn render(title: String) {
 ///   let text = use_state(|| String::new());

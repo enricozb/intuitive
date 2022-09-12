@@ -34,9 +34,11 @@ pub fn re_render() -> Result<()> {
 ///
 /// This is often used in [`KeyHandler`]s like so:
 /// ```rust
+/// use intuitive::on_key;
+///
 /// let on_key = on_key! {
 ///   KeyEvent { code: Char('q'), .. } => event::quit(),
-/// }
+/// };
 /// ```
 ///
 /// [`KeyHandler`]: struct.KeyHandler.html

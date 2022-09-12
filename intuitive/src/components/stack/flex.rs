@@ -4,11 +4,16 @@ use std::ops::Deref;
 ///
 /// For example:
 /// ```rust
-/// render! {
-///   VStack(flex: [1, 2, 3]) {
-///     Section(title: "small")
-///     Section(title: "medium")
-///     Section(title: "large")
+/// # use intuitive::{component, components::{Section, VStack}, render};
+/// #
+/// #[component(Root)]
+/// fn render() {
+///   render! {
+///     VStack(flex: [1, 2, 3]) {
+///       Section(title: "small")
+///       Section(title: "medium")
+///       Section(title: "large")
+///     }
 ///   }
 /// }
 /// ```
@@ -21,11 +26,16 @@ use std::ops::Deref;
 /// all dimensions relative. In order to have absolute height or width for a child, provide a
 /// value of type `[Flex; N]` to the `flex` parameter. For example,
 /// ```rust
-/// render! {
-///   VStack(flex: [Block(3), Grow(1), Block(3)]) {
-///     Section(title: "absolute")
-///     Section(title: "relative")
-///     Section(title: "absolute")
+/// # use intuitive::{component, components::{Section, VStack, stack::Flex::*}, render};
+/// #
+/// #[component(Root)]
+/// fn render() {
+///   render! {
+///     VStack(flex: [Block(3), Grow(1), Block(3)]) {
+///       Section(title: "absolute")
+///       Section(title: "relative")
+///       Section(title: "absolute")
+///     }
 ///   }
 /// }
 /// ```

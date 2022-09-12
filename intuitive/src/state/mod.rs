@@ -17,6 +17,8 @@ use crate::event;
 /// from one another share the inner reference to a `T`, and therefore mutating one of
 /// them will be reflected across all of the cloned states. For example,
 /// ```rust
+/// # use intuitive::state::use_state;
+/// #
 /// let count = use_state(|| 0);
 ///
 /// let other_count = count.clone();

@@ -52,7 +52,18 @@ impl Funcs {
 /// a component that is a child component of some [`Modal`]. The [`Funcs`] returned by
 /// `use_modal` will then refer to the nearest ancestor [`Modal`]. For example, if we
 /// have the following layout:
-/// ```rust
+/// ```ignore
+/// use intuitive::{render, component, components::{Empty, experimental::{Modal, modal::use_modal}}};
+///
+/// #[component(MyComponent)]
+/// fn render() {
+///   let modal = use_modal();
+///
+///   render! {
+///     Empty()
+///   }
+/// }
+///
 /// render! {
 ///   Modal() {     // modal 1
 ///     Modal() {   // modal 2

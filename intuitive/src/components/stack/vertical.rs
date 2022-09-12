@@ -15,11 +15,16 @@ use crate::{
 ///
 /// An example usage would be,
 /// ```rust
-/// render! {
-///   VStack(flex: [1, 2, 3]) {
-///     Section(title: "Top")
-///     Section(title: "Middle")
-///     Section(title: "Bottom")
+/// # use intuitive::{component, components::{VStack, Section}, render};
+/// #
+/// #[component(Root)]
+/// fn render() {
+///   render! {
+///     VStack(flex: [1, 2, 3]) {
+///       Section(title: "Top")
+///       Section(title: "Middle")
+///       Section(title: "Bottom")
+///     }
 ///   }
 /// }
 /// ```

@@ -15,11 +15,16 @@ use crate::{
 ///
 /// An example usage would be,
 /// ```rust
-/// render! {
-///   HStack(flex: [1, 2, 3]) {
-///     Section(title: "Left")
-///     Section(title: "Middle")
-///     Section(title: "Right")
+/// # use intuitive::{component, components::{HStack, Section}, render};
+/// #
+/// #[component(Root)]
+/// fn render() {
+///   render! {
+///     HStack(flex: [1, 2, 3]) {
+///       Section(title: "Left")
+///       Section(title: "Middle")
+///       Section(title: "Right")
+///     }
 ///   }
 /// }
 /// ```

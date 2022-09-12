@@ -9,9 +9,14 @@ use crate::{
 ///
 /// For example,
 /// ```rust
-/// render! {
-///   Centered() {
-///     Section(title: "I'm centered")
+/// # use intuitive::{component, components::{Centered, Section}, render};
+/// #
+/// #[component(Root)]
+/// fn render() {
+///   render! {
+///     Centered() {
+///       Section(title: "I'm centered")
+///     }
 ///   }
 /// }
 /// ```

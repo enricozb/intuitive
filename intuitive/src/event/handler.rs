@@ -10,8 +10,15 @@ use super::KeyEvent;
 /// [`KeyEvent`] as a parameter. It implements `From<Fn(KeyEvent) + 'static + Send + Sync>`,
 /// which allows for code like this:
 /// ```rust
-/// render! {
-///   Text(text: "Hi There", on_key: |event| { /* ... */ })
+/// # use intuitive::{component, components::Text, render};
+/// #
+/// #[component(Root)]
+/// fn render() {
+///   let on_key = |event| {};
+///
+///   render! {
+///     Text(text: "Hi There", on_key)
+///   }
 /// }
 /// ```
 ///
@@ -25,6 +32,8 @@ use super::KeyEvent;
 /// `on_key`, but allow the user of this component to override this handler. This can
 /// be done using the [`KeyHandler::handle_or`] method:
 /// ```rust
+/// # use intuitive::{element::Element, event::{KeyHandler, KeyEvent}};
+/// #
 /// struct Frozen {
 ///   on_key: KeyHandler,
 /// }

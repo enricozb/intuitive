@@ -19,6 +19,3 @@ tui = "0.19.0"
 
 [features]
 experimental = []
-
-[lib]
-doctest = false
