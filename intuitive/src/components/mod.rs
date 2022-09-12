@@ -102,17 +102,17 @@
 //! in order to make use of a rendered component inside of the [`render!`] macro.
 //!
 //! ```rust
-//! use intuitive::{
-//!   component,
-//!   components::{Section, Text, VStack, Embed},
-//!   element::{Any as AnyElement, Element},
-//!   event::KeyEvent,
-//!   on_key, render,
-//!   state::use_state,
-//!   style::Color,
-//!   terminal::{Rect, Frame},
-//! };
-//!
+//! # use intuitive::{
+//! #   component,
+//! #   components::{Section, Text, VStack, Embed},
+//! #   element::{Any as AnyElement, Element},
+//! #   event::KeyEvent,
+//! #   on_key, render,
+//! #   state::use_state,
+//! #   style::Color,
+//! #   terminal::{Rect, Frame},
+//! # };
+//! #
 //! #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 //! enum Focus {
 //!   A,

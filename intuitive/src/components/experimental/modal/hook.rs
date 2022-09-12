@@ -53,8 +53,8 @@ impl Funcs {
 /// `use_modal` will then refer to the nearest ancestor [`Modal`]. For example, if we
 /// have the following layout:
 /// ```ignore
-/// use intuitive::{render, component, components::{Empty, experimental::{Modal, modal::use_modal}}};
-///
+/// # use intuitive::{render, component, components::{Empty, experimental::{Modal, modal::use_modal}}};
+/// #
 /// #[component(MyComponent)]
 /// fn render() {
 ///   let modal = use_modal();

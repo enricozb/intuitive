@@ -31,8 +31,8 @@ impl Default for Content {
 ///
 /// For example,
 /// ```rust
-/// use intuitive::{component, components::{children::Children, HStack, VStack, Empty, Embed}, render};
-///
+/// # use intuitive::{component, components::{children::Children, HStack, VStack, Empty, Embed}, render};
+/// #
 /// #[component(Centered)]
 /// pub fn render(children: Children<1>) -> AnyElement {
 ///   render! {

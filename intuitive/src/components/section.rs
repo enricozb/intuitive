@@ -17,8 +17,8 @@ use crate::{
 /// `Section` is used to wrap a component with a border and a title.
 /// For example,
 /// ```rust
-/// use intuitive::{component, components::{Section, Text}, render};
-///
+/// # use intuitive::{component, components::{Section, Text}, render};
+/// #
 /// #[component(Root)]
 /// fn render() {
 ///   render! {
