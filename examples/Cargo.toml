@@ -5,4 +5,6 @@ edition = "2021"
 publish = false
 
 [dependencies]
+chrono = "0.4.22"
+clap = { version = "3.2.20", features = ["derive"] }
 intuitive = { path = "../intuitive" }
