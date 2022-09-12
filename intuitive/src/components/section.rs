@@ -32,7 +32,10 @@ use crate::{
 ///
 /// ![section](https://raw.githubusercontent.com/enricozb/intuitive/main/assets/section.png)
 ///
-/// `Section` also optionally accepts a color, which will be applied to the title and border.
+/// `Section` also accepts a border [`Style`]. This style will merge with any style applied to
+/// the title.
+///
+/// [`Style`]: ../style/struct.Style.html
 #[derive(Clone, Default)]
 pub struct Section {
   pub title: Spans,

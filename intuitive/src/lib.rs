@@ -11,8 +11,12 @@
 //!
 //! # Design
 //! The main focus of Intuitive is to simplify the implementation of section-based TUIs,
-//! such as [lazygit](https://github.com/jesseduffield/lazygit)'s. Resizing is handled
-//! automatically, and keyboard events can be handled easily.
+//! such as [lazygit](https://github.com/jesseduffield/lazygit)'s, even at the slight
+//! expense of performance. Intuitive attempts to make it easy to write reusable TUI
+//! components that
+//!   - encapsulate logic around handling state and key events
+//!   - have complex layouts
+//!   - are easy to read
 //!
 //! For example, a complex layout with an input box:
 //! ```no_run
@@ -69,6 +73,8 @@
 //!
 //! Both of these are discussed in depth in the [`components`] module documentation. Other
 //! useful resources are:
+//! - The documentation for the [`render!`] and [`on_key!`] macros, as they are often used
+//!   when writing components.
 //! - The [recipes] section of the [`components`] module documentation, describing ways to
 //!   achieve common UI interactions.
 //! - The [examples] directory in the repository, which contains complete examples of simple
@@ -84,6 +90,8 @@
 //!
 //! [raise an issue]: https://github.com/enricozb/intuitive/issues
 //! [`component` attribute macro]: attr.component.html
+//! [`render!`]: macro.render.html
+//! [`on_key!`]: macro.on_key.html
 //! [`Component`]: components/trait.Component.html
 //! [`components`]: components/index.html
 //! [`Element`]: element/trait.Element.html

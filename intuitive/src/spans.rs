@@ -50,6 +50,21 @@ impl From<Span> for TuiSpan<'_> {
 }
 
 /// Text with a variety of styles.
+///
+/// `Spans` can be thought of as `Vec<Span>`, as they implement [`IntoIterator`],
+/// and [`Deref`] into a [`Vec`]. Usually, components that accept text (such as
+/// [`Section`] accepting a title), will accept `Spans`, as they represent
+/// text with potentially multiple styles. `Spans` also implement
+/// `From<S: Into<Span>>`, making it easy to pass values of many types to components
+/// accepting `Spans`, such as [`String`], [`Span`], and [`&str`].
+///
+/// [`Deref`]: https://doc.rust-lang.org/std/ops/trait.Deref.html
+/// [`IntoIterator`]: https://doc.rust-lang.org/std/iter/trait.IntoIterator.html
+/// [`Section`]: ../components/struct.Section.html
+/// [`Span`]: struct.Span.html
+/// [`&str`]: https://doc.rust-lang.org/std/primitive.str.html
+/// [`String`]: https://doc.rust-lang.org/std/string/struct.String.html
+/// [`Vec`]: https://doc.rust-lang.org/std/vec/struct.Vec.html
 #[derive(Default, Clone)]
 pub struct Spans(Vec<Span>);
 
@@ -59,15 +74,9 @@ impl Spans {
   }
 }
 
-impl From<Span> for Spans {
-  fn from(span: Span) -> Self {
-    Spans(vec![span])
-  }
-}
-
-impl<S: Into<String>> From<S> for Spans {
+impl<S: Into<Span>> From<S> for Spans {
   fn from(s: S) -> Self {
-    Spans(vec![s.into().into()])
+    Spans(vec![s.into()])
   }
 }
 

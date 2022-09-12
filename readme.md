@@ -14,8 +14,12 @@ directory to see some demo applications.
 
 ## Design
 The main focus of Intuitive is to simplify the implementation of section-based TUIs,
-such as [lazygit](https://github.com/jesseduffield/lazygit)'s. Resizing is handled
-automatically, and keyboard events can be handled easily.
+such as [lazygit](https://github.com/jesseduffield/lazygit)'s, even at the slight
+expense of performance. Intuitive attempts to make it easy to write reusable TUI
+components that
+  - encapsulate logic around handling state and key events
+  - have complex layouts
+  - are easy to read
 
 For example, a complex layout with an input box:
 ```rust
