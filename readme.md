@@ -61,7 +61,16 @@ And the output would look like this:
 
 ![demo](https://raw.githubusercontent.com/enricozb/intuitive/main/assets/demo.png)
 
-[Getting Started]: https://docs.rs/intuitive/latest/intuitive/#getting-started
+# Disclaimer
+Intuitive is closer to a proof-of-concept than to a crate that's ready for
+prime-time use. There may also be some bugs in the library of components,
+please [raise an issue] if you find any. Furthermore, since a large and
+complex application has yet to be built using Intuitive, it is not a
+guarantee that it does not have some major flaw making such development
+difficult.
+
 [examples]: https://github.com/enricozb/intuitive/tree/main/examples
+[Getting Started]: https://docs.rs/intuitive/latest/intuitive/#getting-started
+[raise an issue]: https://github.com/enricozb/intuitive/issues
 [React]: https://reactjs.org/
 [SwiftUI]: https://developer.apple.com/xcode/swiftui/
