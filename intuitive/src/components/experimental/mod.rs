@@ -5,4 +5,5 @@
 //! here may or may not have any accompanying documentation.
 
 pub mod modal;
+pub mod scroll;
 pub mod table;
