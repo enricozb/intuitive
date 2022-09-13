@@ -11,8 +11,8 @@ use tui::{
 use crate::{
   components::Component,
   element::{Any as AnyElement, Element},
-  event::{KeyEvent, KeyHandler},
-  state::use_state,
+  event::{KeyEvent, KeyHandler, MouseEvent, MouseEventKind},
+  state::{use_state, State},
   style::Style,
   terminal::{Frame, Rect},
   text::{Lines, Spans},
@@ -41,6 +41,8 @@ impl Component for Scroll {
       border: self.border,
       lines: self.text.clone().into(),
       on_key: self.on_key.clone(),
+
+      offset,
     })
   }
 }
@@ -50,11 +52,34 @@ struct Frozen {
   lines: Lines,
   border: Style,
   on_key: KeyHandler,
+
+  offset: State<u16>,
+}
+
+impl Frozen {
+  fn scroll_height(&self, rect: Rect) -> u16 {
+    let num_lines = self.lines.0.len();
+    let height = (rect.height - 2) as usize;
+
+    cmp::min(height, height * height / num_lines) as u16
+  }
 }
 
 impl Element for Frozen {
   fn on_key(&self, event: KeyEvent) {
     self.on_key.handle(event)
+  }
+
+  fn on_mouse(&self, rect: Rect, event: MouseEvent) {
+    let scroll_height = self.scroll_height(rect);
+    let max_offset = rect.height - scroll_height - 2;
+
+    match event.kind {
+      MouseEventKind::ScrollDown => self.offset.update(|offset| cmp::min(max_offset, offset + 1)),
+      MouseEventKind::ScrollUp => self.offset.update(|offset| offset.saturating_sub(1)),
+
+      _ => (),
+    }
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {
@@ -69,22 +94,18 @@ impl Widget for &Frozen {
       .borders(Borders::ALL)
       .border_style(self.border.into());
 
+    let offset = self.offset.get();
+
     // render text
-    let paragraph = Paragraph::new::<Vec<TuiSpans>>(self.lines.0.iter().cloned().map(TuiSpans::from).collect()).block(block);
+    let paragraph =
+      Paragraph::new::<Vec<TuiSpans>>(self.lines.0.iter().skip(offset as usize).cloned().map(TuiSpans::from).collect()).block(block);
+
     Widget::render(paragraph, rect, buf);
-
-    // render scroll bar
-    let num_lines = self.lines.0.len();
-    let height = (rect.height - 2) as usize;
-    let scroll_height = cmp::min(height, height * height / num_lines) as u16;
-    let offset = 5;
-
-    eprintln!("scroll height: {}", scroll_height);
 
     buf.set_string(rect.right() - 1, rect.top(), "▲", self.border.into());
     buf.set_string(rect.right() - 1, rect.bottom() - 1, "▼", self.border.into());
 
-    for y in 1..=scroll_height {
+    for y in 1..=self.scroll_height(rect) {
       buf.set_string(rect.x + rect.width - 1, rect.y + y + offset, "█", self.border.into());
     }
   }

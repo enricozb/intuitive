@@ -1,7 +1,5 @@
 use std::sync::Arc;
 
-use super::KeyEvent;
-
 /// A handler for [`KeyEvent`]s.
 ///
 /// # Creating a `KeyHandler`
@@ -54,16 +52,29 @@ use super::KeyEvent;
 /// [`KeyHandler::handle_or`]: #method.handle_or
 /// [`State`]: ../state/struct.State.html
 /// [`Default`]: https://doc.rust-lang.org/std/default/trait.Default.html
-#[derive(Clone, Default)]
-pub struct Handler {
-  handler: Option<Arc<dyn Fn(KeyEvent) + 'static + Send + Sync>>,
+pub struct Handler<T> {
+  handler: Option<Arc<dyn Fn(T) + 'static + Send + Sync>>,
 }
 
-impl Handler {
+impl<T> Default for Handler<T> {
+  fn default() -> Self {
+    Self { handler: None }
+  }
+}
+
+impl<T> Clone for Handler<T> {
+  fn clone(&self) -> Self {
+    Self {
+      handler: self.handler.clone(),
+    }
+  }
+}
+
+impl<T> Handler<T> {
   /// Call the inner function on the provided [`KeyEvent`]
   ///
   /// [`KeyEvent`]: struct.KeyEvent.html
-  pub fn handle(&self, event: KeyEvent) {
+  pub fn handle(&self, event: T) {
     self.handle_or(event, |_| {});
   }
 
@@ -72,9 +83,9 @@ impl Handler {
   /// the provided [`KeyEvent`].
   ///
   /// [`KeyEvent`]: struct.KeyEvent.html
-  pub fn handle_or<F>(&self, event: KeyEvent, alternative_handler: F)
+  pub fn handle_or<F>(&self, event: T, alternative_handler: F)
   where
-    F: FnOnce(KeyEvent),
+    F: FnOnce(T),
   {
     if let Some(handler) = &self.handler {
       handler(event);
@@ -84,9 +95,9 @@ impl Handler {
   }
 }
 
-impl<F> From<F> for Handler
+impl<F, T> From<F> for Handler<T>
 where
-  F: Fn(KeyEvent) + 'static + Send + Sync,
+  F: Fn(T) + 'static + Send + Sync,
 {
   fn from(f: F) -> Self {
     Self {
@@ -95,8 +106,8 @@ where
   }
 }
 
-impl From<&Handler> for Handler {
-  fn from(handler: &Handler) -> Self {
+impl<T> From<&Handler<T>> for Handler<T> {
+  fn from(handler: &Handler<T>) -> Self {
     handler.clone()
   }
 }

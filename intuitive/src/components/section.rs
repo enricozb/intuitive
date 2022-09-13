@@ -6,7 +6,7 @@ use tui::{
 use crate::{
   components::{children::Children, Component},
   element::{Any as AnyElement, Element},
-  event::{KeyEvent, KeyHandler},
+  event::{KeyEvent, KeyHandler, MouseEvent, MouseHandler},
   style::Style,
   terminal::{Frame, Rect},
   text::Spans,
@@ -42,7 +42,9 @@ pub struct Section {
   pub border: Style,
 
   pub children: Children<1>,
+
   pub on_key: KeyHandler,
+  pub on_mouse: MouseHandler,
 }
 
 impl Component for Section {
@@ -53,6 +55,7 @@ impl Component for Section {
 
       content: self.children[0].render(),
       on_key: self.on_key.clone(),
+      on_mouse: self.on_mouse.clone(),
     })
   }
 }
@@ -63,11 +66,26 @@ struct Frozen {
 
   content: AnyElement,
   on_key: KeyHandler,
+  on_mouse: MouseHandler,
 }
 
 impl Element for Frozen {
   fn on_key(&self, event: KeyEvent) {
     self.on_key.handle_or(event, |event| self.content.on_key(event));
+  }
+
+  fn on_mouse(&self, rect: Rect, event: MouseEvent) {
+    self.on_mouse.handle_or(event, |event| {
+      self.content.on_mouse(
+        Rect {
+          x: rect.x + 1,
+          y: rect.y - 1,
+          width: rect.width - 1,
+          height: rect.height - 1,
+        },
+        event,
+      )
+    });
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {

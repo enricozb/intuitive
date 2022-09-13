@@ -4,7 +4,7 @@ use super::{Flex, FlexArray};
 use crate::{
   components::{children::Children, Component},
   element::{Any as AnyElement, Element},
-  event::{KeyEvent, KeyHandler},
+  event::{self, KeyEvent, KeyHandler, MouseEvent, MouseHandler},
   terminal::{Frame, Rect},
 };
 
@@ -40,6 +40,7 @@ pub struct Stack<const N: usize> {
 
   pub children: Children<N>,
   pub on_key: KeyHandler,
+  pub on_mouse: MouseHandler,
 }
 
 impl<const N: usize> Component for Stack<N> {
@@ -49,6 +50,7 @@ impl<const N: usize> Component for Stack<N> {
 
       children: self.children.render(),
       on_key: self.on_key.clone(),
+      on_mouse: self.on_mouse.clone(),
     })
   }
 }
@@ -58,6 +60,7 @@ struct Frozen<const N: usize> {
 
   children: [AnyElement; N],
   on_key: KeyHandler,
+  on_mouse: MouseHandler,
 }
 
 impl<const N: usize> Frozen<N> {
@@ -95,6 +98,18 @@ impl<const N: usize> Frozen<N> {
 impl<const N: usize> Element for Frozen<N> {
   fn on_key(&self, event: KeyEvent) {
     self.on_key.handle(event);
+  }
+
+  fn on_mouse(&self, rect: Rect, event: MouseEvent) {
+    self.on_mouse.handle_or(event, |event| {
+      for (i, rect) in self.layout(rect).into_iter().enumerate() {
+        if event::is_within(&event, rect) {
+          self.children[i].on_mouse(rect, event);
+
+          break;
+        }
+      }
+    });
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {

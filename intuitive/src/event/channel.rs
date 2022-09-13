@@ -50,6 +50,7 @@ pub fn start_crossterm_events() {
   thread::spawn(move || loop {
     let event = match crossterm_event::read().expect("read") {
       CrosstermEvent::Key(event) => Event::Key(event),
+      CrosstermEvent::Mouse(event) => Event::Mouse(event),
       CrosstermEvent::Resize(..) => Event::Render,
 
       _ => continue,

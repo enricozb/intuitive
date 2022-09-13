@@ -4,7 +4,7 @@ use std::{ops::Deref, sync::Arc};
 
 use crate::{
   components::{Component, Empty},
-  event::KeyEvent,
+  event::{KeyEvent, MouseEvent},
   terminal::{Frame, Rect},
 };
 
@@ -66,4 +66,5 @@ impl<C: Component> From<C> for Any {
 pub trait Element {
   fn draw(&self, _rect: Rect, _frame: &mut Frame) {}
   fn on_key(&self, _event: KeyEvent) {}
+  fn on_mouse(&self, _rect: Rect, _event: MouseEvent) {}
 }

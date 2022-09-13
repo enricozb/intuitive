@@ -14,7 +14,7 @@ use crate::{
   components::Any as AnyComponent,
   element::Any as AnyElement,
   error::Result,
-  event::{self, Event},
+  event::{self, Event, MouseEventKind},
   state,
 };
 
@@ -64,20 +64,29 @@ impl Terminal {
   }
 
   pub fn run(&mut self) -> Result<()> {
-    let component = self.root.render();
+    let mut component = self.root.render();
     state::render_done();
+
+    let mut skip_next_render = false;
 
     self.draw(&component)?;
 
     loop {
       let event = event::read()?;
 
-      let component = self.root.render();
-      state::render_done();
+      if !skip_next_render {
+        component = self.root.render();
+        state::render_done();
+      }
+      skip_next_render = false;
 
       match event {
         Event::Render => self.draw(&component)?,
         Event::Key(event) => component.on_key(event),
+
+        Event::Mouse(event) if event.kind == MouseEventKind::Moved => skip_next_render = true,
+        Event::Mouse(event) => component.on_mouse(self.terminal.size()?, event),
+
         Event::Quit => break,
       }
     }
