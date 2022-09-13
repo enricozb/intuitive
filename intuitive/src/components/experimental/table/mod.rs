@@ -11,9 +11,9 @@ use crate::{
   components::Component,
   element::{Any as AnyElement, Element},
   event::{KeyCode, KeyEvent, KeyHandler},
-  spans::Spans,
   state::{use_state, State},
   terminal::{Frame, Rect},
+  text::Spans,
 };
 
 /// A component to render tabular data.

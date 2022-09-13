@@ -7,9 +7,9 @@ use crate::{
   components::{children::Children, Component},
   element::{Any as AnyElement, Element},
   event::{KeyEvent, KeyHandler},
-  spans::Spans,
   style::Style,
   terminal::{Frame, Rect},
+  text::Spans,
 };
 
 /// A component with a border and a title.

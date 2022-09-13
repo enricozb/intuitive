@@ -108,10 +108,10 @@ pub mod components;
 pub mod element;
 pub mod error;
 pub mod event;
-pub mod spans;
 pub mod state;
 pub mod style;
 pub mod terminal;
+pub mod text;
 
 /// Helper attribute macro for creating functional components.
 ///

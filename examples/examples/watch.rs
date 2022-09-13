@@ -11,10 +11,10 @@ use intuitive::{
   components::{stack::Flex::*, HStack, Section, Text, VStack},
   error::Result,
   on_key, render,
-  spans::Span,
   state::State,
   style::Color,
   terminal::Terminal,
+  text::Span,
 };
 
 #[component(Top)]

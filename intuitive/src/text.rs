@@ -108,3 +108,29 @@ impl Deref for Spans {
     &self.0
   }
 }
+
+#[derive(Clone)]
+pub struct Lines(pub Vec<Spans>);
+
+impl<S: Into<Spans>> From<S> for Lines {
+  fn from(spans: S) -> Self {
+    let mut expanded = Vec::new();
+
+    for span in spans.into() {
+      let lines: Vec<&str> = span.text.split('\n').collect();
+      expanded.push(Some(Span::new(lines[0], span.style)));
+
+      for line in &lines[1..] {
+        expanded.push(None);
+        expanded.push(Some(Span::new(*line, span.style)));
+      }
+    }
+
+    let split = expanded
+      .split(|span| span.is_none())
+      .map(|spans| Spans::new(spans.into_iter().flatten().cloned().collect::<Vec<Span>>()))
+      .collect();
+
+    Lines(split)
+  }
+}
