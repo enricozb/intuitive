@@ -34,7 +34,7 @@ pub struct Scroll {
 
 impl Component for Scroll {
   fn render(&self) -> AnyElement {
-    let offset = use_state(|| 0);
+    let buffer_offset = use_state(|| 0);
 
     AnyElement::new(Frozen {
       title: self.title.clone(),
@@ -42,7 +42,7 @@ impl Component for Scroll {
       lines: self.text.clone().into(),
       on_key: self.on_key.clone(),
 
-      offset,
+      buffer_offset,
     })
   }
 }
@@ -53,15 +53,23 @@ struct Frozen {
   border: Style,
   on_key: KeyHandler,
 
-  offset: State<u16>,
+  buffer_offset: State<u16>,
 }
 
 impl Frozen {
   fn scroll_height(&self, rect: Rect) -> u16 {
     let num_lines = self.lines.0.len();
-    let height = (rect.height - 2) as usize;
+    let height = rect.height.saturating_sub(2) as usize;
 
     cmp::min(height, height * height / num_lines) as u16
+  }
+
+  fn max_buffer_offset(&self, rect: Rect) -> u16 {
+    self.lines.0.len().saturating_sub(rect.height.saturating_sub(2) as usize) as u16
+  }
+
+  fn max_scroll_offset(&self, rect: Rect) -> u16 {
+    rect.height.saturating_sub(2) - self.scroll_height(rect)
   }
 }
 
@@ -71,12 +79,11 @@ impl Element for Frozen {
   }
 
   fn on_mouse(&self, rect: Rect, event: MouseEvent) {
-    let scroll_height = self.scroll_height(rect);
-    let max_offset = rect.height - scroll_height - 2;
-
     match event.kind {
-      MouseEventKind::ScrollDown => self.offset.update(|offset| cmp::min(max_offset, offset + 1)),
-      MouseEventKind::ScrollUp => self.offset.update(|offset| offset.saturating_sub(1)),
+      MouseEventKind::ScrollDown => self
+        .buffer_offset
+        .update(|offset| cmp::min(self.max_buffer_offset(rect), offset + 1)),
+      MouseEventKind::ScrollUp => self.buffer_offset.update(|offset| offset.saturating_sub(1)),
 
       _ => (),
     }
@@ -94,19 +101,29 @@ impl Widget for &Frozen {
       .borders(Borders::ALL)
       .border_style(self.border.into());
 
-    let offset = self.offset.get();
+    let buffer_offset = self.buffer_offset.get();
+
+    let lines = self
+      .lines
+      .0
+      .iter()
+      .skip(buffer_offset as usize)
+      .cloned()
+      .map(TuiSpans::from)
+      .collect();
 
     // render text
-    let paragraph =
-      Paragraph::new::<Vec<TuiSpans>>(self.lines.0.iter().skip(offset as usize).cloned().map(TuiSpans::from).collect()).block(block);
-
+    let paragraph = Paragraph::new::<Vec<TuiSpans>>(lines).block(block);
     Widget::render(paragraph, rect, buf);
 
+    // render border & scroll-bar
     buf.set_string(rect.right() - 1, rect.top(), "▲", self.border.into());
     buf.set_string(rect.right() - 1, rect.bottom() - 1, "▼", self.border.into());
 
+    let scroll_offset = self.max_scroll_offset(rect) * buffer_offset / self.max_buffer_offset(rect);
+
     for y in 1..=self.scroll_height(rect) {
-      buf.set_string(rect.x + rect.width - 1, rect.y + y + offset, "█", self.border.into());
+      buf.set_string(rect.x + rect.width - 1, rect.y + y + scroll_offset, "█", self.border.into());
     }
   }
 }
