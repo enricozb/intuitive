@@ -43,7 +43,7 @@ pub fn re_render() -> Result<()> {
 ///
 /// [`KeyHandler`]: struct.KeyHandler.html
 pub fn quit() {
-  send(Event::Quit).expect("quit")
+  send(Event::Quit).expect("quit");
 }
 
 pub fn start_crossterm_events() {

@@ -27,7 +27,7 @@ impl<'a, const N: usize> Table<'a, N> {
       .map(|row| {
         let mut lengths = [0; N];
         for (i, cell) in row.iter().enumerate() {
-          lengths[i] = Spans::width(cell)
+          lengths[i] = Spans::width(cell);
         }
 
         lengths

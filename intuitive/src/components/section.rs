@@ -84,7 +84,7 @@ impl Element for Frozen {
           height: rect.height - 1,
         },
         event,
-      )
+      );
     });
   }
 

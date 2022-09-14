@@ -10,7 +10,8 @@ use self::widget::Table as TableWidget;
 use crate::{
   components::Component,
   element::{Any as AnyElement, Element},
-  event::{KeyCode, KeyEvent, KeyHandler},
+  event::{KeyEvent, KeyHandler},
+  on_key,
   state::{use_state, State},
   terminal::{Frame, Rect},
   text::Spans,
@@ -49,16 +50,13 @@ struct Frozen<const N: usize> {
 
 impl<const N: usize> Element for Frozen<N> {
   fn on_key(&self, event: KeyEvent) {
-    self.on_key.handle_or(event, |event| {
-      use KeyCode::*;
-
-      match event {
+    self.on_key.handle_or(
+      event,
+      on_key! {
         KeyEvent { code: Char('j'), .. } => self.index.update(|i| if i + 1 < self.rows.len() { i + 1 } else { *i }),
         KeyEvent { code: Char('k'), .. } => self.index.update(|i| i.saturating_sub(1)),
-
-        _ => (),
-      }
-    });
+      },
+    );
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {

@@ -75,7 +75,7 @@ impl Frozen {
 
 impl Element for Frozen {
   fn on_key(&self, event: KeyEvent) {
-    self.on_key.handle(event)
+    self.on_key.handle(event);
   }
 
   fn on_mouse(&self, rect: Rect, event: MouseEvent) {

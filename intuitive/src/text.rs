@@ -128,7 +128,7 @@ impl<S: Into<Spans>> From<S> for Lines {
 
     let split = expanded
       .split(|span| span.is_none())
-      .map(|spans| Spans::new(spans.into_iter().flatten().cloned().collect::<Vec<Span>>()))
+      .map(|spans| Spans::new(spans.iter().flatten().cloned().collect::<Vec<Span>>()))
       .collect();
 
     Lines(split)
