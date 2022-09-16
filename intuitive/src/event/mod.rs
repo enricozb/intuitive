@@ -25,11 +25,11 @@ pub(crate) enum Event {
 /// [`KeyEvent`] as a parameter. It implements `From<Fn(KeyEvent) + 'static + Send + Sync>`,
 /// which allows for code like this:
 /// ```rust
-/// # use intuitive::{component, components::Text, render};
+/// # use intuitive::{component, components::Text, render, on_key};
 /// #
 /// #[component(Root)]
 /// fn render() {
-///   let on_key = |event| {};
+///   let on_key = on_key! {};
 ///
 ///   render! {
 ///     Text(text: "Hi There", on_key)

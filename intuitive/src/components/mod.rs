@@ -59,7 +59,7 @@
 //! # };
 //! #
 //! #[component(Input)]
-//! fn render(title: String) -> element::Any {
+//! fn render(title: String) {
 //!   let text = use_state(|| String::new());
 //!
 //!   let on_key = on_key! { [text]

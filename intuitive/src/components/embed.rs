@@ -34,7 +34,7 @@ impl Default for Content {
 /// # use intuitive::{component, components::{children::Children, HStack, VStack, Empty, Embed}, render};
 /// #
 /// #[component(Centered)]
-/// pub fn render(children: Children<1>) -> AnyElement {
+/// pub fn render(children: Children<1>) {
 ///   render! {
 ///     VStack() {
 ///       Empty()

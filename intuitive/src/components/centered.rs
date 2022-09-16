@@ -53,9 +53,8 @@ mod tests {
     let called = State::new(false);
     let on_key_called = called.clone();
 
-    let on_key = move |event| match event {
+    let on_key = on_key! {
       KeyEvent { code: Esc, .. } => on_key_called.set(true),
-      _ => (),
     };
 
     let centered: AnyElement = render! {
