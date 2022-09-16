@@ -8,6 +8,9 @@
 - custom components must implement `Default`
 
 # todo
-- add a conditional component
+- add a conditional component, or `if` syntax to `render!`
 - make `KeyHandler` have a return type, specifically something like a `Continue`,
   for `KeyEvent` propagation.
+- consider giving `KeyHandler` an additional parameter, specifically a struct that
+  holds state that the `KeyHandler` can inspect. this could handle `onEnter` use
+  case for input text boxes.
