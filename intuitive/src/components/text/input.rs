@@ -21,22 +21,27 @@ pub fn render(title: Spans, border: Style, on_key: KeyHandler, on_mouse: MouseHa
   let text = use_state(|| String::new());
 
   let on_key = on_key.then(on_key! { [cursor, text]
+    KeyEvent { code: Char('a'), modifiers: KeyModifiers::CONTROL, .. } => cursor.set(0),
+    KeyEvent { code: Char('e'), modifiers: KeyModifiers::CONTROL, .. } => cursor.set(text.get().len()),
+
+    KeyEvent { code: Left, .. } => {
+      cursor.update(|cursor| cursor.saturating_sub(1));
+    },
+
+    KeyEvent { code: Right, .. } => {
+      cursor.update(|cursor| cmp::min(cursor + 1, text.get().len()));
+    },
+
     KeyEvent { code: Char(c), .. } => {
       text.mutate(|text| text.insert(cursor.get(), c));
       cursor.update(|cursor| cursor + 1);
     },
+
     KeyEvent { code: Backspace, .. } => {
       if cursor.get() > 0 && text.get().len() > 0 {
         text.mutate(|text| text.remove(cursor.get() - 1));
         cursor.update(|cursor| cursor - 1);
       }
-    },
-
-    KeyEvent { code: Left, .. } => {
-      cursor.update(|cursor| cursor.saturating_sub(1));
-    },
-    KeyEvent { code: Right, .. } => {
-      cursor.update(|cursor| cmp::min(cursor + 1, text.get().len()));
     },
   });
 
@@ -66,15 +71,15 @@ struct Frozen {
 
 impl Element for Frozen {
   fn draw(&self, rect: Rect, frame: &mut Frame) {
-    if self.cursor < rect.width {
-      let widget = Paragraph::new::<TuiSpans>(self.text.clone().into());
-      frame.render_widget(widget, rect);
-      frame.set_cursor(rect.x + self.cursor as u16, rect.y);
+    let (text, cursor) = if self.cursor < rect.width {
+      (self.text.clone().into(), rect.x + self.cursor)
     } else {
       let offset = (self.cursor - rect.width) as usize + 1;
-      let widget = Paragraph::new::<TuiSpans>(self.text[offset..].into());
-      frame.render_widget(widget, rect);
-      frame.set_cursor(rect.right() - 1, rect.y);
-    }
+      (self.text[offset..].into(), rect.right() - 1)
+    };
+
+    let widget = Paragraph::new::<TuiSpans>(text);
+    frame.render_widget(widget, rect);
+    frame.set_cursor(cursor, rect.y);
   }
 }
