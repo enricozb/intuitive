@@ -2,7 +2,8 @@ use tui::layout::{Constraint, Direction, Layout};
 
 use super::{Flex, FlexArray};
 use crate::{
-  components::{children::Children, Component},
+  component,
+  components::children::Children,
   element::{Any as AnyElement, Element},
   event::{self, KeyEvent, KeyHandler, MouseEvent, MouseHandler},
   terminal::{Frame, Rect},
@@ -34,25 +35,15 @@ use crate::{
 ///
 /// [`flex` css property]: https://developer.mozilla.org/en-US/docs/Web/CSS/flex
 /// [`FlexArray`]: struct.FlexArray.html
-#[derive(Clone, Default)]
-pub struct Stack<const N: usize> {
-  pub flex: FlexArray<N>,
+#[component(Stack<const N: usize>)]
+pub fn render(flex: FlexArray<N>, children: Children<N>, on_key: KeyHandler, on_mouse: MouseHandler) {
+  AnyElement::new(Frozen {
+    flex: *flex,
 
-  pub children: Children<N>,
-  pub on_key: KeyHandler,
-  pub on_mouse: MouseHandler,
-}
-
-impl<const N: usize> Component for Stack<N> {
-  fn render(&self) -> AnyElement {
-    AnyElement::new(Frozen {
-      flex: self.flex,
-
-      children: self.children.render(),
-      on_key: self.on_key.clone(),
-      on_mouse: self.on_mouse.clone(),
-    })
-  }
+    children: children.render(),
+    on_key: on_key.clone(),
+    on_mouse: on_mouse.clone(),
+  })
 }
 
 struct Frozen<const N: usize> {

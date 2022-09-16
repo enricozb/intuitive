@@ -1,7 +1,7 @@
 use tui::{text::Spans as TuiSpans, widgets::Paragraph};
 
 use crate::{
-  components::Component,
+  component,
   element::{Any as AnyElement, Element},
   event::{KeyEvent, KeyHandler, MouseEvent, MouseHandler},
   terminal::{Frame, Rect},
@@ -11,22 +11,13 @@ use crate::{
 /// A component that displays text.
 ///
 /// `Text` renders the `Spans` passed into it.
-#[derive(Default)]
-pub struct Text {
-  pub text: Spans,
-
-  pub on_key: KeyHandler,
-  pub on_mouse: MouseHandler,
-}
-
-impl Component for Text {
-  fn render(&self) -> AnyElement {
-    AnyElement::new(Frozen {
-      lines: self.text.clone().into(),
-      on_key: self.on_key.clone(),
-      on_mouse: self.on_mouse.clone(),
-    })
-  }
+#[component(Text)]
+pub fn render(text: Spans, on_key: KeyHandler, on_mouse: MouseHandler) {
+  AnyElement::new(Frozen {
+    lines: text.clone().into(),
+    on_key: on_key.clone(),
+    on_mouse: on_mouse.clone(),
+  })
 }
 
 struct Frozen {

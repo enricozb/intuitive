@@ -4,7 +4,8 @@ use tui::{
 };
 
 use crate::{
-  components::{children::Children, Component},
+  component,
+  components::children::Children,
   element::{Any as AnyElement, Element},
   event::{KeyEvent, KeyHandler, MouseEvent, MouseHandler},
   style::Style,
@@ -36,28 +37,16 @@ use crate::{
 /// the title.
 ///
 /// [`Style`]: ../style/struct.Style.html
-#[derive(Clone, Default)]
-pub struct Section {
-  pub title: Spans,
-  pub border: Style,
+#[component(Section)]
+pub fn render(title: Spans, border: Style, children: Children<1>, on_key: KeyHandler, on_mouse: MouseHandler) {
+  AnyElement::new(Frozen {
+    title: title.clone(),
+    border: *border,
 
-  pub children: Children<1>,
-
-  pub on_key: KeyHandler,
-  pub on_mouse: MouseHandler,
-}
-
-impl Component for Section {
-  fn render(&self) -> AnyElement {
-    AnyElement::new(Frozen {
-      title: self.title.clone(),
-      border: self.border,
-
-      content: self.children[0].render(),
-      on_key: self.on_key.clone(),
-      on_mouse: self.on_mouse.clone(),
-    })
-  }
+    content: children[0].render(),
+    on_key: on_key.clone(),
+    on_mouse: on_mouse.clone(),
+  })
 }
 
 struct Frozen {

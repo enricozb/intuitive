@@ -68,7 +68,9 @@ pub fn parse(input: TokenStream) -> TokenStream {
           #(#arms,)*
 
           _ => (),
-        }
+        };
+
+        #crate_name::event::handler::Propagate::Stop
       }
     }
   }

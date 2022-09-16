@@ -34,7 +34,7 @@ impl Deref for Any {
   }
 }
 
-impl<C: Component> From<C> for Any {
+impl<C: Component + 'static> From<C> for Any {
   fn from(component: C) -> Self {
     component.render()
   }

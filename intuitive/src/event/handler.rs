@@ -1,13 +1,21 @@
 use std::sync::Arc;
 
+/// Whether to propagate the event to the next handler.
+pub enum Propagate {
+  Next,
+  Stop,
+}
+
 /// A generic handler for mouse and keyboard events.
 pub struct Handler<T> {
-  handler: Option<Arc<dyn Fn(T) + 'static + Send + Sync>>,
+  handler: Arc<dyn Fn(T) -> Propagate + 'static + Send + Sync>,
 }
 
 impl<T> Default for Handler<T> {
   fn default() -> Self {
-    Self { handler: None }
+    Self {
+      handler: Arc::new(|_| Propagate::Next),
+    }
   }
 }
 
@@ -19,33 +27,30 @@ impl<T> Clone for Handler<T> {
   }
 }
 
-impl<T> Handler<T> {
+impl<T: Copy> Handler<T> {
   /// Call the handler on the event.
   pub fn handle(&self, event: T) {
     self.handle_or(event, |_| {});
   }
 
   /// Call the handler on the event, defaulting to the alternative_handler.
-  pub fn handle_or<F>(&self, event: T, alternative_handler: F)
+  pub fn handle_or<F, R>(&self, event: T, alternative_handler: F)
   where
-    F: FnOnce(T),
+    F: FnOnce(T) -> R,
   {
-    if let Some(handler) = &self.handler {
-      handler(event);
-    } else {
-      alternative_handler(event);
+    match (self.handler)(event) {
+      Propagate::Next => drop(alternative_handler(event)),
+      Propagate::Stop => (),
     }
   }
 }
 
 impl<F, T> From<F> for Handler<T>
 where
-  F: Fn(T) + 'static + Send + Sync,
+  F: Fn(T) -> Propagate + 'static + Send + Sync,
 {
   fn from(f: F) -> Self {
-    Self {
-      handler: Some(Arc::new(f)),
-    }
+    Self { handler: Arc::new(f) }
   }
 }
 
