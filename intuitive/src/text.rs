@@ -20,6 +20,10 @@ impl Span {
       style: style.into(),
     }
   }
+
+  pub fn len(&self) -> usize {
+    self.text.len()
+  }
 }
 
 impl<S: Into<String>> From<S> for Span {
@@ -72,11 +76,21 @@ impl Spans {
   pub fn new(spans: Vec<Span>) -> Self {
     Self(spans)
   }
+
+  pub fn len(&self) -> usize {
+    self.0.iter().map(|span| span.len()).sum()
+  }
 }
 
 impl<S: Into<Span>> From<S> for Spans {
   fn from(s: S) -> Self {
     Spans(vec![s.into()])
+  }
+}
+
+impl<'a> From<&'a Spans> for Spans {
+  fn from(spans: &'a Spans) -> Self {
+    spans.clone()
   }
 }
 

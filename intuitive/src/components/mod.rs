@@ -202,7 +202,7 @@ pub use self::{
   empty::Empty,
   section::Section,
   stack::{horizontal::Stack as HStack, vertical::Stack as VStack},
-  text::Text,
+  text::{input::Input as TextInput, Text},
 };
 use crate::element::Any as AnyElement;
 

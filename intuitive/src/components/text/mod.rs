@@ -1,3 +1,5 @@
+pub mod input;
+
 use tui::{text::Spans as TuiSpans, widgets::Paragraph};
 
 use crate::{

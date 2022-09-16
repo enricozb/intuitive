@@ -37,3 +37,9 @@ impl From<Style> for TuiStyle {
     style.0
   }
 }
+
+impl<'a> From<&'a Style> for Style {
+  fn from(style: &'a Style) -> Self {
+    *style
+  }
+}

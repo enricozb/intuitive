@@ -27,7 +27,7 @@ impl<T> Clone for Handler<T> {
   }
 }
 
-impl<T: Copy> Handler<T> {
+impl<T: 'static + Copy> Handler<T> {
   /// Call the handler on the event.
   pub fn handle(&self, event: T) {
     self.handle_or(event, |_| {});
@@ -42,6 +42,21 @@ impl<T: Copy> Handler<T> {
       Propagate::Next => drop(alternative_handler(event)),
       Propagate::Stop => (),
     }
+  }
+
+  /// Create a new handler that propagates to `next_handler`.
+  ///
+  /// Propagation only occurs if this handler returns `Propagate::Next`.
+  pub fn then<F>(&self, next_handler: F) -> Self
+  where
+    F: Fn(T) -> Propagate + 'static + Send + Sync,
+  {
+    let handler = self.handler.clone();
+
+    Handler::from(move |event| match handler(event) {
+      Propagate::Next => next_handler(event),
+      Propagate::Stop => Propagate::Stop,
+    })
   }
 }
 

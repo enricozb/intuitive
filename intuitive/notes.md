@@ -9,8 +9,9 @@
 
 # todo
 - add a conditional component, or `if` syntax to `render!`
-- make `KeyHandler` have a return type, specifically something like a `Continue`,
-  for `KeyEvent` propagation.
 - consider giving `KeyHandler` an additional parameter, specifically a struct that
   holds state that the `KeyHandler` can inspect. this could handle `onEnter` use
   case for input text boxes.
+- create a `use_memo` hook, as it
+  1. is probably useful
+  2. could serve as the primitive the `use_state`
