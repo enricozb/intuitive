@@ -258,7 +258,5 @@ use crate::element::Any as AnyElement;
 /// [`Section` component source]: ../../src/intuitive/components/section.rs.html
 /// [`Children<N>`]: children/struct.Children.html
 pub trait Component {
-  fn render(&self) -> AnyElement
-  where
-    Self: 'static;
+  fn render(&self) -> AnyElement;
 }
