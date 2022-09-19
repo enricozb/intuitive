@@ -1,5 +1,3 @@
-pub mod input;
-
 use tui::{text::Spans as TuiSpans, widgets::Paragraph};
 
 use crate::{
@@ -7,16 +5,18 @@ use crate::{
   element::{Any as AnyElement, Element},
   event::{KeyEvent, KeyHandler, MouseEvent, MouseHandler},
   terminal::{Frame, Rect},
-  text::{Lines, Spans},
+  text::Lines,
 };
 
 /// A component that displays text.
 ///
-/// `Text` renders the `Spans` passed into it.
+/// `Text` renders the [`Lines`] passed into it.
+///
+/// [`Lines`]: ../text/struct.Lines.html
 #[component(Text)]
-pub fn render(text: Spans, on_key: KeyHandler, on_mouse: MouseHandler) {
+pub fn render(text: Lines, on_key: KeyHandler, on_mouse: MouseHandler) {
   AnyElement::new(Frozen {
-    lines: text.clone().into(),
+    lines: text.clone(),
     on_key: on_key.clone(),
     on_mouse: on_mouse.clone(),
   })

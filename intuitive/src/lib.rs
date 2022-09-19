@@ -1,4 +1,4 @@
-#![feature(doc_auto_cfg)]
+#![cfg_attr(feature = "unstable-doc-cfg", feature(doc_cfg))]
 
 //! # Intuitive
 //! Intuitive is a component-based library for creating text-based user interfaces

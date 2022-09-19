@@ -10,7 +10,7 @@ pub use tui::style::{Color, Modifier};
 /// and can be merged together when multiple styles are applied.
 ///
 /// `Style` also conveniently implements `From<Color>`, which creates a style
-/// with the provided color as the froeground color.
+/// with the provided color as the foreground color.
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct Style(TuiStyle);
 

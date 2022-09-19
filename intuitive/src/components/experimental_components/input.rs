@@ -1,3 +1,5 @@
+//! A module containing the `Input` component.
+
 use std::cmp;
 
 use tui::{text::Spans as TuiSpans, widgets::Paragraph};
@@ -15,6 +17,54 @@ use crate::{
 };
 
 /// A single-line input component with cursor controls.
+///
+/// This is a smart input box with the following features:
+///   - rendering a cursor
+///   - scrolling on overflow
+///   - supports navigating with arrow keys
+///   - supports navigating with `ctrl+a` and `ctrl+e`
+///   - has a fixed single-line height of 3 rows
+///
+/// ## Vertical Alignment
+///
+/// Since this component always renders as three blocks high,
+/// when more space is available it vertically centers itself.
+/// In order to align this element to the top, you will need
+/// to use [`VStack`] along with [`Flex::Block`] and properly
+/// route the key events:
+///
+/// ```rust
+/// # use intuitive::{
+/// #   component,
+/// #   components::{stack::Flex::*, Embed, Empty, experimental::input::Input, VStack},
+/// #   element,
+/// #   error::Result,
+/// #   on_key, render,
+/// #   terminal::Terminal,
+/// # };
+/// #
+/// #[component(Root)]
+/// fn render() {
+///   let input: element::Any = render! {
+///     Input(title: "Input Box")
+///   };
+///
+///   let on_key = on_key! { [input]
+///     KeyEvent { code: Esc, .. } => event::quit(),
+///     event => input.on_key(event),
+///   };
+///
+///   render! {
+///     VStack(flex: [Block(3), Grow(1)], on_key) {
+///       Embed(content: input)
+///       Empty()
+///     }
+///   }
+/// }
+/// ```
+///
+/// [`VStack`]: struct.VStack.html
+/// [`Flex::Block`]: stack/enum.Flex.html#variant.Block
 #[component(Input)]
 pub fn render(title: Spans, border: Style, on_key: KeyHandler, on_mouse: MouseHandler) {
   let cursor = use_state(|| 0usize);
@@ -45,6 +95,8 @@ pub fn render(title: Spans, border: Style, on_key: KeyHandler, on_mouse: MouseHa
     },
   });
 
+  // TODO(enricozb): consider adding (Vertical)Alignment as a property, that will
+  // align the input box to the top/middle/bottom.
   render! {
     VStack(flex: [Grow(1), Block(3), Grow(1)], on_key) {
       Empty()

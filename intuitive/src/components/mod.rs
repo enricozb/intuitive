@@ -181,12 +181,22 @@
 //! [Input Box]: #input-box
 //! [Input Box With Cursor]: #input-box-with-cursor
 //! [`render!`]: ../macro.render.html
-/// [`Component::render`]: #tymethod.render
+//! [`Component::render`]: #tymethod.render
+
 pub mod children;
 pub mod stack;
 
-#[cfg(any(feature = "experimental", doc, test))]
-pub mod experimental;
+mod experimental_components;
+#[doc_cfg::doc_cfg(feature = "experimental")]
+pub mod experimental {
+  //! An experimental collection of components not subject to semver.
+  //!
+  //! Components in this crate are subject to change without guarantees from semver.
+  //! This is a staging ground for potential future components. Furthermore, components
+  //! here may or may not have any accompanying documentation.
+
+  pub use super::experimental_components::*;
+}
 
 mod any;
 mod centered;
@@ -202,7 +212,7 @@ pub use self::{
   empty::Empty,
   section::Section,
   stack::{horizontal::Stack as HStack, vertical::Stack as VStack},
-  text::{input::Input as TextInput, Text},
+  text::Text,
 };
 use crate::element::Any as AnyElement;
 

@@ -7,6 +7,15 @@ use tui::text::{Span as TuiSpan, Spans as TuiSpans};
 use crate::style::Style;
 
 /// Text with a specific style.
+///
+/// As `Span` can only hold a single style, components typically accept [`Spans`]
+/// or [`Lines`] when accepting text.
+///
+/// `Span` also implements `From<S: Into<String>>`, making it easy to pass
+/// in string-like values to components accepting [`Span`], [`Spans`], and [`Lines`].
+///
+/// [`Lines`]: struct.Lines.html
+/// [`Spans`]: struct.Spans.html
 #[derive(Default, Clone)]
 pub struct Span {
   pub text: String,
@@ -53,24 +62,21 @@ impl From<Span> for TuiSpan<'_> {
   }
 }
 
-/// Text with a variety of styles.
+/// A single line of text with a variety of styles.
 ///
-/// `Spans` can be thought of as `Vec<Span>`, as they implement [`IntoIterator`],
-/// and [`Deref`] into a [`Vec`]. Usually, components that accept text (such as
-/// [`Section`] accepting a title), will accept `Spans`, as they represent
-/// text with potentially multiple styles. `Spans` also implement
-/// `From<S: Into<Span>>`, making it easy to pass values of many types to components
-/// accepting `Spans`, such as [`String`], [`Span`], and [`&str`].
+/// Components that accept multiple lines of text should accept [`Lines`].
+/// Components that accept single lines of text should accept `Spans`.
 ///
-/// [`Deref`]: https://doc.rust-lang.org/std/ops/trait.Deref.html
-/// [`IntoIterator`]: https://doc.rust-lang.org/std/iter/trait.IntoIterator.html
-/// [`Section`]: ../components/struct.Section.html
+/// `Spans` implement `From<S: Into<Span>>`, making it easy to pass values of
+/// many types such as [`String`], [`Span`] and [`&str`].
+///
+/// [`Lines`]: struct.Lines.html
 /// [`Span`]: struct.Span.html
 /// [`&str`]: https://doc.rust-lang.org/std/primitive.str.html
 /// [`String`]: https://doc.rust-lang.org/std/string/struct.String.html
 /// [`Vec`]: https://doc.rust-lang.org/std/vec/struct.Vec.html
 #[derive(Default, Clone)]
-pub struct Spans(Vec<Span>);
+pub struct Spans(pub Vec<Span>);
 
 impl Spans {
   pub fn new(spans: Vec<Span>) -> Self {
@@ -106,15 +112,6 @@ impl From<Spans> for TuiSpans<'_> {
   }
 }
 
-impl IntoIterator for Spans {
-  type Item = Span;
-  type IntoIter = std::vec::IntoIter<Self::Item>;
-
-  fn into_iter(self) -> Self::IntoIter {
-    self.0.into_iter()
-  }
-}
-
 impl Deref for Spans {
   type Target = Vec<Span>;
 
@@ -123,14 +120,31 @@ impl Deref for Spans {
   }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
+/// Multiple lines of text with a variety of styles.
+///
+/// Each [`Spans`] element in the inner [`Vec`] is considered a line. Components that
+/// accept multiple lines of text should accept `Lines`. Components that accept single
+/// lines of text should accept [`Spans`].
+///
+/// `Lines` implement `From<S: Into<Spans>>`, making it easy to pass values of
+/// many types such as [`Spans`], [`Span`], [`String`] and [`&str`].
+///
+/// **Note**: The implementation of `From<S: Into<Spans>>` for `Lines` automatically
+/// splits on newlines (`\n`). If you do not want this behavior, then construct
+/// `Lines` directly.
+///
+/// [`Vec`]: https://doc.rust-lang.org/std/vec/struct.Vec.html
+/// [`Spans`]: struct.Spans.html
+/// [`Span`]: struct.Span.html
+/// [`String`]: https://doc.rust-lang.org/std/string/struct.String.html
 pub struct Lines(pub Vec<Spans>);
 
 impl<S: Into<Spans>> From<S> for Lines {
   fn from(spans: S) -> Self {
     let mut expanded = Vec::new();
 
-    for span in spans.into() {
+    for span in spans.into().0 {
       let lines: Vec<&str> = span.text.split('\n').collect();
       expanded.push(Some(Span::new(lines[0], span.style)));
 

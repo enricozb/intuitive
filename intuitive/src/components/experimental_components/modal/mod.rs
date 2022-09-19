@@ -25,8 +25,8 @@ use crate::{
 ///
 /// For example, if we wanted to show an error message
 /// whenever the `Enter` key is pressed, we can do something like this:
-/// ```ignore
-/// # use intuitive::{component, components::{Centered, Section, Text, experimental::modal::use_modal}, style::Color, render, on_key};
+/// ```rust
+/// # use intuitive::{component, components::{Centered, Section, Text, experimental::modal::{use_modal, Modal}}, style::Color, render, on_key};
 /// #
 /// #[component(MyComponent)]
 /// fn render() {
@@ -35,7 +35,7 @@ use crate::{
 ///   let on_key = on_key! {
 ///     KeyEvent { code: Enter, .. } => modal.show(render! {
 ///       Centered() {
-///         Section(title: "Error", color: Color::Red) {
+///         Section(title: "Error", border: Color::Red) {
 ///           Text(text: "Enter was pressed!")
 ///         }
 ///       }
@@ -51,7 +51,7 @@ use crate::{
 /// }
 ///
 /// #[component(Root)]
-/// fn render() -> AnyElement {
+/// fn render() {
 ///   render! {
 ///     Modal() {
 ///       MyComponent()
