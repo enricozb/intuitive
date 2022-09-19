@@ -63,8 +63,8 @@ use crate::{
 /// }
 /// ```
 ///
-/// [`VStack`]: struct.VStack.html
-/// [`Flex::Block`]: stack/enum.Flex.html#variant.Block
+/// [`VStack`]: ../../struct.VStack.html
+/// [`Flex::Block`]: ../../stack/enum.Flex.html#variant.Block
 #[component(Input)]
 pub fn render(title: Spans, border: Style, on_key: KeyHandler, on_mouse: MouseHandler) {
   let cursor = use_state(|| 0usize);

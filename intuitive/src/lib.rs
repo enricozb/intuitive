@@ -162,6 +162,32 @@ pub mod text;
 /// have only a single child), and therefore the `on_key` handler could have been
 /// provided to any of the [`Centered`], [`Section`], or [`Text`] components above.
 ///
+/// # Generics
+/// When requiring generics, for example when accepting a variable number of children,
+/// they can be added into the attribute and then used in the parameters. For example:
+/// ```rust
+/// # use intuitive::{component, components::{Centered, children::Children, Section, Text}, on_key, state::use_state, render};
+/// #
+/// #[component(Root<const N: usize>)]
+/// pub fn render(title: String, children: Children<N>) {
+///   let text = use_state(String::new);
+///
+///   let on_key = on_key! { [text]
+///     KeyEvent { code: Char(c), .. } => text.mutate(|text| text.push(c)),
+///     KeyEvent { code: Char(c), .. } => text.mutate(|text| text.pop()),
+///     KeyEvent { code: Esc, .. } => event::quit(),
+///   };
+///
+///   render! {
+///     Centered() {
+///       Section(title) {
+///         Text(text: text.get(), on_key)
+///       }
+///     }
+///   }
+/// }
+/// ```
+///
 /// # Generated Component
 /// The generated component is a structure that implements the [`Component`] trait. It
 /// also has a an associated function `new() -> component::Any` that is used to create the
