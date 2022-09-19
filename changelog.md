@@ -1,5 +1,8 @@
-# 0.6.0
+# 0.6.1
+- fix relative links in docs
+- add docs for generics in `#[component]`
 
+# 0.6.0
 - remove unstable feature
 - add experimental `Scroll` and `Input` components
 - add `Span`, `Spans`, and `Lines` for text styling
