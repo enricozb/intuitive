@@ -215,14 +215,15 @@ pub use intuitive_macros::component;
 /// Helper macro for creating key handlers.
 ///
 /// # Details
-/// This macro is used to simplify a common pattern constructing a [`KeyHandler`] where:
-/// - [`event`], [`event::KeyEvent`] and [`event::KeyCode::*`] are brought into scope
-/// - [`State`]s need to be cloned before being moved into the key handler
+/// This macro is used to simplify a common pattern constructing a [`event::KeyHandler`] where:
+/// - [`event`], [`event::KeyEvent`], [`event::KeyCode`]`::*`, and [`event::handler::Propagate`] are brought into scope
+/// - [`state::State`]s need to be cloned before being moved into the key handler
 /// - The event is immediately `match`ed
 ///
 /// In addition to the above, this macro also:
 /// - implicitly introduces the `|event|` closure parameter
 /// - adds the catch-all `_ => ()` case to the `match` expression
+/// - returns [`event::handler::Propagate::Stop`]
 ///
 /// # Usage
 /// An example usage looks like the following:
@@ -256,17 +257,11 @@ pub use intuitive_macros::component;
 ///   };
 /// };
 /// ```
-///
-/// [`event`]: event/index.html
-/// [`event::KeyEvent`]: event/struct.KeyEvent.html
-/// [`event::KeyCode::*`]: event/enum.KeyCode.html
-/// [`State`]: state/struct.State.html
-/// [`KeyHandler`]: event/struct.KeyHandler.html
 pub use intuitive_macros::on_key;
 /// Macro for rendering components.
 ///
 /// # Usage
-/// This macro is meant to be used when returning from `Component::render`,
+/// This macro is meant to be used when returning from [`components::Component::render`],
 /// and uses a [SwiftUI](https://developer.apple.com/xcode/swiftui/)-like syntax.
 ///
 /// For example:

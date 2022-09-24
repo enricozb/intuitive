@@ -62,7 +62,7 @@ pub fn parse(input: TokenStream) -> TokenStream {
       #(let #capture = #capture.clone();)*
 
       move |event| {
-        use #crate_name::event::{self, KeyCode::*, KeyEvent, KeyModifiers};
+        use #crate_name::event::{self, KeyCode::*, KeyEvent, KeyModifiers, handler::Propagate};
 
         match event {
           #(#arms,)*

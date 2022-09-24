@@ -2,7 +2,9 @@ use std::sync::Arc;
 
 /// Whether to propagate the event to the next handler.
 pub enum Propagate {
+  /// Continues handler propagation.
   Next,
+  /// Stops handler propagation.
   Stop,
 }
 

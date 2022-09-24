@@ -8,6 +8,8 @@ pub use crossterm::event::{KeyCode, KeyEvent, KeyModifiers, MouseEvent, MouseEve
 pub use self::channel::{quit, re_render};
 pub(crate) use self::channel::{read, start_crossterm_events};
 use self::handler::Handler;
+#[cfg(doc)]
+use self::handler::Propagate;
 use crate::terminal::Rect;
 
 pub(crate) enum Event {
@@ -22,28 +24,32 @@ pub(crate) enum Event {
 /// # Creating a `KeyHandler`
 ///
 /// A `KeyHandler` is used to manipulate closures or functions that take in a
-/// [`KeyEvent`] as a parameter. It implements `From<Fn(KeyEvent) + 'static + Send + Sync>`,
-/// which allows for code like this:
+/// [`KeyEvent`] as a parameter, and return a [`Propagate`]. `KeyHandler`s are often
+/// created using the [`on_key!`] macro. For example,
 /// ```rust
-/// # use intuitive::{component, components::Text, render, on_key};
+/// # use intuitive::{component, components::Text, render, on_key, state::use_state};
 /// #
 /// #[component(Root)]
 /// fn render() {
-///   let on_key = on_key! {};
+///   let text = use_state(|| String::new());
+///
+///   let on_key = on_key! { [text]
+///     KeyEvent { code: Char(c), .. } => text.mutate(|text| text.push(c)),
+///   };
 ///
 ///   render! {
-///     Text(text: "Hi There", on_key)
+///     Text(text: format!("Hi There {}", text.get()), on_key)
 ///   }
 /// }
 /// ```
 ///
-/// `KeyHandler`s are often constructed using the [`on_key!`] macro.
-///
 /// # Using a `KeyHandler`
 ///
-/// A [`KeyEvent`] can be handled by a `KeyHandler` through the [`KeyHandler::handle`]
+/// A [`KeyEvent`] can be handled by a `KeyHandler` through the [`Handler::handle`]
 /// method. `KeyHandler` implements [`Default`], and the default handler ignores the
-/// `KeyEvent`. Typically, components want to take some default action when implementing
+/// `KeyEvent`, and always returns [`Propagate`]`::Next`.
+///
+/// Typically, components want to take some default action when implementing
 /// `on_key`, but allow the user of this component to override this handler. This can
 /// be done using the [`KeyHandler::handle_or`] method:
 /// ```rust
@@ -60,22 +66,46 @@ pub(crate) enum Event {
 /// }
 /// ```
 /// Here, `Frozen::on_key` calls the handler that was provided if one was. If no
-/// non-default `KeyHandler` was provided, then the closure passed to
-/// [`KeyHandler::handle_or`] is executed.
+/// `KeyHandler` was provided, then `self.on_key` is the default handler,
+/// which always returns [`Propagate`]`::Next`. This causes the closure above to
+/// be executed.
 ///
-/// [`KeyEvent`]: struct.KeyEvent.html
+/// # Propagation
+///
+/// A user of a component can control when the default key handler is run by
+/// returning one of [`Propagate`]`::{Next, Stop}`. For example, to create an
+/// input box that receives input keys, but quits on the escape key:
+/// ```rust
+/// # use intuitive::{component, components::experimental::input::Input, render, on_key, state::use_state};
+/// #
+/// #[component(Root)]
+/// fn render() {
+///   let text = use_state(|| String::new);
+///
+///   let on_key = on_key! { [text]
+///     KeyEvent { code: Esc, .. } => event::quit(),
+///
+///     _ => return Propagate::Next,
+///   };
+///
+///   render! {
+///     Input(on_key)
+///   }
+/// }
+/// ```
+/// This will cause all key events other than `Esc` to be handled by `Input`'s
+/// default key handler.
+///
 /// [`on_key!`]: ../macro.on_key.html
-/// [`KeyHandler::handle`]: #method.handle
-/// [`KeyHandler::handle_or`]: #method.handle_or
+/// [`Handler::handle_or`]: handler/struct.Handler.html#method.handle_or
 /// [`State`]: ../state/struct.State.html
 /// [`Default`]: https://doc.rust-lang.org/std/default/trait.Default.html
 pub type KeyHandler = Handler<KeyEvent>;
 
-/// A handler for [`KeyEvent`]s.
-///
-/// [`MouseEvent`]: struct.MouseEvent.html
+/// A handler for [`MouseEvent`]s.
 pub type MouseHandler = Handler<MouseEvent>;
 
+/// Check if a mouse event is within a [`Rect`].
 pub fn is_within(event: &MouseEvent, rect: Rect) -> bool {
   let (x, y) = (event.column, event.row);
 
