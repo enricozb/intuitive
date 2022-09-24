@@ -1,3 +1,7 @@
+# 0.6.2
+- better `KeyHandler` docs
+- bring `Propagate` into scope in `on_key!` macro
+
 # 0.6.1
 - fix relative links in docs
 - add docs for generics in `#[component]`
