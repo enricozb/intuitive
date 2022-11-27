@@ -5,6 +5,7 @@ use parking_lot::Mutex;
 use super::{Element, Empty};
 
 /// A container for any type that implements [`Element`].
+#[derive(Clone)]
 pub struct Any {
   element: Arc<Mutex<Cell<Box<dyn Element + Send>>>>,
 }

@@ -15,7 +15,7 @@ pub struct Any {
 
 impl Any {
   /// Creates a new [`Any`].
-  fn new<C: Component + 'static + Send>(component: C) -> Self {
+  pub(crate) fn new<C: Component + 'static + Send>(component: C) -> Self {
     Self {
       component: Arc::new(Mutex::new(Box::new(move || component.render()))),
     }
@@ -23,7 +23,7 @@ impl Any {
 
   #[must_use]
   /// Calls the inner [`Self::component`].
-  fn render(&self) -> AnyElement {
+  pub(crate) fn render(&self) -> AnyElement {
     (self.component.lock())()
   }
 }
