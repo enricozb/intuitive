@@ -1,3 +1,5 @@
+use std::io::Error as IoError;
+
 use thiserror::Error;
 
 use crate::render::{hooks::error::Error as HookError, ComponentID};
@@ -14,4 +16,7 @@ pub enum Error {
 
   #[error("No element found for the given component id: {0:?}")]
   NoElement(ComponentID),
+
+  #[error("io: {0}")]
+  Io(#[from] IoError),
 }

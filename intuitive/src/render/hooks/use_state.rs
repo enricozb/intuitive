@@ -19,7 +19,8 @@ impl<T> State<T> {
     }
   }
 
-  /// Retrieves [`State<T>`].
+  /// Returns a clone of the inner `T`.
+  #[must_use]
   pub fn get(&self) -> T
   where
     T: Clone,
