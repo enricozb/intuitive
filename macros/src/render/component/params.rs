@@ -1,5 +1,5 @@
 use proc_macro2::TokenStream as TokenStream2;
-use quote::quote;
+use quote::{quote, ToTokens};
 use syn::{
   parenthesized,
   parse::{Parse, ParseStream},
@@ -10,7 +10,7 @@ use syn::{
 /// The parameters passed to a component within [`render!`].
 pub struct Params {
   /// The `key` parameter, if one was provided.
-  key: Option<TokenStream2>,
+  pub key: Option<TokenStream2>,
 
   /// The non-`key` parameters.
   params: Vec<Param>,
@@ -36,6 +36,16 @@ impl Parse for Params {
     };
 
     Ok(Self { key, params })
+  }
+}
+
+impl ToTokens for Params {
+  fn to_tokens(&self, tokens: &mut TokenStream2) {
+    let params = &self.params;
+
+    tokens.extend(quote! {
+      #(#params),*
+    });
   }
 }
 
@@ -70,6 +80,21 @@ impl Parse for Param {
     } else {
       Ok(Self::Short(ident))
     }
+  }
+}
+
+impl ToTokens for Param {
+  fn to_tokens(&self, tokens: &mut TokenStream2) {
+    let param = match self {
+      Self::Short(name) => quote! { #name: #name},
+      Self::Long(name, expr) => quote! { #name: #expr },
+    };
+
+    tokens.extend(quote! {
+      #param
+        .try_into()
+        .expect(&format!("try into failed for argument: '{}'", stringify!(#param)))
+    });
   }
 }
 

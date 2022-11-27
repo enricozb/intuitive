@@ -1,3 +1,5 @@
+use proc_macro2::TokenStream as TokenStream2;
+use quote::{quote, ToTokens};
 use syn::{
   braced,
   parse::{Parse, ParseStream},
@@ -26,5 +28,17 @@ impl Parse for Children {
     }
 
     Ok(Self { children })
+  }
+}
+
+impl ToTokens for Children {
+  fn to_tokens(&self, tokens: &mut TokenStream2) {
+    let children = &self.children;
+
+    if !children.is_empty() {
+      tokens.extend(quote! {
+        [#(#children,)*].into()
+      });
+    }
   }
 }
