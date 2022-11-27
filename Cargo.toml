@@ -1,7 +1,5 @@
 [workspace]
 
 members = [
-  "examples",
-  "intuitive",
   "macros",
 ]
