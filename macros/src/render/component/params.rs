@@ -7,6 +7,9 @@ use syn::{
   Error, Expr, Ident, Result, Token,
 };
 
+#[allow(unused)]
+use crate::render;
+
 /// The parameters passed to a component within [`render!`].
 pub struct Params {
   /// The `key` parameter, if one was provided.

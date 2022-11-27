@@ -8,6 +8,8 @@ use syn::{
 };
 
 use super::Component;
+#[allow(unused)]
+use crate::render;
 
 /// The children passed to a component within [`render!`].
 pub struct Children {

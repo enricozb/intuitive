@@ -11,6 +11,8 @@ use syn::{
 };
 
 use self::{children::Children, params::Params};
+#[allow(unused)]
+use crate::render;
 use crate::utils;
 
 /// An atomic counter used to create unique integer ids to every instance of a
@@ -19,7 +21,7 @@ static COMPONENT_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 
 /// A component within [`render!`].
 pub struct Component {
-  /// A unique id. This is set automatically by [`parse`].
+  /// A unique id. This is set automatically by [`Component::parse`].
   uid: usize,
 
   /// The name of the component,
@@ -68,7 +70,7 @@ impl ToTokens for Component {
 }
 
 impl Component {
-  /// A unique [`ComponentID`]. Used when calling [`render`].
+  /// A unique component identifier. Used during rendering.
   fn component_id(&self) -> TokenStream2 {
     let Self { uid, name, params, .. } = self;
 

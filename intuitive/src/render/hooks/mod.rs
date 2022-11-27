@@ -1,14 +1,17 @@
+pub mod use_state;
+
+pub(crate) mod error;
+pub(crate) mod manager;
+
 use std::any::{self, Any};
 
+use self::error::{Error, Result};
 use super::ComponentID;
 
-pub mod error;
-pub mod manager;
-
-use self::error::{Error, Result};
-
 /// A hook initializer.
-trait Initializer<T>: FnOnce(&ComponentID) -> T {}
+pub trait Initializer<T>: FnOnce(ComponentID) -> T {}
+
+impl<F, T> Initializer<T> for F where F: FnOnce(ComponentID) -> T {}
 
 /// Memoized return values of hook [`Initializer`] calls.
 struct Memos(Vec<Box<dyn Any + Send + Sync>>);

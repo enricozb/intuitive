@@ -18,12 +18,23 @@ lazy_static! {
   static ref MANAGER: Mutex<Manager> = Mutex::new(Manager::new());
 }
 
-/// Calls [`Manager::with`] for the global [`MANAGER`].
+/// Calls [`Manager::with`] for the global [`Manager`].
+#[allow(rustdoc::private_intra_doc_links)]
 pub fn with<F, T>(id: ComponentID, f: F) -> T
 where
   F: FnOnce() -> T,
 {
   MANAGER.lock().with(id, f)
+}
+
+/// Calls [`Manager::use_hook`] for the global [`Manager`].
+#[allow(rustdoc::private_intra_doc_links)]
+pub fn use_hook<I, T>(initializer: I) -> Result<T>
+where
+  T: 'static + Send + Sync + Clone,
+  I: Initializer<T>,
+{
+  MANAGER.lock().use_hook(initializer)
 }
 
 /// Manages [`use_hook`] calls across renders.
@@ -43,7 +54,7 @@ impl Manager {
     }
   }
 
-  /// Calls `f` with a [`Cursor`] for the given [`ComponentID`] at the top of the [`Self::cursor`]s stack.
+  /// Calls `f` with a [`Cursor`] for the given [`ComponentID`] at the top of the [`Self::cursors`] stack.
   fn with<F, T>(&mut self, id: ComponentID, f: F) -> T
   where
     F: FnOnce() -> T,
@@ -74,7 +85,7 @@ impl Manager {
     match mode {
       Mode::Reading => self.memos.get(id).ok_or(Error::NoMemo(*id))?.get::<T>(*idx),
       Mode::Writing => {
-        let val = initializer(id);
+        let val = initializer(*id);
         self.memos.get_mut(id).ok_or(Error::NoMemo(*id))?.push(val.clone());
 
         Ok(val)
