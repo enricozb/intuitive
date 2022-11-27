@@ -19,7 +19,7 @@ impl Any {
   }
 
   /// Swaps the inner [`Element`]s.
-  fn swap(&self, other: &Self) {
+  pub fn swap(&self, other: &Self) {
     self.element.lock().swap(&other.element.lock());
   }
 

@@ -6,7 +6,11 @@ use lazy_static::lazy_static;
 use parking_lot::Mutex;
 
 use self::hooks::manager;
-use crate::{components::Any as AnyComponent, element::Any as AnyElement};
+use crate::{
+  components::Any as AnyComponent,
+  element::Any as AnyElement,
+  error::{Error, Result},
+};
 #[allow(unused)]
 use crate::{components::Component, render};
 
@@ -47,5 +51,24 @@ pub fn render<C: Component + 'static + Send>(id: ComponentID, component: C) -> A
     ELEMENTS.lock().insert(id, element.clone());
 
     element
+  })
+}
+
+/// Re-renders an already rendered component, specified by its [`ComponentID`].
+///
+/// # Errors
+///
+/// Will return an error if a component has not yet been rendered with the provided [`ComponentID`].
+pub fn rerender(id: ComponentID) -> Result<()> {
+  manager::with(id, || -> Result<()> {
+    let components = COMPONENTS.lock();
+    let elements = ELEMENTS.lock();
+
+    let component = components.get(&id).ok_or(Error::NoComponent(id))?;
+    let element = elements.get(&id).ok_or(Error::NoElement(id))?;
+
+    element.swap(&component.render());
+
+    Ok(())
   })
 }
