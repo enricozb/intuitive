@@ -2,3 +2,5 @@
 
 mod alignment;
 pub(super) mod component;
+
+pub use alignment::Alignment;
