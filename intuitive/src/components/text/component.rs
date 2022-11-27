@@ -1,5 +1,6 @@
 use tui::{text::Spans as TuiSpans, widgets::Paragraph};
 
+use super::Alignment;
 use crate::{
   component,
   element::{Any as AnyElement, Element},
@@ -14,8 +15,9 @@ use crate::{
 ///
 /// [`Lines`]: ../text/struct.Lines.html
 #[component(Text)]
-pub fn render(text: Lines, on_key: KeyHandler, on_mouse: MouseHandler) {
+pub fn render(alignment: Alignment, text: Lines, on_key: KeyHandler, on_mouse: MouseHandler) {
   AnyElement::new(Frozen {
+    alignment: *alignment,
     lines: text.clone(),
     on_key: on_key.clone(),
     on_mouse: on_mouse.clone(),
@@ -23,6 +25,7 @@ pub fn render(text: Lines, on_key: KeyHandler, on_mouse: MouseHandler) {
 }
 
 struct Frozen {
+  alignment: Alignment,
   lines: Lines,
   on_key: KeyHandler,
   on_mouse: MouseHandler,
@@ -38,7 +41,8 @@ impl Element for Frozen {
   }
 
   fn draw(&self, rect: Rect, frame: &mut Frame) {
-    let widget = Paragraph::new::<Vec<TuiSpans>>(self.lines.0.iter().cloned().map(TuiSpans::from).collect());
+    let widget =
+      Paragraph::new::<Vec<TuiSpans>>(self.lines.0.iter().cloned().map(TuiSpans::from).collect()).alignment(self.alignment.into());
 
     frame.render_widget(widget, rect);
   }
