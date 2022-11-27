@@ -1,0 +1,16 @@
+[package]
+name = "intuitive"
+version = "0.7.0"
+description = "a library for building declarative text-based user interfaces"
+edition = "2021"
+license = "CC0-1.0"
+repository = "https://github.com/enricozb/intuitive"
+readme = "readme.md"
+
+[dependencies]
+crossterm = "0.25.0"
+intuitive_macros = { path = "../macros", version = "0.7.0" }
+lazy_static = "1.4.0"
+parking_lot = "0.12.1"
+serial_test = "0.9"
+thiserror = "1.0.37"
