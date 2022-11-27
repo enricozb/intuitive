@@ -185,6 +185,7 @@
 
 pub mod children;
 pub mod stack;
+pub mod text;
 
 mod experimental_components;
 #[doc_cfg::doc_cfg(feature = "experimental")]
@@ -203,7 +204,6 @@ mod centered;
 mod embed;
 mod empty;
 mod section;
-mod text;
 
 pub use self::{
   any::Any,
@@ -212,7 +212,7 @@ pub use self::{
   empty::Empty,
   section::Section,
   stack::{horizontal::Stack as HStack, vertical::Stack as VStack},
-  text::Text,
+  text::component::Text,
 };
 use crate::element::Any as AnyElement;
 
