@@ -185,6 +185,7 @@
 
 pub mod children;
 pub mod stack;
+pub mod text;
 
 mod experimental_components;
 #[doc_cfg::doc_cfg(feature = "experimental")]
@@ -203,7 +204,6 @@ mod centered;
 mod embed;
 mod empty;
 mod section;
-mod text;
 
 pub use self::{
   any::Any,
