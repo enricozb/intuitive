@@ -1,4 +1,4 @@
-use super::Buffer;
+use super::{draw::Draw, Buffer, Cell};
 use crate::{
   error::{Error, Result},
   utils::geometry::{Position, Size},
@@ -30,7 +30,7 @@ impl<'a> Region<'a> {
   /// # Errors
   ///
   /// Will return `Err` if the desired region exceeds the current region's bounds.
-  fn narrow(&'a mut self, position: Position, size: Size) -> Result<Self> {
+  pub fn narrow(&'a mut self, position: Position, size: Size) -> Result<Self> {
     if position.x + size.width > self.size.width || position.y + size.height > self.size.height {
       return Err(Error::RegionOutOfBounds);
     }
@@ -40,5 +40,17 @@ impl<'a> Region<'a> {
       size,
       buffer: self.buffer,
     })
+  }
+
+  #[must_use]
+  /// Returns the [`Size`] of the [`Region`].
+  pub fn size(&self) -> Size {
+    self.size
+  }
+}
+
+impl<'a> Draw for Region<'a> {
+  fn set_option_cell(&mut self, position: Position, cell: Option<Cell>) {
+    self.buffer.set_option_cell(position + self.position, cell);
   }
 }

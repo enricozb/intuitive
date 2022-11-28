@@ -12,7 +12,7 @@ impl From<(u16, u16)> for Size {
   }
 }
 
-#[derive(Clone, Copy, Default)]
+#[derive(Clone, Copy, Default, Debug)]
 pub struct Position {
   pub x: u16,
   pub y: u16,
@@ -41,4 +41,19 @@ impl Position {
       y: idx / size.width,
     }
   }
+
+  /// Returns a `u16` given a [`Size`].
+  ///
+  /// This maps the 2-dimensional value of a [`Position`] to a 1-dimensional value by "unwrapping" `self` within the `size`
+  /// going left-to-right and top-to-bottom.
+  #[must_use]
+  pub fn into_idx(&self, size: Size) -> u16 {
+    self.x + size.width * self.y
+  }
+}
+
+#[derive(Clone, Copy)]
+pub enum Axis {
+  Horizontal,
+  Vertical,
 }

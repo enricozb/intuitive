@@ -1,9 +1,14 @@
+pub mod draw;
 pub mod region;
 
-use std::{io::Stdout, iter};
+use std::{
+  io::{Stdout, Write},
+  iter,
+};
 
 use crossterm::{cursor::MoveTo, queue, style::Print};
 
+use self::draw::Draw;
 use crate::{
   error::Result,
   utils::geometry::{Position, Size},
@@ -53,19 +58,27 @@ impl Buffer {
       queue!(stdout, MoveTo(pos.x, pos.y))?;
 
       match cell {
-        None | Some(Cell { content: None, .. }) => queue!(stdout, Print(" "))?,
-        Some(Cell { content: Some(c), .. }) => queue!(stdout, Print(c))?,
+        None | Some(Cell { chr: None, .. }) => queue!(stdout, Print(" "))?,
+        Some(Cell { chr: Some(c), .. }) => queue!(stdout, Print(c))?,
       };
     }
+
+    stdout.flush()?;
 
     Ok(())
   }
 }
 
+impl Draw for Buffer {
+  fn set_option_cell(&mut self, position: Position, cell: Option<Cell>) {
+    self.data[usize::from(position.into_idx(self.size))] = cell;
+  }
+}
+
 /// A single cell within a [`Buffer`].
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Debug)]
 pub struct Cell {
-  content: Option<char>,
+  chr: Option<char>,
 }
 
 /// Differences between two [`Buffer`]s.

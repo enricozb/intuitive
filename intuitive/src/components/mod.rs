@@ -1,6 +1,8 @@
 mod any;
+mod section;
 mod text;
 
+pub use section::Section;
 pub use text::Text;
 
 pub use self::any::Any;

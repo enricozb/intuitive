@@ -10,5 +10,5 @@ use crate::{buffer::region::Region, error::Result};
 pub trait Element {
   /// Draw the element onto the given [`Region`].
   #[allow(clippy::missing_errors_doc)]
-  fn draw(&self, region: Region) -> Result<()>;
+  fn draw<'a>(&self, region: &'a mut Region<'a>) -> Result<()>;
 }

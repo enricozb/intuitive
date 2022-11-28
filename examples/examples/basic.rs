@@ -1,5 +1,5 @@
 use intuitive::{
-  components::{Component, Text},
+  components::{Component, Section, Text},
   element::Any as AnyElement,
   error::Result,
   render,
@@ -12,7 +12,9 @@ pub struct Root {}
 impl Component for Root {
   fn render(&self) -> AnyElement {
     render! {
-      Text(text: "Hello, world!")
+      Section(title: "Hello, world!") {
+        Text(text: "Here's a basic example of intuitive!")
+      }
     }
   }
 }

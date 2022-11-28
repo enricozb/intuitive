@@ -27,7 +27,7 @@ impl Any {
   }
 
   /// Draws the inner [`Element`] on to a [`Region`].
-  pub(crate) fn draw(&self, region: Region) -> Result<()> {
+  pub(crate) fn draw<'a>(&self, region: &'a mut Region<'a>) -> Result<()> {
     let cell = self.element.lock();
 
     let element = cell.replace(Box::new(Empty));
@@ -35,5 +35,11 @@ impl Any {
     cell.set(element);
 
     Ok(())
+  }
+}
+
+impl Default for Any {
+  fn default() -> Self {
+    Self::new(Empty)
   }
 }

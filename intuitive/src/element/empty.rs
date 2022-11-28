@@ -5,7 +5,7 @@ use crate::{buffer::region::Region, error::Result};
 pub struct Empty;
 
 impl Element for Empty {
-  fn draw(&self, _region: Region) -> Result<()> {
+  fn draw<'a>(&self, _region: &'a mut Region<'a>) -> Result<()> {
     Ok(())
   }
 }

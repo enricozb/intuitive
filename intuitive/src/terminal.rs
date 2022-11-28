@@ -1,6 +1,9 @@
 use std::io::{self, Stdout};
 
-use crossterm::{execute, terminal};
+use crossterm::{
+  execute,
+  terminal::{self, Clear, ClearType},
+};
 
 use crate::{
   buffer::{region::Region, Buffer},
@@ -44,13 +47,17 @@ impl Terminal {
   pub fn render(&mut self, element: &AnyElement) -> Result<()> {
     self.prepare()?;
 
+    // TODO(enricozb): move this into a single function.
+    element.draw(&mut self.current_region())?;
+    self.draw_diffs()?;
+
     loop {
       match event::read()? {
-        Event::Resize => element.draw(self.current_region())?,
+        Event::Resize => element.draw(&mut self.current_region())?,
         Event::Quit => break,
       }
 
-      // TODO(enricozb): only do this when the current buffer is dirty
+      // TODO(enricozb): only do this when the current buffer is dirty.
       self.draw_diffs()?;
     }
 
@@ -65,9 +72,11 @@ impl Terminal {
   /// Draw the differences between the current and previous [`Buffer`]s onto [`Self::stdout`].
   fn draw_diffs(&mut self) -> Result<()> {
     let current_buffer = &self.buffers[usize::from(self.idx)];
-    let previous_buffer = &self.buffers[usize::from(self.idx)];
+    let previous_buffer = &self.buffers[usize::from(!self.idx)];
 
     current_buffer.draw_diff(previous_buffer, &mut self.stdout)?;
+
+    self.idx = !self.idx;
 
     Ok(())
   }
@@ -76,6 +85,7 @@ impl Terminal {
   fn prepare(&self) -> Result<()> {
     execute!(&self.stdout, terminal::EnterAlternateScreen)?;
     terminal::enable_raw_mode()?;
+    execute!(&self.stdout, Clear(ClearType::All))?;
     event::start_crossterm_events();
 
     Ok(())
