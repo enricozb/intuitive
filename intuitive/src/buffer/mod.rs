@@ -48,7 +48,7 @@ impl Buffer {
   }
 
   /// Draws the difference between `other` and `self` onto `stdout`.
-  fn draw_diff(&self, other: &Self, stdout: &mut Stdout) -> Result<()> {
+  pub(crate) fn draw_diff(&self, other: &Self, stdout: &mut Stdout) -> Result<()> {
     for (pos, cell) in self.diffs(other).cells {
       queue!(stdout, MoveTo(pos.x, pos.y))?;
 

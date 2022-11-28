@@ -5,6 +5,7 @@ use parking_lot::Mutex;
 use super::{Element, Empty};
 #[allow(unused)]
 use crate::buffer::region::Region;
+use crate::error::Result;
 
 /// A container for any type that implements [`Element`].
 #[derive(Clone)]
@@ -26,11 +27,13 @@ impl Any {
   }
 
   /// Draws the inner [`Element`] on to a [`Region`].
-  pub(crate) fn draw(&self) {
+  pub(crate) fn draw<'a>(&self, region: Region<'a>) -> Result<()> {
     let cell = self.element.lock();
 
     let element = cell.replace(Box::new(Empty));
-    element.draw();
+    element.draw(region)?;
     cell.set(element);
+
+    Ok(())
   }
 }

@@ -3,7 +3,7 @@ use std::io::{self, Stdout};
 use crossterm::{execute, terminal};
 
 use crate::{
-  buffer::Buffer,
+  buffer::{region::Region, Buffer},
   element::Any as AnyElement,
   error::Result,
   event::{self, Event},
@@ -41,19 +41,32 @@ impl Terminal {
   ///
   /// Will return `Err` if [`Terminal::prepare`] fails.
   #[allow(rustdoc::private_intra_doc_links)]
-  pub fn render(&self, element: &AnyElement) -> Result<()> {
+  pub fn render(&mut self, element: &AnyElement) -> Result<()> {
     self.prepare()?;
 
     loop {
       match event::read()? {
-        Event::Resize => element.draw(),
+        Event::Resize => element.draw(self.current_region())?,
       }
 
-      // if self.buffer().is_dirty() {
-      //   self.buffer().clean();
-      //   self.draw();
-      // }
+      // TODO(enricozb): only do this when the current buffer is dirty
+      self.draw_diffs()?;
     }
+
+    Ok(())
+  }
+
+  /// Returns a the current [`Region`].
+  fn current_region(&mut self) -> Region {
+    (&mut self.buffers[self.idx as usize]).into()
+  }
+
+  /// Draw the differences between the current and previous [`Buffer`]s onto [`Self::stdout`].
+  fn draw_diffs(&mut self) -> Result<()> {
+    let current_buffer = &self.buffers[self.idx as usize];
+    let previous_buffer = &self.buffers[self.idx as usize];
+
+    current_buffer.draw_diff(previous_buffer, &mut self.stdout)?;
 
     Ok(())
   }
