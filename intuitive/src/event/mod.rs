@@ -7,6 +7,7 @@ pub(crate) use self::channel::{read, send};
 
 pub(crate) enum Event {
   Resize,
+  Quit,
 }
 
 pub(crate) fn start_crossterm_events() {

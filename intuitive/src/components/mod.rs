@@ -1,4 +1,7 @@
 mod any;
+mod text;
+
+pub use text::Text;
 
 pub use self::any::Any;
 use crate::element::Any as AnyElement;

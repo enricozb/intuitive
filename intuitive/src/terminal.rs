@@ -42,12 +42,17 @@ impl Terminal {
   /// Will return `Err` if [`Terminal::prepare`] fails.
   #[allow(rustdoc::private_intra_doc_links)]
   pub fn render(&mut self, element: &AnyElement) -> Result<()> {
+    eprintln!("preparing...");
+
     self.prepare()?;
 
     loop {
       match event::read()? {
         Event::Resize => element.draw(self.current_region())?,
+        Event::Quit => break,
       }
+
+      eprintln!("resized!");
 
       // TODO(enricozb): only do this when the current buffer is dirty
       self.draw_diffs()?;
@@ -58,13 +63,13 @@ impl Terminal {
 
   /// Returns a the current [`Region`].
   fn current_region(&mut self) -> Region {
-    (&mut self.buffers[self.idx as usize]).into()
+    (&mut self.buffers[usize::from(self.idx)]).into()
   }
 
   /// Draw the differences between the current and previous [`Buffer`]s onto [`Self::stdout`].
   fn draw_diffs(&mut self) -> Result<()> {
-    let current_buffer = &self.buffers[self.idx as usize];
-    let previous_buffer = &self.buffers[self.idx as usize];
+    let current_buffer = &self.buffers[usize::from(self.idx)];
+    let previous_buffer = &self.buffers[usize::from(self.idx)];
 
     current_buffer.draw_diff(previous_buffer, &mut self.stdout)?;
 

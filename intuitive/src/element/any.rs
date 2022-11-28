@@ -15,7 +15,7 @@ pub struct Any {
 
 impl Any {
   /// Creates a new [`Any`].
-  fn new<E: Element + 'static + Send>(element: E) -> Self {
+  pub fn new<E: Element + 'static + Send>(element: E) -> Self {
     Self {
       element: Arc::new(Mutex::new(Cell::new(Box::new(element)))),
     }
@@ -27,7 +27,7 @@ impl Any {
   }
 
   /// Draws the inner [`Element`] on to a [`Region`].
-  pub(crate) fn draw<'a>(&self, region: Region<'a>) -> Result<()> {
+  pub(crate) fn draw(&self, region: Region) -> Result<()> {
     let cell = self.element.lock();
 
     let element = cell.replace(Box::new(Empty));

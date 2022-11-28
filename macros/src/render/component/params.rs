@@ -47,7 +47,7 @@ impl ToTokens for Params {
     let params = &self.params;
 
     tokens.extend(quote! {
-      #(#params),*
+      #(#params,)*
     });
   }
 }

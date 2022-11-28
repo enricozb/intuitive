@@ -39,7 +39,7 @@ impl ToTokens for Children {
 
     if !children.is_empty() {
       tokens.extend(quote! {
-        [#(#children,)*].into()
+        children: [#(#children,)*].into(),
       });
     }
   }

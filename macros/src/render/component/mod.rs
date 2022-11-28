@@ -60,9 +60,9 @@ impl ToTokens for Component {
       #crate_name::render::render(
         #component_id,
         #name {
-          #params,
-          #children,
-          ..Default::default(),
+          #params
+          #children
+          ..Default::default()
         },
       )
     });

@@ -15,7 +15,7 @@ use crate::render::ComponentID;
 
 lazy_static! {
   /// The global hook [`Manager`].
-  static ref MANAGER: Mutex<Manager> = Mutex::new(Manager::new());
+  static ref MANAGER: Manager = Manager::new();
 }
 
 /// Calls [`Manager::with`] for the global [`Manager`].
@@ -24,7 +24,7 @@ pub fn with<F, T>(id: ComponentID, f: F) -> T
 where
   F: FnOnce() -> T,
 {
-  MANAGER.lock().with(id, f)
+  MANAGER.with(id, f)
 }
 
 /// Calls [`Manager::use_hook`] for the global [`Manager`].
@@ -34,32 +34,34 @@ where
   T: 'static + Send + Sync + Clone,
   I: Initializer<T>,
 {
-  MANAGER.lock().use_hook(initializer)
+  MANAGER.use_hook(initializer)
 }
 
 /// Manages [`use_hook`] calls across renders.
+///
+/// [`Manager`]s have interior mutability, so they can be [`Sync`].
 pub struct Manager {
   /// A stack of [`Cursor`]s that are pushed/popped before/after rendering.
-  cursors: Vec<Cursor>,
+  cursors: Mutex<Vec<Cursor>>,
   /// Maps instances of components within [`render!`] calls to memoized hook initializer return values.
-  memos: HashMap<ComponentID, Memos>,
+  memos: Mutex<HashMap<ComponentID, Memos>>,
 }
 
 impl Manager {
   /// Creates a new [`Manager`].
   fn new() -> Self {
     Self {
-      cursors: Vec::new(),
-      memos: HashMap::new(),
+      cursors: Mutex::new(Vec::new()),
+      memos: Mutex::new(HashMap::new()),
     }
   }
 
   /// Calls `f` with a [`Cursor`] for the given [`ComponentID`] at the top of the [`Self::cursors`] stack.
-  fn with<F, T>(&mut self, id: ComponentID, f: F) -> T
+  fn with<F, T>(&self, id: ComponentID, f: F) -> T
   where
     F: FnOnce() -> T,
   {
-    let mode = match self.memos.entry(id) {
+    let mode = match self.memos.lock().entry(id) {
       Entry::Occupied(_) => Mode::Reading,
       Entry::Vacant(e) => {
         e.insert(Memos::new());
@@ -67,26 +69,27 @@ impl Manager {
       }
     };
 
-    self.cursors.push(Cursor::new(id, mode));
+    self.cursors.lock().push(Cursor::new(id, mode));
     let ret = f();
-    self.cursors.pop();
+    self.cursors.lock().pop();
 
     ret
   }
 
   /// Returns the return value of the provided [`Initializer`], memoizing it if it was called previously.
-  fn use_hook<I, T>(&mut self, initializer: I) -> Result<T>
+  fn use_hook<I, T>(&self, initializer: I) -> Result<T>
   where
     T: 'static + Send + Sync + Clone,
     I: Initializer<T>,
   {
-    let Cursor { id, idx, mode } = self.cursors.last_mut().ok_or(Error::NoCursor)?;
+    let mut cursors = self.cursors.lock();
+    let Cursor { id, idx, mode } = cursors.last_mut().ok_or(Error::NoCursor)?;
 
     match mode {
-      Mode::Reading => self.memos.get(id).ok_or(Error::NoMemo(*id))?.get::<T>(*idx),
+      Mode::Reading => self.memos.lock().get(id).ok_or(Error::NoMemo(*id))?.get::<T>(*idx),
       Mode::Writing => {
         let val = initializer(*id);
-        self.memos.get_mut(id).ok_or(Error::NoMemo(*id))?.push(val.clone());
+        self.memos.lock().get_mut(id).ok_or(Error::NoMemo(*id))?.push(val.clone());
 
         Ok(val)
       }
