@@ -15,7 +15,9 @@ pub struct Buffer {
 
 impl Buffer {
   /// Creates a new [`Buffer`].
-  fn new(size: Size) -> Self {
+  pub fn new<S: Into<Size>>(size: S) -> Self {
+    let size = size.into();
+
     let mut data = Vec::new();
     data.resize_with((size.width * size.height) as usize, Option::default);
 
