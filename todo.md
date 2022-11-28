@@ -1,0 +1,8 @@
+- add styles
+- add `component` macro
+- add mouse and key events
+  - consider implementation for focusing system
+- add cursor showing/hiding ability (or leave this to crossterm?)
+- add `use_memo`
+- add `use_state` example
+- add alignment to `Text` and `Section`
