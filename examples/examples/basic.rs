@@ -18,12 +18,7 @@ impl Component for Root {
 }
 
 fn main() -> Result<()> {
-  let mut terminal = Terminal::new()?;
-  eprintln!("render!");
-  let element = render! { Root() };
-  eprintln!("terminal::render");
-
-  terminal.render(&element)?;
+  Terminal::new()?.render(&render! { Root() })?;
 
   Ok(())
 }

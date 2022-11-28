@@ -42,8 +42,6 @@ impl Terminal {
   /// Will return `Err` if [`Terminal::prepare`] fails.
   #[allow(rustdoc::private_intra_doc_links)]
   pub fn render(&mut self, element: &AnyElement) -> Result<()> {
-    eprintln!("preparing...");
-
     self.prepare()?;
 
     loop {
@@ -51,8 +49,6 @@ impl Terminal {
         Event::Resize => element.draw(self.current_region())?,
         Event::Quit => break,
       }
-
-      eprintln!("resized!");
 
       // TODO(enricozb): only do this when the current buffer is dirty
       self.draw_diffs()?;
