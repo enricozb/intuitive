@@ -2,7 +2,12 @@ use std::io::{self, Stdout};
 
 use crossterm::{execute, terminal};
 
-use crate::{buffer::Buffer, element::Any as AnyElement, error::Result};
+use crate::{
+  buffer::Buffer,
+  element::Any as AnyElement,
+  error::Result,
+  event::{self, Event},
+};
 
 /// A terminal that can be drawn onto.
 pub struct Terminal {
@@ -16,6 +21,10 @@ pub struct Terminal {
 
 impl Terminal {
   /// Creates a new [`Terminal`].
+  ///
+  /// # Errors
+  ///
+  /// Will return `Err` if the terminal's size cannot be read from [`Stdout`].
   pub fn new() -> Result<Self> {
     let size = terminal::size()?;
 
@@ -27,8 +36,23 @@ impl Terminal {
   }
 
   /// Starts the render loop, given a root [`AnyElement`].
+  ///
+  /// # Errors
+  ///
+  /// Will return `Err` if [`Terminal::prepare`] fails.
   pub fn render(&self, element: &AnyElement) -> Result<()> {
     self.prepare()?;
+
+    loop {
+      match event::read()? {
+        Event::Resize => element.draw(),
+      }
+
+      // if self.buffer().is_dirty() {
+      //   self.buffer().clean();
+      //   self.draw();
+      // }
+    }
 
     Ok(())
   }
@@ -37,6 +61,7 @@ impl Terminal {
   fn prepare(&self) -> Result<()> {
     execute!(&self.stdout, terminal::EnterAlternateScreen)?;
     terminal::enable_raw_mode()?;
+    event::start_crossterm_events();
 
     Ok(())
   }
@@ -54,6 +79,6 @@ impl Terminal {
 #[allow(rustdoc::private_intra_doc_links)]
 impl Drop for Terminal {
   fn drop(&mut self) {
-    self.cleanup().expect("Terminal::cleanup")
+    self.cleanup().expect("Terminal::cleanup");
   }
 }

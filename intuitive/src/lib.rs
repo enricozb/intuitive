@@ -6,4 +6,6 @@ pub mod render;
 pub mod terminal;
 pub mod utils;
 
+pub mod event;
+
 pub use intuitive_macros::render;

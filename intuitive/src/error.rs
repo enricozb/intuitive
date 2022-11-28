@@ -1,4 +1,4 @@
-use std::io::Error as IoError;
+use std::{io::Error as IoError, sync::mpsc::RecvError};
 
 use thiserror::Error;
 
@@ -19,4 +19,10 @@ pub enum Error {
 
   #[error("io: {0}")]
   Io(#[from] IoError),
+
+  #[error("send: {0}")]
+  Send(String),
+
+  #[error("recv: {0}")]
+  Recv(#[from] RecvError),
 }

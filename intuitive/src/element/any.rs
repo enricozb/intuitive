@@ -24,7 +24,7 @@ impl Any {
   }
 
   /// Draws the inner [`Element`] on to a [`Region`].
-  fn draw(&self) {
+  pub(crate) fn draw(&self) {
     let cell = self.element.lock();
 
     let element = cell.replace(Box::new(Empty));
