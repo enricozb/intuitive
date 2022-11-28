@@ -32,14 +32,14 @@ pub trait Draw {
       Axis::Horizontal => {
         for chr in string.chars() {
           self.set_cell(position, Cell { chr: Some(chr) });
-          position.x += 1
+          position.x += 1;
         }
       }
 
       Axis::Vertical => {
         for chr in string.chars() {
           self.set_cell(position, Cell { chr: Some(chr) });
-          position.y += 1
+          position.y += 1;
         }
       }
     };
@@ -54,14 +54,14 @@ pub trait Draw {
       Axis::Horizontal => {
         for _ in 0..n {
           self.set_cell(position, Cell { chr: Some(chr) });
-          position.x += 1
+          position.x += 1;
         }
       }
 
       Axis::Vertical => {
         for _ in 0..n {
           self.set_cell(position, Cell { chr: Some(chr) });
-          position.y += 1
+          position.y += 1;
         }
       }
     };

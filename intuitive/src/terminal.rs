@@ -1,10 +1,13 @@
 use std::io::{self, Stdout};
 
 use crossterm::{
+  cursor::{Hide as HideCursor, Show as ShowCursor},
   execute,
   terminal::{self, Clear, ClearType},
 };
 
+#[allow(unused)]
+use crate::element::Element;
 use crate::{
   buffer::{region::Region, Buffer},
   element::Any as AnyElement,
@@ -16,8 +19,10 @@ use crate::{
 pub struct Terminal {
   /// The [`Stdout`] to write to.
   stdout: Stdout,
+
   /// The two buffers that are used for drawing.
   buffers: [Buffer; 2],
+
   /// The current index of the [`Buffer`] being drawn onto.
   idx: bool,
 }
@@ -46,20 +51,27 @@ impl Terminal {
   #[allow(rustdoc::private_intra_doc_links)]
   pub fn render(&mut self, element: &AnyElement) -> Result<()> {
     self.prepare()?;
-
-    // TODO(enricozb): move this into a single function.
-    element.draw(&mut self.current_region())?;
-    self.draw_diffs()?;
+    self.draw(element)?;
 
     loop {
       match event::read()? {
-        Event::Resize => element.draw(&mut self.current_region())?,
+        Event::Resize => {
+          self.resize()?;
+          execute!(&self.stdout, Clear(ClearType::All))?;
+          self.draw(element)?;
+        }
+
         Event::Quit => break,
       }
-
-      // TODO(enricozb): only do this when the current buffer is dirty.
-      self.draw_diffs()?;
     }
+
+    Ok(())
+  }
+
+  /// Recomputes the current size of the terminal.
+  fn resize(&mut self) -> Result<()> {
+    let size = terminal::size()?;
+    self.buffers = [Buffer::new(size), Buffer::new(size)];
 
     Ok(())
   }
@@ -67,6 +79,14 @@ impl Terminal {
   /// Returns a the current [`Region`].
   fn current_region(&mut self) -> Region {
     (&mut self.buffers[usize::from(self.idx)]).into()
+  }
+
+  /// Draw the provided [`Element`] onto the terminal.
+  fn draw(&mut self, element: &AnyElement) -> Result<()> {
+    element.draw(&mut self.current_region())?;
+    self.draw_diffs()?;
+
+    Ok(())
   }
 
   /// Draw the differences between the current and previous [`Buffer`]s onto [`Self::stdout`].
@@ -84,8 +104,10 @@ impl Terminal {
   /// Prepares the [`Terminal`] for rendering.
   fn prepare(&self) -> Result<()> {
     execute!(&self.stdout, terminal::EnterAlternateScreen)?;
-    terminal::enable_raw_mode()?;
     execute!(&self.stdout, Clear(ClearType::All))?;
+    execute!(&self.stdout, HideCursor)?;
+
+    terminal::enable_raw_mode()?;
     event::start_crossterm_events();
 
     Ok(())
@@ -94,6 +116,8 @@ impl Terminal {
   /// Cleans up the [`Terminal`] after rendering.
   fn cleanup(&self) -> Result<()> {
     terminal::disable_raw_mode()?;
+
+    execute!(&self.stdout, ShowCursor)?;
     execute!(&self.stdout, terminal::LeaveAlternateScreen)?;
 
     Ok(())
