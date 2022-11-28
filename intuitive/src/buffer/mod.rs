@@ -1,3 +1,5 @@
+pub mod region;
+
 use std::{io::Stdout, iter};
 
 use crossterm::{cursor::MoveTo, queue, style::Print};

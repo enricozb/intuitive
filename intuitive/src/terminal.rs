@@ -40,6 +40,7 @@ impl Terminal {
   /// # Errors
   ///
   /// Will return `Err` if [`Terminal::prepare`] fails.
+  #[allow(rustdoc::private_intra_doc_links)]
   pub fn render(&self, element: &AnyElement) -> Result<()> {
     self.prepare()?;
 

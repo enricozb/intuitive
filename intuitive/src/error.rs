@@ -17,6 +17,9 @@ pub enum Error {
   #[error("No element found for the given component id: {0:?}")]
   NoElement(ComponentID),
 
+  #[error("Narrower region exceeds bounds")]
+  RegionOutOfBounds,
+
   #[error("io: {0}")]
   Io(#[from] IoError),
 

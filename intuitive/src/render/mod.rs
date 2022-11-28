@@ -58,7 +58,7 @@ pub fn render<C: Component + 'static + Send>(id: ComponentID, component: C) -> A
 ///
 /// # Errors
 ///
-/// Will return an error if a component has not yet been rendered with the provided [`ComponentID`].
+/// Will return `Err` if a component has not yet been rendered with the provided [`ComponentID`].
 pub fn rerender(id: ComponentID) -> Result<()> {
   manager::with(id, || -> Result<()> {
     let components = COMPONENTS.lock();

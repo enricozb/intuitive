@@ -3,6 +3,8 @@ use std::{cell::Cell, sync::Arc};
 use parking_lot::Mutex;
 
 use super::{Element, Empty};
+#[allow(unused)]
+use crate::buffer::region::Region;
 
 /// A container for any type that implements [`Element`].
 #[derive(Clone)]

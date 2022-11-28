@@ -3,6 +3,8 @@ mod empty;
 
 pub use self::{any::Any, empty::Empty};
 #[allow(unused)]
+use crate::buffer::region::Region;
+#[allow(unused)]
 use crate::buffer::Buffer;
 #[allow(unused)]
 use crate::components::Component;

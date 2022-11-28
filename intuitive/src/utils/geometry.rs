@@ -1,3 +1,5 @@
+use std::ops::Add;
+
 #[derive(Clone, Copy)]
 pub struct Size {
   pub width: u16,
@@ -10,9 +12,21 @@ impl From<(u16, u16)> for Size {
   }
 }
 
+#[derive(Clone, Copy, Default)]
 pub struct Position {
   pub x: u16,
   pub y: u16,
+}
+
+impl Add for Position {
+  type Output = Self;
+
+  fn add(self, rhs: Self) -> Self::Output {
+    Self {
+      x: self.x + rhs.x,
+      y: self.y + rhs.y,
+    }
+  }
 }
 
 impl Position {
