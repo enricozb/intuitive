@@ -41,14 +41,14 @@ pub struct ComponentID {
 ///
 /// A [`ComponentID`] is required because it is used to track which hooks are used within the rendering of the
 /// specific instance of a component.
-pub fn render<C: Component + 'static + Send>(id: ComponentID, component: C) -> AnyElement {
+pub fn render<C: Component + 'static + Send>(component_id: ComponentID, component: C) -> AnyElement {
   let component = AnyComponent::new(component);
 
-  manager::with(id, || {
+  manager::with(component_id, || {
     let element = component.render();
 
-    COMPONENTS.lock().insert(id, component);
-    ELEMENTS.lock().insert(id, element.clone());
+    COMPONENTS.lock().insert(component_id, component);
+    ELEMENTS.lock().insert(component_id, element.clone());
 
     element
   })
@@ -59,13 +59,13 @@ pub fn render<C: Component + 'static + Send>(id: ComponentID, component: C) -> A
 /// # Errors
 ///
 /// Will return `Err` if a component has not yet been rendered with the provided [`ComponentID`].
-pub fn rerender(id: ComponentID) -> Result<()> {
-  manager::with(id, || -> Result<()> {
+pub fn rerender(component_id: ComponentID) -> Result<()> {
+  manager::with(component_id, || -> Result<()> {
     let components = COMPONENTS.lock();
     let elements = ELEMENTS.lock();
 
-    let component = components.get(&id).ok_or(Error::NoComponent(id))?;
-    let element = elements.get(&id).ok_or(Error::NoElement(id))?;
+    let component = components.get(&component_id).ok_or(Error::NoComponent(component_id))?;
+    let element = elements.get(&component_id).ok_or(Error::NoElement(component_id))?;
 
     element.swap(&component.render());
 
