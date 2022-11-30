@@ -1,21 +1,27 @@
-- add styles
-- add `component` macro
-- add mouse and key events
-  - consider implementation for focusing system
-- add cursor showing/hiding ability (or leave this to crossterm?)
-- add alignment to `Text` and `Section`
+- styles
 
-- implement signals (finer-grained re-rendering) on `State` changes
+- events
+  - focusing system
 
-- add components
+- macros
+  - `#[component]`
+  - `on_key!`
+  - `on_mouse!`
+
+- components
+  - add alignment to `Text` and `Section` title
   - hstack/vstack
   - centered
   - padding
   - input
 
-- add hooks
+- hooks
   - add `use_memo`
   - add `use_effect`
+  - signals: finer-grained re-rendering) on `State` changes
 
-- add examples
+- examples
   - `use_state`
+
+- misc
+  - cursor showing/hiding ability (or leave this to crossterm?)
