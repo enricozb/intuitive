@@ -1,4 +1,7 @@
-use std::sync::Arc;
+use std::{
+  fmt::{Display, Formatter},
+  sync::Arc,
+};
 
 use parking_lot::Mutex;
 
@@ -96,6 +99,12 @@ impl<T> Clone for State<T> {
       component_id: self.component_id,
       inner: self.inner.clone(),
     }
+  }
+}
+
+impl<T: Display> Display for State<T> {
+  fn fmt(&self, f: &mut Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
+    self.inner.lock().fmt(f)
   }
 }
 

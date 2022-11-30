@@ -57,11 +57,11 @@ impl Manager {
   }
 
   /// Calls `f` with a [`Cursor`] for the given [`ComponentID`] at the top of the [`Self::cursors`] stack.
-  fn with<F, T>(&self, id: ComponentID, f: F) -> T
+  fn with<F, T>(&self, component_id: ComponentID, f: F) -> T
   where
     F: FnOnce() -> T,
   {
-    let mode = match self.memos.lock().entry(id) {
+    let mode = match self.memos.lock().entry(component_id) {
       Entry::Occupied(_) => Mode::Reading,
       Entry::Vacant(e) => {
         e.insert(Memos::new());
@@ -69,7 +69,7 @@ impl Manager {
       }
     };
 
-    self.cursors.lock().push(Cursor::new(id, mode));
+    self.cursors.lock().push(Cursor::new(component_id, mode));
     let ret = f();
     self.cursors.lock().pop();
 
@@ -83,16 +83,32 @@ impl Manager {
     I: Initializer<T>,
   {
     let mut cursors = self.cursors.lock();
-    let Cursor { id, idx, mode } = cursors.last_mut().ok_or(Error::NoCursor)?;
+    let cursor = cursors.last_mut().ok_or(Error::NoCursor)?;
 
-    match mode {
-      Mode::Reading => self.memos.lock().get(id).ok_or(Error::NoMemo(*id))?.get::<T>(*idx),
+    let val = match cursor.mode {
+      Mode::Reading => self
+        .memos
+        .lock()
+        .get(&cursor.component_id)
+        .ok_or(Error::NoMemo(cursor.component_id))?
+        .get::<T>(cursor.idx),
+
       Mode::Writing => {
-        let val = initializer(*id);
-        self.memos.lock().get_mut(id).ok_or(Error::NoMemo(*id))?.push(val.clone());
+        let val = initializer(cursor.component_id);
+
+        self
+          .memos
+          .lock()
+          .get_mut(&cursor.component_id)
+          .ok_or(Error::NoMemo(cursor.component_id))?
+          .push(val.clone());
 
         Ok(val)
       }
-    }
+    };
+
+    cursor.increment();
+
+    val
   }
 }

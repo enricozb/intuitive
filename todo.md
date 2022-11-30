@@ -38,7 +38,11 @@
       - delete the hooks from the global `COMPONENTS` and `ELEMENTS`
 
 - misc
+  - `Terminal::render` should ensure that cleanup is called before it leaves that function, or else error isn't printed
   - cursor showing/hiding ability (or leave this to crossterm?)
+
+  - create an `impl dyn Element` with a `draw_checked` method that automatically checks if the region is empty before
+    calling the inner `draw`, and have `AnyElement` call `draw_checked`.
 
 - tests
   - `use_state`

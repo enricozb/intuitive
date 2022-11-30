@@ -47,6 +47,11 @@ impl<'a> Region<'a> {
   pub fn size(&self) -> Size {
     self.size
   }
+
+  /// Returns if the region is empty, which returns true if either [`Self::size`] dimention is `0`.
+  pub fn is_empty(&self) -> bool {
+    self.size.width == 0 || self.size.height == 0
+  }
 }
 
 impl<'a> Draw for Region<'a> {

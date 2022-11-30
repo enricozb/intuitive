@@ -7,6 +7,7 @@ pub(crate) mod manager;
 use std::any::{self, Any};
 
 use self::error::{Error, Result};
+pub use self::{use_effect::use_effect, use_state::use_state};
 use super::ComponentID;
 
 /// A hook initializer.

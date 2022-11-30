@@ -28,6 +28,10 @@ impl Any {
 
   /// Draws the inner [`Element`] on to a [`Region`].
   pub(crate) fn draw<'a>(&self, region: &'a mut Region<'a>) -> Result<()> {
+    if region.is_empty() {
+      return Ok(());
+    }
+
     let cell = self.element.lock();
 
     let element = cell.replace(Box::new(Empty));

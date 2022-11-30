@@ -1,0 +1,4 @@
+   Compiling intuitive v0.7.0 (/home/enricozb/projects/frameworks/intuitive/dated/2022-11-27/intuitive)
+   Compiling intuitive_examples v0.1.0 (/home/enricozb/projects/frameworks/intuitive/dated/2022-11-27/examples)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.53s
+     Running `target/debug/examples/hooks`
