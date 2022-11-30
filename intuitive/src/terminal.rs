@@ -13,6 +13,7 @@ use crate::{
   element::Any as AnyElement,
   error::Result,
   event::{self, Event},
+  render,
 };
 
 /// A terminal that can be drawn onto.
@@ -55,6 +56,11 @@ impl Terminal {
 
     loop {
       match event::read()? {
+        Event::Rerender(component_id) => {
+          render::rerender(component_id)?;
+          self.draw(element)?;
+        }
+
         Event::Resize => {
           self.resize()?;
           execute!(&self.stdout, Clear(ClearType::All))?;
