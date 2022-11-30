@@ -99,6 +99,19 @@ impl<T> Clone for State<T> {
   }
 }
 
+/// Implements symmetric equality for the types inside the [`State`].
+impl<T: PartialEq<T>> PartialEq<State<T>> for State<T> {
+  fn eq(&self, other: &State<T>) -> bool {
+    if Arc::as_ptr(&self.inner) == Arc::as_ptr(&other.inner) {
+      return true;
+    }
+
+    *self.inner.lock() == *other.inner.lock()
+  }
+}
+
+impl<T: Eq + PartialEq<T>> Eq for State<T> {}
+
 /// A hook to add state to a component.
 ///
 /// Returns a [`State<T>`] initialized with the provided `initializer`. The `initializer` is only called once,
