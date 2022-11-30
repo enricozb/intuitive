@@ -14,5 +14,5 @@ pub fn use_effect<F, T>(func: F)
 where
   F: FnOnce() -> T,
 {
-  manager::use_hook(|_| drop(func())).expect("use_effect: use_hook")
+  manager::use_hook(|_| drop(func())).expect("use_effect: use_hook");
 }

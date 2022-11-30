@@ -15,10 +15,11 @@ pub enum Amount {
 impl Amount {
   /// Returns the fixed amount if `self` is [`Amount::Fixed`], or the percentage
   /// of `amount` if `self` is [`Amount::Percentage`].
+  #[must_use]
   pub fn of(&self, amount: u16) -> u16 {
     match self {
       Self::Fixed(fixed) => *fixed,
-      Self::Percentage(pct) => (*pct as u16) * amount / 100,
+      Self::Percentage(pct) => u16::from(*pct) * amount / 100,
     }
   }
 }
