@@ -1,26 +1,26 @@
 use super::Cell;
 #[allow(unused)]
 use super::{region::Region, Buffer};
-use crate::utils::geometry::{Axis, Position};
+use crate::utils::geometry::{Axis, Position, Size};
 
 /// Types that can be drawn onto, mostly for [`Buffer`] and [`Region`].
 pub trait Draw {
   /// Sets an `Option<`[`Cell`]`>` at a given [`Position`].
-  fn set_option_cell(&mut self, position: Position, cell: Option<Cell>);
+  fn set_option_cell(&mut self, position: Position, cell: Option<Cell>) -> bool;
 
   /// Sets a [`Cell`] at a given [`Position`].
-  fn set_cell(&mut self, position: Position, cell: Cell) {
-    self.set_option_cell(position, Some(cell));
+  fn set_cell(&mut self, position: Position, cell: Cell) -> bool {
+    self.set_option_cell(position, Some(cell))
   }
 
   /// Unsets a [`Cell`] at a given [`Position`].
-  fn unset_cell(&mut self, position: Position) {
-    self.set_option_cell(position, None);
+  fn unset_cell(&mut self, position: Position) -> bool {
+    self.set_option_cell(position, None)
   }
 
   /// Sets a [`char`] at a given [`Position`].
-  fn set_char(&mut self, position: Position, chr: char) {
-    self.set_cell(position, Cell { chr: Some(chr) });
+  fn set_char(&mut self, position: Position, chr: char) -> bool {
+    self.set_cell(position, Cell { chr: Some(chr) })
   }
 
   /// Writes a string at a given [`Position`] and [`Axis`].
@@ -31,14 +31,20 @@ pub trait Draw {
     match axis {
       Axis::Horizontal => {
         for chr in string.chars() {
-          self.set_cell(position, Cell { chr: Some(chr) });
+          if !self.set_cell(position, Cell { chr: Some(chr) }) {
+            return;
+          }
+
           position.x += 1;
         }
       }
 
       Axis::Vertical => {
         for chr in string.chars() {
-          self.set_cell(position, Cell { chr: Some(chr) });
+          if !self.set_cell(position, Cell { chr: Some(chr) }) {
+            return;
+          }
+
           position.y += 1;
         }
       }
@@ -53,17 +59,27 @@ pub trait Draw {
     match axis {
       Axis::Horizontal => {
         for _ in 0..n {
-          self.set_cell(position, Cell { chr: Some(chr) });
+          if !self.set_cell(position, Cell { chr: Some(chr) }) {
+            return;
+          }
+
           position.x += 1;
         }
       }
 
       Axis::Vertical => {
         for _ in 0..n {
-          self.set_cell(position, Cell { chr: Some(chr) });
+          if !self.set_cell(position, Cell { chr: Some(chr) }) {
+            return;
+          }
+
           position.y += 1;
         }
       }
     };
   }
+
+  /// Returns the size of the region being drawn onto.
+  #[must_use]
+  fn size(&self) -> Size;
 }

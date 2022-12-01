@@ -42,8 +42,14 @@ impl<'a> Region<'a> {
     })
   }
 
+  /// Returns whether a [`Position`] is within the bounds of this [`Region`].
   #[must_use]
+  pub fn in_bounds(&self, position: Position) -> bool {
+    position.x < self.size.width && position.y < self.size.height
+  }
+
   /// Returns the [`Size`] of the [`Region`].
+  #[must_use]
   pub fn size(&self) -> Size {
     self.size
   }
@@ -56,7 +62,17 @@ impl<'a> Region<'a> {
 }
 
 impl<'a> Draw for Region<'a> {
-  fn set_option_cell(&mut self, position: Position, cell: Option<Cell>) {
-    self.buffer.set_option_cell(position + self.position, cell);
+  fn set_option_cell(&mut self, position: Position, cell: Option<Cell>) -> bool {
+    let in_bounds = self.in_bounds(position);
+
+    if in_bounds {
+      self.buffer.set_option_cell(position + self.position, cell);
+    }
+
+    in_bounds
+  }
+
+  fn size(&self) -> Size {
+    self.size
   }
 }

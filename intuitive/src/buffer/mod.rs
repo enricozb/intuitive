@@ -31,12 +31,6 @@ impl Buffer {
     Self { size, data }
   }
 
-  #[must_use]
-  /// Returns the [`Size`] of the [`Buffer`].
-  fn size(&self) -> Size {
-    self.size
-  }
-
   /// Computes the differences between `other` and `self`. Specifically, return [`Cell`]s from `self`
   /// when they differ from `other`.
   fn diffs(&self, other: &Self) -> Diffs {
@@ -70,8 +64,19 @@ impl Buffer {
 }
 
 impl Draw for Buffer {
-  fn set_option_cell(&mut self, position: Position, cell: Option<Cell>) {
-    self.data[usize::from(position.into_idx(self.size))] = cell;
+  fn set_option_cell(&mut self, position: Position, cell: Option<Cell>) -> bool {
+    let idx = usize::from(position.into_idx(self.size));
+    let in_bounds = idx < self.data.len();
+
+    if in_bounds {
+      self.data[idx] = cell;
+    }
+
+    in_bounds
+  }
+
+  fn size(&self) -> Size {
+    self.size
   }
 }
 
