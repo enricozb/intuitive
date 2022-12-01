@@ -91,7 +91,7 @@ impl Manager {
         .lock()
         .get(&cursor.component_id)
         .ok_or(Error::NoMemo(cursor.component_id))?
-        .get::<T>(cursor.idx),
+        .get::<T>(cursor.idx)?,
 
       Mode::Writing => {
         let val = initializer(cursor.component_id);
@@ -103,12 +103,12 @@ impl Manager {
           .ok_or(Error::NoMemo(cursor.component_id))?
           .push(val.clone());
 
-        Ok(val)
+        val
       }
     };
 
     cursor.increment();
 
-    val
+    Ok(val)
   }
 }
