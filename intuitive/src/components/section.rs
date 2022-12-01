@@ -3,13 +3,19 @@ use crate::{
   components::Component,
   element::{Any as AnyElement, Element},
   error::Result,
-  utils::geometry::{Axis, Position, Size},
+  utils::{
+    geometry::{Axis, Position, Size},
+    layout::Alignment,
+  },
 };
 
 #[derive(Clone, Default)]
 /// Wraps its child in a border and a title.
 pub struct Section {
   pub title: String,
+
+  /// [`Alingment`] of the title.
+  pub alignment: Alignment,
 
   pub children: [AnyElement; 1],
 }
@@ -39,7 +45,19 @@ impl Element for Section {
     region.repeat_char(Axis::Vertical, Position { x: min_x, y: min_y + 1 }, '│', height_minus_2);
     region.repeat_char(Axis::Vertical, Position { x: max_x, y: min_y + 1 }, '│', height_minus_2);
 
-    region.write_string(Axis::Horizontal, Position { x: 1, y: 0 }, &self.title);
+    let title_position = match self.alignment {
+      Alignment::Left => Position { x: 1, y: 0 },
+      Alignment::Center => Position {
+        x: region.size().width.saturating_sub(self.title.len() as u16) / 2,
+        y: 0,
+      },
+      Alignment::Right => Position {
+        x: region.size().width.saturating_sub(self.title.len() as u16 + 1),
+        y: 0,
+      },
+    };
+
+    region.write_string(Axis::Horizontal, title_position, &self.title);
 
     let mut region = region.narrow(
       Position { x: 1, y: 1 },

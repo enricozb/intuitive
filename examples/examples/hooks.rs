@@ -7,7 +7,7 @@ use intuitive::{
   render,
   render::hooks::{use_effect, use_state},
   terminal::Terminal,
-  utils::layout::Amount,
+  utils::layout::{Alignment, Amount},
 };
 
 #[derive(Clone, Default)]
@@ -29,7 +29,7 @@ impl Component for Root {
     render! {
       Padding(amount: Amount::Percentage(10)) {
         Section(title: "Seconds") {
-          Text(text: format!("This program has run for {} seconds", seconds))
+          Text(text: format!("This program has run for {} seconds", seconds), alignment: Alignment::Center)
         }
       }
     }

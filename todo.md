@@ -9,10 +9,8 @@
   - `on_mouse!`
 
 - components
-  - add alignment to `Text` and `Section` title
   - hstack/vstack
   - centered
-  - padding
   - input
 
 - hooks

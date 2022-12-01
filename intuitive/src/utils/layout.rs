@@ -5,6 +5,12 @@ pub enum Alignment {
   Right,
 }
 
+impl Default for Alignment {
+  fn default() -> Self {
+    Self::Left
+  }
+}
+
 #[derive(Clone, Copy)]
 pub enum Amount {
   Fixed(u16),

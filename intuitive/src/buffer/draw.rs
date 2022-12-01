@@ -28,27 +28,16 @@ pub trait Draw {
   /// For [`Axis::Horizontal`], the provided position is the left-most character of the string,
   /// and for [`Axis::Vertical`], the provided position is the top-most character of the string.
   fn write_string(&mut self, axis: Axis, mut position: Position, string: &str) {
-    match axis {
-      Axis::Horizontal => {
-        for chr in string.chars() {
-          if !self.set_cell(position, Cell { chr: Some(chr) }) {
-            return;
-          }
-
-          position.x += 1;
-        }
+    for chr in string.chars() {
+      if !self.set_cell(position, Cell { chr: Some(chr) }) {
+        return;
       }
 
-      Axis::Vertical => {
-        for chr in string.chars() {
-          if !self.set_cell(position, Cell { chr: Some(chr) }) {
-            return;
-          }
-
-          position.y += 1;
-        }
+      match axis {
+        Axis::Horizontal => position.x += 1,
+        Axis::Vertical => position.y += 1,
       }
-    };
+    }
   }
 
   /// Repeats a `char` at a given [`Position`] and [`Axis`] `n` times.
@@ -56,27 +45,16 @@ pub trait Draw {
   /// For [`Axis::Horizontal`], the provided position is the left-most character of the string,
   /// and for [`Axis::Vertical`], the provided position is the top-most character of the string.
   fn repeat_char(&mut self, axis: Axis, mut position: Position, chr: char, n: u16) {
-    match axis {
-      Axis::Horizontal => {
-        for _ in 0..n {
-          if !self.set_cell(position, Cell { chr: Some(chr) }) {
-            return;
-          }
-
-          position.x += 1;
-        }
+    for _ in 0..n {
+      if !self.set_cell(position, Cell { chr: Some(chr) }) {
+        return;
       }
 
-      Axis::Vertical => {
-        for _ in 0..n {
-          if !self.set_cell(position, Cell { chr: Some(chr) }) {
-            return;
-          }
-
-          position.y += 1;
-        }
+      match axis {
+        Axis::Horizontal => position.x += 1,
+        Axis::Vertical => position.y += 1,
       }
-    };
+    }
   }
 
   /// Returns the size of the region being drawn onto.
