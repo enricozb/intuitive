@@ -1,20 +1,17 @@
 use intuitive::{
-  components::{Component, Section, Text},
+  component,
+  components::{Section, Text},
   element::Any as AnyElement,
   error::Result,
   render,
   terminal::Terminal,
 };
 
-#[derive(Clone, Default)]
-pub struct Root {}
-
-impl Component for Root {
-  fn render(&self) -> AnyElement {
-    render! {
-      Section(title: "Hello, world!") {
-        Text(text: "Here's a basic example of intuitive!")
-      }
+#[component(Root)]
+fn render() -> AnyElement {
+  render! {
+    Section(title: "Hello, world!") {
+      Text(text: "Here's a basic example of intuitive!")
     }
   }
 }

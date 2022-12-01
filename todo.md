@@ -9,8 +9,9 @@
   - `on_mouse!`
 
 - components
+  - sized (basically a centered region with a fixed size, as opposed to a fixed padding)
+  - `Text` multi-line string
   - hstack/vstack
-  - centered
   - input
 
 - hooks
@@ -39,3 +40,6 @@
 - tests
   - `use_state`
   - `use_effect`
+
+- docs
+  - macros

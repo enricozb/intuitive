@@ -8,4 +8,4 @@ pub mod utils;
 
 pub mod event;
 
-pub use intuitive_macros::render;
+pub use intuitive_macros::{component, render};

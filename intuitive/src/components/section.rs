@@ -14,7 +14,7 @@ use crate::{
 pub struct Section {
   pub title: String,
 
-  /// [`Alingment`] of the title.
+  /// [`Alignment`] of the title.
   pub alignment: Alignment,
 
   pub children: [AnyElement; 1],
