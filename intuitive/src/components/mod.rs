@@ -1,13 +1,15 @@
 mod any;
+mod fixed;
 mod padding;
 mod section;
 mod text;
 
+pub use fixed::Fixed;
 pub use padding::Padding;
 pub use section::Section;
 pub use text::Text;
 
-pub use self::any::Any;
+pub(crate) use self::any::Any;
 use crate::element::Any as AnyElement;
 #[allow(unused)]
 use crate::element::Element;

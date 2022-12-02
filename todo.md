@@ -9,7 +9,6 @@
   - `on_mouse!`
 
 - components
-  - sized (basically a centered region with a fixed size, as opposed to a fixed padding)
   - `Text` multi-line string
   - hstack/vstack
   - input

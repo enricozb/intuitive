@@ -2,7 +2,7 @@ use std::{thread, time::Duration};
 
 use intuitive::{
   component,
-  components::{Padding, Section, Text},
+  components::{Fixed, Padding, Section, Text},
   element::Any as AnyElement,
   error::Result,
   render,
@@ -26,8 +26,10 @@ fn render() -> AnyElement {
 
   render! {
     Padding(amount: Amount::Percentage(10)) {
-      Section(title: "Seconds") {
-        Text(text: format!("This program has run for {} seconds", seconds), alignment: Alignment::Center)
+      Fixed(height: Amount::Fixed(3)) {
+        Section(title: "Seconds") {
+          Text(text: format!("This program has run for {} seconds", seconds), alignment: Alignment::Center)
+        }
       }
     }
   }

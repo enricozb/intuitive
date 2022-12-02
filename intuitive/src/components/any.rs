@@ -10,7 +10,7 @@ use crate::element::Element;
 /// A container for functions that return an [`Element`]. This is used as a way to
 /// capture a closure of a [`Component::render`] call.
 #[derive(Clone)]
-pub struct Any {
+pub(crate) struct Any {
   pub component: Arc<Mutex<Box<dyn Fn() -> AnyElement + Send>>>,
 }
 

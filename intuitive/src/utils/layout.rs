@@ -13,9 +13,17 @@ impl Default for Alignment {
 
 #[derive(Clone, Copy)]
 pub enum Amount {
+  /// A fixed amount in cells.
   Fixed(u16),
   /// A percentage as an integer, ranging from 0-100.
   Percentage(u8),
+}
+
+impl Default for Amount {
+  /// Defaults to 100%.
+  fn default() -> Self {
+    Self::Percentage(100)
+  }
 }
 
 impl Amount {

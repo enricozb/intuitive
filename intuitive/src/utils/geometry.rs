@@ -1,6 +1,6 @@
 use std::ops::Add;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct Size {
   pub width: u16,
   pub height: u16,
