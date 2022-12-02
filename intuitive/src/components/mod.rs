@@ -2,11 +2,13 @@ mod any;
 mod fixed;
 mod padding;
 mod section;
+mod stack;
 mod text;
 
 pub use fixed::Fixed;
 pub use padding::Padding;
 pub use section::Section;
+pub use stack::Stack;
 pub use text::Text;
 
 pub(crate) use self::any::Any;

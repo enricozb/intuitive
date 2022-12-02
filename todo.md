@@ -4,12 +4,18 @@
   - focusing system
 
 - macros
+  - `render!`
+    - add the ability to specify generic parameters when using components, using turbofish:
+      ```rust
+      render! {
+        Table::<3>()
+      }
+      ```
   - `on_key!`
   - `on_mouse!`
 
 - components
   - `Text` multi-line string
-  - hstack/vstack
   - input
 
 - hooks
@@ -34,6 +40,11 @@
 - misc
   - `Terminal::render` should ensure that cleanup is called before it leaves that function, or else error isn't printed
   - cursor showing/hiding ability (or leave this to crossterm?)
+
+- layout
+  - add `FlexArray<N>` and `Children<N>` so we can derive `Default` for these.
+  - when laying things out in `Stack`, we need to compute the remaiing space across `Grow` cases, and spread out
+    the remainder evenly among the first `k` children.
 
 - tests
   - `use_state`

@@ -37,3 +37,46 @@ impl Amount {
     }
   }
 }
+
+/// Controls how much space a child of a flex component should occupy.
+#[derive(Clone, Copy)]
+pub enum Flex {
+  /// A fixed amount of space in cells.
+  Fixed(u16),
+  /// A relative amount of height or width.
+  Grow(u16),
+}
+
+impl Default for Flex {
+  /// Defaults to [`Flex::Grow`]`(1)`.
+  fn default() -> Self {
+    Self::Grow(1)
+  }
+}
+
+impl Flex {
+  /// Returns the inner value of [`Self::Fixed`], or `0`.
+  #[must_use]
+  pub fn fixed(&self) -> u16 {
+    match self {
+      Self::Fixed(fixed) => *fixed,
+      Self::Grow(_) => 0,
+    }
+  }
+
+  /// Returns the inner value of [`Self::Grow`], or `0`.
+  #[must_use]
+  pub fn grow(&self) -> u16 {
+    match self {
+      Self::Fixed(_) => 0,
+      Self::Grow(rel) => *rel,
+    }
+  }
+}
+
+/// Controls the direction a flex component should layout its children.
+#[derive(Clone, Copy)]
+pub enum FlexDirection {
+  Row,
+  Column,
+}

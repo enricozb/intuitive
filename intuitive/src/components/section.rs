@@ -10,8 +10,8 @@ use crate::{
   },
 };
 
-#[derive(Clone, Default)]
 /// Wraps its child in a border and a title.
+#[derive(Clone, Default)]
 pub struct Section {
   pub title: String,
 

@@ -1,3 +1,6 @@
+// A hack so macro uses within intuitive use the correct crate name.
+extern crate self as intuitive;
+
 pub mod buffer;
 pub mod components;
 pub mod element;

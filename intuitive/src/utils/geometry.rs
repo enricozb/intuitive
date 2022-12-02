@@ -18,6 +18,12 @@ pub struct Position {
   pub y: u16,
 }
 
+impl From<(u16, u16)> for Position {
+  fn from((x, y): (u16, u16)) -> Self {
+    Self { x, y }
+  }
+}
+
 impl Add for Position {
   type Output = Self;
 

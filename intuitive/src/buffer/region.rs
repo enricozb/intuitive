@@ -30,12 +30,15 @@ impl<'a> Region<'a> {
   /// # Errors
   ///
   /// Will return `Err` if the desired region exceeds the current region's bounds.
-  pub fn narrow(&'a mut self, position: Position, size: Size) -> Result<Self> {
+  pub fn narrow<'b>(&'b mut self, position: Position, size: Size) -> Result<Region<'b>>
+  where
+    'a: 'b,
+  {
     if position.x + size.width > self.size.width || position.y + size.height > self.size.height {
       return Err(Error::RegionOutOfBounds);
     }
 
-    Ok(Self {
+    Ok(Region {
       position: self.position + position,
       size,
       buffer: self.buffer,
