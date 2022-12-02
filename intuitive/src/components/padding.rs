@@ -9,26 +9,17 @@ use crate::{
   },
 };
 
-#[derive(Clone)]
 /// Renders its child with padding around it.
 ///
 /// If the provided amount is a [`Amount::Percentage`], then the horizontal padding will be a
 /// percentage of the width of the terminal, and the vertical padding will be a percentage
 /// of its hight.
+#[derive(Clone, Default)]
 pub struct Padding {
   /// The amount of padding.
   pub amount: Amount,
 
   pub children: Children<1>,
-}
-
-impl Default for Padding {
-  fn default() -> Self {
-    Self {
-      amount: Amount::Fixed(2),
-      children: Default::default(),
-    }
-  }
 }
 
 impl Component for Padding {
