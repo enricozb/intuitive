@@ -33,7 +33,7 @@ pub fn parse(attr: TokenStream, item: TokenStream) -> TokenStream {
 
   let retty = match sig.output {
     ReturnType::Default => syn::parse(quote! { -> #crate_name::element::Any }.into()).unwrap(),
-    retty => retty,
+    retty @ ReturnType::Type(..) => retty,
   };
 
   let param_names: Vec<Box<Pat>> = params

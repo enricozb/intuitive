@@ -6,11 +6,16 @@ use std::{
   iter,
 };
 
-use crossterm::{cursor::MoveTo, queue, style::Print};
+use crossterm::{
+  cursor::MoveTo,
+  queue,
+  style::{Print, SetStyle},
+};
 
 use self::draw::Draw;
 use crate::{
   error::Result,
+  style::Style,
   utils::geometry::{Position, Size},
 };
 
@@ -46,14 +51,22 @@ impl Buffer {
     Diffs { cells: diffs }
   }
 
-  /// Draws the difference between `other` and `self` onto `stdout`.
-  pub(crate) fn draw_diff(&self, other: &Self, stdout: &mut Stdout) -> Result<()> {
+  /// Paints the difference between `other` and `self` onto `stdout`.
+  pub(crate) fn paint_diffs(&self, other: &Self, stdout: &mut Stdout) -> Result<()> {
     for (pos, cell) in self.diffs(other).cells {
       queue!(stdout, MoveTo(pos.x, pos.y))?;
 
       match cell {
-        None | Some(Cell { chr: None, .. }) => queue!(stdout, Print(" "))?,
-        Some(Cell { chr: Some(c), .. }) => queue!(stdout, Print(c))?,
+        None => queue!(stdout, Print(" "))?,
+        Some(Cell { chr: None, style }) => {
+          queue!(stdout, SetStyle((*style).into()))?;
+          queue!(stdout, Print(" "))?;
+        }
+
+        Some(Cell { chr: Some(c), style }) => {
+          queue!(stdout, SetStyle((*style).into()))?;
+          queue!(stdout, Print(c))?;
+        }
       };
     }
 
@@ -84,6 +97,7 @@ impl Draw for Buffer {
 #[derive(PartialEq, Eq, Debug)]
 pub struct Cell {
   chr: Option<char>,
+  style: Style,
 }
 
 /// Differences between two [`Buffer`]s.

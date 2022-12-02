@@ -41,8 +41,6 @@ impl Element for Fixed {
       Size { width, height },
     )?;
 
-    eprintln!("new region size: {:?}", region.size());
-
     self.children[0].draw(&mut region)?;
 
     Ok(())

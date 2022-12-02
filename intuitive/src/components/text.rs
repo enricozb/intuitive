@@ -3,6 +3,7 @@ use crate::{
   components::Component,
   element::{Any as AnyElement, Element},
   error::Result,
+  style::Style,
   utils::{
     geometry::{Axis, Position},
     layout::Alignment,
@@ -24,6 +25,7 @@ impl Component for Text {
 
 impl Element for Text {
   fn draw(&self, region: &mut Region) -> Result<()> {
+    #[allow(clippy::cast_possible_truncation)]
     let position = match self.alignment {
       Alignment::Left => Position::default(),
       Alignment::Center => Position {
@@ -36,7 +38,7 @@ impl Element for Text {
       },
     };
 
-    region.write_string(Axis::Horizontal, position, &self.text);
+    region.write_string(Axis::Horizontal, position, &self.text, Style::default());
 
     Ok(())
   }

@@ -3,6 +3,7 @@ pub mod components;
 pub mod element;
 pub mod error;
 pub mod render;
+pub mod style;
 pub mod terminal;
 pub mod utils;
 

@@ -3,6 +3,7 @@ use crate::{
   components::Component,
   element::{Any as AnyElement, Element},
   error::Result,
+  style::Style,
   utils::{
     geometry::{Axis, Position, Size},
     layout::Alignment,
@@ -13,6 +14,9 @@ use crate::{
 /// Wraps its child in a border and a title.
 pub struct Section {
   pub title: String,
+
+  /// [`Style`] of the border.
+  pub border: Style,
 
   /// [`Alignment`] of the title.
   pub alignment: Alignment,
@@ -32,19 +36,20 @@ impl Element for Section {
     let (min_x, min_y) = (0, 0);
     let (max_x, max_y) = (size.width.saturating_sub(1), size.height.saturating_sub(1));
 
-    let width_minus_2 = size.width.saturating_sub(2);
-    let height_minus_2 = size.height.saturating_sub(2);
+    let width_sub_2 = size.width.saturating_sub(2);
+    let height_sub_2 = size.height.saturating_sub(2);
 
-    region.set_char(Position { x: min_x, y: min_y }, '╭');
-    region.set_char(Position { x: max_x, y: min_y }, '╮');
-    region.set_char(Position { x: max_x, y: max_y }, '╯');
-    region.set_char(Position { x: min_x, y: max_y }, '╰');
+    region.set_char(Position { x: min_x, y: min_y }, '╭', self.border);
+    region.set_char(Position { x: max_x, y: min_y }, '╮', self.border);
+    region.set_char(Position { x: max_x, y: max_y }, '╯', self.border);
+    region.set_char(Position { x: min_x, y: max_y }, '╰', self.border);
 
-    region.repeat_char(Axis::Horizontal, Position { x: min_x + 1, y: min_y }, '─', width_minus_2);
-    region.repeat_char(Axis::Horizontal, Position { x: min_x + 1, y: max_y }, '─', width_minus_2);
-    region.repeat_char(Axis::Vertical, Position { x: min_x, y: min_y + 1 }, '│', height_minus_2);
-    region.repeat_char(Axis::Vertical, Position { x: max_x, y: min_y + 1 }, '│', height_minus_2);
+    region.repeat_char(Axis::Horizontal, Position { x: min_x + 1, y: min_y }, '─', self.border, width_sub_2);
+    region.repeat_char(Axis::Horizontal, Position { x: min_x + 1, y: max_y }, '─', self.border, width_sub_2);
+    region.repeat_char(Axis::Vertical, Position { x: min_x, y: min_y + 1 }, '│', self.border, height_sub_2);
+    region.repeat_char(Axis::Vertical, Position { x: max_x, y: min_y + 1 }, '│', self.border, height_sub_2);
 
+    #[allow(clippy::cast_possible_truncation)]
     let title_position = match self.alignment {
       Alignment::Left => Position { x: 1, y: 0 },
       Alignment::Center => Position {
@@ -57,13 +62,13 @@ impl Element for Section {
       },
     };
 
-    region.write_string(Axis::Horizontal, title_position, &self.title);
+    region.write_string(Axis::Horizontal, title_position, &self.title, Style::default());
 
     let mut region = region.narrow(
       Position { x: 1, y: 1 },
       Size {
-        width: width_minus_2,
-        height: height_minus_2,
+        width: width_sub_2,
+        height: height_sub_2,
       },
     )?;
 

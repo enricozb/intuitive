@@ -7,6 +7,7 @@ use intuitive::{
   error::Result,
   render,
   render::hooks::{use_effect, use_state},
+  style::Color,
   terminal::Terminal,
   utils::layout::{Alignment, Amount},
 };
@@ -27,7 +28,7 @@ fn render() -> AnyElement {
   render! {
     Padding(amount: Amount::Percentage(10)) {
       Fixed(height: Amount::Fixed(3)) {
-        Section(title: "Seconds") {
+        Section(title: "Seconds", border: Color::Red) {
           Text(text: format!("This program has run for {} seconds", seconds), alignment: Alignment::Center)
         }
       }

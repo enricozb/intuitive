@@ -1,7 +1,10 @@
 use super::Cell;
 #[allow(unused)]
 use super::{region::Region, Buffer};
-use crate::utils::geometry::{Axis, Position, Size};
+use crate::{
+  style::Style,
+  utils::geometry::{Axis, Position, Size},
+};
 
 /// Types that can be drawn onto, mostly for [`Buffer`] and [`Region`].
 pub trait Draw {
@@ -19,17 +22,17 @@ pub trait Draw {
   }
 
   /// Sets a [`char`] at a given [`Position`].
-  fn set_char(&mut self, position: Position, chr: char) -> bool {
-    self.set_cell(position, Cell { chr: Some(chr) })
+  fn set_char(&mut self, position: Position, chr: char, style: Style) -> bool {
+    self.set_cell(position, Cell { chr: Some(chr), style })
   }
 
   /// Writes a string at a given [`Position`] and [`Axis`].
   ///
   /// For [`Axis::Horizontal`], the provided position is the left-most character of the string,
   /// and for [`Axis::Vertical`], the provided position is the top-most character of the string.
-  fn write_string(&mut self, axis: Axis, mut position: Position, string: &str) {
+  fn write_string(&mut self, axis: Axis, mut position: Position, string: &str, style: Style) {
     for chr in string.chars() {
-      if !self.set_cell(position, Cell { chr: Some(chr) }) {
+      if !self.set_cell(position, Cell { chr: Some(chr), style }) {
         return;
       }
 
@@ -44,9 +47,9 @@ pub trait Draw {
   ///
   /// For [`Axis::Horizontal`], the provided position is the left-most character of the string,
   /// and for [`Axis::Vertical`], the provided position is the top-most character of the string.
-  fn repeat_char(&mut self, axis: Axis, mut position: Position, chr: char, n: u16) {
+  fn repeat_char(&mut self, axis: Axis, mut position: Position, chr: char, style: Style, n: u16) {
     for _ in 0..n {
-      if !self.set_cell(position, Cell { chr: Some(chr) }) {
+      if !self.set_cell(position, Cell { chr: Some(chr), style }) {
         return;
       }
 

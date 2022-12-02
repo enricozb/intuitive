@@ -90,17 +90,17 @@ impl Terminal {
   /// Draw the provided [`Element`] onto the terminal.
   fn draw(&mut self, element: &AnyElement) -> Result<()> {
     element.draw(&mut self.current_region())?;
-    self.draw_diffs()?;
+    self.paint_diffs()?;
 
     Ok(())
   }
 
   /// Draw the differences between the current and previous [`Buffer`]s onto [`Self::stdout`].
-  fn draw_diffs(&mut self) -> Result<()> {
+  fn paint_diffs(&mut self) -> Result<()> {
     let current_buffer = &self.buffers[usize::from(self.idx)];
     let previous_buffer = &self.buffers[usize::from(!self.idx)];
 
-    current_buffer.draw_diff(previous_buffer, &mut self.stdout)?;
+    current_buffer.paint_diffs(previous_buffer, &mut self.stdout)?;
 
     self.idx = !self.idx;
 
