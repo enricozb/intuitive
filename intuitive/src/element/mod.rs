@@ -14,4 +14,13 @@ pub trait Element {
   /// Draw the element onto the given [`Region`].
   #[allow(clippy::missing_errors_doc)]
   fn draw<'a>(&self, region: &'a mut Region<'a>) -> Result<()>;
+
+  // Future methods
+  //
+  // fn on_unmount(&self) -> Result<()> {
+  //   Ok(())
+  // }
+  // fn on_key(&self, event: KeyEvent) -> Result<Propagation> {}
+  // fn on_mouse(&self, event: MouseEvent) -> Result<Propagation> {}
+  // fn on_focus(&self, event: FocusEvent) -> Result<()> {}
 }
