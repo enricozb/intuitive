@@ -1,7 +1,10 @@
 mod any;
 mod empty;
 
-pub use self::{any::Any, empty::Empty};
+pub use self::{
+  any::{Any, Children},
+  empty::Empty,
+};
 #[allow(unused)]
 use crate::components::Component;
 use crate::{buffer::region::Region, error::Result};

@@ -1,7 +1,7 @@
 use crate::{
   buffer::region::Region,
   components::Component,
-  element::{Any as AnyElement, Element},
+  element::{Any as AnyElement, Children, Element},
   error::Result,
   utils::{
     geometry::{Position, Size},
@@ -17,7 +17,7 @@ pub struct Fixed {
   pub width: Amount,
   pub height: Amount,
 
-  pub children: [AnyElement; 1],
+  pub children: Children<1>,
 }
 
 impl Component for Fixed {

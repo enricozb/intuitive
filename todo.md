@@ -44,7 +44,7 @@
 - layout
   - add `FlexArray<N>` and `Children<N>` so we can derive `Default` for these.
   - when laying things out in `Stack`, we need to compute the remaiing space across `Grow` cases, and spread out
-    the remainder evenly among the first `k` children.
+    the remainder evenly among the first `k` `Grow` children.
 
 - tests
   - `use_state`

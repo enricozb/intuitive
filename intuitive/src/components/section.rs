@@ -1,7 +1,7 @@
 use crate::{
   buffer::{draw::Draw, region::Region},
   components::Component,
-  element::{Any as AnyElement, Element},
+  element::{Any as AnyElement, Children, Element},
   error::Result,
   style::Style,
   utils::{
@@ -21,7 +21,7 @@ pub struct Section {
   /// [`Alignment`] of the title.
   pub alignment: Alignment,
 
-  pub children: [AnyElement; 1],
+  pub children: Children<1>,
 }
 
 impl Component for Section {

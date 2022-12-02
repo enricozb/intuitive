@@ -5,12 +5,18 @@ use parking_lot::Mutex;
 use super::{Element, Empty};
 #[allow(unused)]
 use crate::buffer::region::Region;
-use crate::error::Result;
+use crate::{error::Result, utils::array::Array};
 
 /// A container for any type that implements [`Element`].
 #[derive(Clone)]
 pub struct Any {
   element: Arc<Mutex<Cell<Box<dyn Element + Send>>>>,
+}
+
+impl Default for Any {
+  fn default() -> Self {
+    Self::new(Empty)
+  }
 }
 
 impl Any {
@@ -42,8 +48,5 @@ impl Any {
   }
 }
 
-impl Default for Any {
-  fn default() -> Self {
-    Self::new(Empty)
-  }
-}
+/// An [`Array`] of [`AnyElement`][struct@Any].
+pub type Children<const N: usize> = Array<N, Any>;

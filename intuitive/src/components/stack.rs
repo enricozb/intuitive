@@ -1,27 +1,17 @@
 use crate::{
   buffer::region::Region,
   components::Component,
-  element::{Any as AnyElement, Element},
+  element::{Any as AnyElement, Children, Element},
   error::Result,
-  utils::layout::{Flex, FlexDirection},
+  utils::layout::{Flex, FlexArray, FlexDirection},
 };
 
 /// A component that renders stacks of its children.
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct Stack<const N: usize> {
   pub direction: FlexDirection,
-  pub flex: [Flex; N],
-  pub children: [AnyElement; N],
-}
-
-impl<const N: usize> Default for Stack<N> {
-  fn default() -> Self {
-    Self {
-      direction: FlexDirection::Row,
-      flex: [(); N].map(|()| Flex::default()),
-      children: [(); N].map(|()| AnyElement::default()),
-    }
-  }
+  pub flex: FlexArray<N>,
+  pub children: Children<N>,
 }
 
 impl<const N: usize> Component for Stack<N> {

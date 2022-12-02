@@ -1,3 +1,5 @@
+use crate::utils::array::Array;
+
 #[derive(Clone, Copy)]
 pub enum Alignment {
   Left,
@@ -74,9 +76,18 @@ impl Flex {
   }
 }
 
+/// An [`Array`] of [`Flex`] elements.
+pub type FlexArray<const N: usize> = Array<N, Flex>;
+
 /// Controls the direction a flex component should layout its children.
 #[derive(Clone, Copy)]
 pub enum FlexDirection {
   Row,
   Column,
+}
+
+impl Default for FlexDirection {
+  fn default() -> Self {
+    Self::Row
+  }
 }

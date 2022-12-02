@@ -1,7 +1,7 @@
 use crate::{
   buffer::region::Region,
   components::Component,
-  element::{Any as AnyElement, Element},
+  element::{Any as AnyElement, Children, Element},
   error::Result,
   utils::{
     geometry::{Position, Size},
@@ -19,7 +19,7 @@ pub struct Padding {
   /// The amount of padding.
   pub amount: Amount,
 
-  pub children: [AnyElement; 1],
+  pub children: Children<1>,
 }
 
 impl Default for Padding {
