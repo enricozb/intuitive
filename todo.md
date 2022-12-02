@@ -4,7 +4,6 @@
   - focusing system
 
 - macros
-  - `#[component]`
   - `on_key!`
   - `on_mouse!`
 
