@@ -23,6 +23,25 @@
 
   - in order for events to propagate properly, we need a hierarchy of elements
     - `render` needs to know which elements are parents of others
+    - **this is a different notion of parents than when unmounting**
+      if we have a root component that renders `Section() { Text() }`, the root element's immediate
+      children (in the unmounting sense) are `Section` and `Text`. However, in the sense of event
+      propagation, `Text` is a child of `Section`, and `Section` a child of the root element.
+      - perhaps the `render` function shoudl take care of this? Maybe we have to manaully pass in a components parent id?
+        - nah this won't work, because a component can be rendered not immediately in the context of its parent, and then
+          passed in later:
+          ```
+          let el = render! { SomeComponent() };
+          render! { Section() { Embed(el) } }
+          ```
+        - nah this would work, b/c the second `render!` call could call `render()` on `Section`, and apply this `set_parent`
+          to the provided child, `Embed`.
+        - but it's a little hard to introspect an element's children within `render()`, and might be easier within `render!`
+      - perhaps the `render!` macro can take this. Any time we pass in children, we call a function on `Children<N>`, like
+        `Children::register_parent` or something.
+        - or we read the IDs from the children manually and register them then
+          - i _think_ this could work, because children being prop drilled will have this called multiple times on them,
+            the last one being on the parent they ended up with
 
 - macros
   - `render!`
@@ -36,12 +55,14 @@
   - `on_mouse!`
 
 - components
+  - `Embed`
   - `Text` multi-line string
   - input
 
 - hooks
   - `use_memo`
   - `use_effect`
+    - if it returns a closure, it should be cleaned up on unmount
     - having a `deps: D` arg is a little difficult:
       - if the depenedency is a `State`, then just saving a clone of it wouldn't let us compare it to future
         versions of the state because the clone and the "future" version would hold `Arc`s to the same point
@@ -56,6 +77,7 @@
       - call an `on_umount` method on the element
       - have `Initializer` return something that implements `Unmountable`, so we can call `unmount` on
         `State`, and other structs returned by `use_hook`.
+        - `Memos` would have to be changed to store `dyn Unmountable` (better named `Hook`)
       - delete the hooks from the global `COMPONENTS` and `ELEMENTS`
 
 - misc
