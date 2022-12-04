@@ -35,10 +35,7 @@ impl Element for Padding {
     let padding_y = self.amount.of(size.height);
 
     let mut region = region.narrow(
-      Position {
-        x: padding_x,
-        y: padding_y,
-      },
+      Position { x: padding_x, y: padding_y },
       Size {
         width: size.width.saturating_sub(padding_x * 2),
         height: size.height.saturating_sub(padding_y * 2),

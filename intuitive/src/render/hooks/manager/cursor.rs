@@ -15,11 +15,7 @@ pub(crate) struct Cursor {
 impl Cursor {
   /// Creates a new [`Cursor`].
   pub fn new(component_id: ComponentID, hooks: Hooks) -> Self {
-    Self {
-      component_id,
-      hooks,
-      idx: 0,
-    }
+    Self { component_id, hooks, idx: 0 }
   }
 
   /// Calls [`Hooks::seal`] as appropriate.

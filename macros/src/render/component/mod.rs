@@ -52,9 +52,7 @@ impl ToTokens for Component {
     let crate_name = utils::crate_name();
     let component_id = self.component_id();
 
-    let Self {
-      name, params, children, ..
-    } = self;
+    let Self { name, params, children, .. } = self;
 
     tokens.extend(quote! {
       #crate_name::render::render(

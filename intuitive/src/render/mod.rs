@@ -57,11 +57,7 @@ pub fn render<C: Component + 'static + Send>(component_id: ComponentID, componen
 ///
 /// Will return `Err` if a component has not yet been rendered with the provided [`ComponentID`].
 pub fn rerender(component_id: ComponentID) -> Result<()> {
-  let component = COMPONENTS
-    .lock()
-    .get(&component_id)
-    .ok_or(Error::NoComponent(component_id))?
-    .clone();
+  let component = COMPONENTS.lock().get(&component_id).ok_or(Error::NoComponent(component_id))?.clone();
   let old_element = ELEMENTS.lock().get(&component_id).ok_or(Error::NoElement(component_id))?.clone();
 
   let new_element = manager::with(component_id, || component.render());

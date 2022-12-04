@@ -70,13 +70,7 @@ impl Hook {
   ///
   /// Will return an `Err` if the hook's value can't be cast to `T`.
   pub fn downcast_ref<T: 'static + Clone>(&self) -> Result<T> {
-    Ok(
-      self
-        .value
-        .downcast_ref::<T>()
-        .ok_or(Error::InvalidType(any::type_name::<T>()))?
-        .clone(),
-    )
+    Ok(self.value.downcast_ref::<T>().ok_or(Error::InvalidType(any::type_name::<T>()))?.clone())
   }
 }
 
