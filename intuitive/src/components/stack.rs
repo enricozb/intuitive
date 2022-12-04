@@ -1,17 +1,38 @@
 use crate::{
   buffer::region::Region,
+  component,
   components::Component,
   element::{Any as AnyElement, Children, Element},
   error::Result,
+  render,
   utils::layout::{Flex, FlexArray, FlexDirection},
 };
 
 /// A component that renders stacks of its children.
+///
+/// [`Stack`] is typically only used directly when you need the [`FlexDirection`] of the stack to be dynamic.
+/// See [`HStack`] and [`VStack`] for components that render stacks of children in a fixed direction.
 #[derive(Clone, Default)]
 pub struct Stack<const N: usize> {
   pub direction: FlexDirection,
   pub flex: FlexArray<N>,
   pub children: Children<N>,
+}
+
+/// A component that renders a horizontal stack of its children.
+#[component(HStack<const N: usize>)]
+pub fn render(flex: FlexArray<N>, children: Children<N>) -> AnyElement {
+  render! {
+    Stack(direction: FlexDirection::Row, flex: flex.clone(), children: children.clone())
+  }
+}
+
+/// A component that renders a vertical stack of its children.
+#[component(VStack<const N: usize>)]
+pub fn render(flex: FlexArray<N>, children: Children<N>) -> AnyElement {
+  render! {
+    Stack(direction: FlexDirection::Column, flex: flex.clone(), children: children.clone())
+  }
 }
 
 impl<const N: usize> Component for Stack<N> {

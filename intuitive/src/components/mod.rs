@@ -1,14 +1,16 @@
 mod any;
+mod embed;
 mod fixed;
 mod padding;
 mod section;
 mod stack;
 mod text;
 
+pub use embed::Embed;
 pub use fixed::Fixed;
 pub use padding::Padding;
 pub use section::Section;
-pub use stack::Stack;
+pub use stack::{HStack, Stack, VStack};
 pub use text::Text;
 
 pub(crate) use self::any::Any;

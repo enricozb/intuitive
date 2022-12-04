@@ -94,3 +94,5 @@
 
 - docs
   - macros
+  - hooks
+    - writing custom hooks

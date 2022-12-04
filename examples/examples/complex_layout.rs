@@ -1,17 +1,17 @@
 use intuitive::{
   component,
-  components::{Section, Stack},
+  components::{HStack, Section, VStack},
   element::Any as AnyElement,
   error::Result,
   render,
   terminal::Terminal,
-  utils::layout::{Flex::*, FlexDirection},
+  utils::layout::Flex::*,
 };
 
 #[component(Root)]
 fn render() -> AnyElement {
   render! {
-    Stack(direction: FlexDirection::Row, flex: [Grow(1), Grow(2)]) {
+    HStack(flex: [Grow(1), Grow(2)]) {
       Commits()
       Files()
     }
@@ -21,7 +21,7 @@ fn render() -> AnyElement {
 #[component(Commits)]
 fn render() -> AnyElement {
   render! {
-    Stack(direction: FlexDirection::Column, flex: [Fixed(3), Grow(1), Grow(1), Grow(1), Fixed(3)]) {
+    VStack(flex: [Fixed(3), Grow(1), Grow(1), Grow(1), Fixed(3)]) {
       Section(title: "Status")
       Section(title: "Files")
       Section(title: "Branches")
@@ -34,7 +34,7 @@ fn render() -> AnyElement {
 #[component(Files)]
 fn render() -> AnyElement {
   render! {
-    Stack(direction: FlexDirection::Column, flex: [Grow(3), Grow(1)]) {
+    VStack(flex: [Grow(3), Grow(1)]) {
       Section(title: "Unstaged Changes")
       Section(title: "Command Log")
     }
