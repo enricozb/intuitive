@@ -43,15 +43,12 @@ pub struct ComponentID {
 /// specific instance of a component.
 pub fn render<C: Component + 'static + Send>(component_id: ComponentID, component: C) -> AnyElement {
   let component = AnyComponent::new(component);
+  let element = manager::with(component_id, || component.render());
 
-  manager::with(component_id, || {
-    let element = component.render();
+  COMPONENTS.lock().insert(component_id, component);
+  ELEMENTS.lock().insert(component_id, element.clone());
 
-    COMPONENTS.lock().insert(component_id, component);
-    ELEMENTS.lock().insert(component_id, element.clone());
-
-    element
-  })
+  element
 }
 
 /// Re-renders an already rendered component, specified by its [`ComponentID`].
@@ -60,19 +57,16 @@ pub fn render<C: Component + 'static + Send>(component_id: ComponentID, componen
 ///
 /// Will return `Err` if a component has not yet been rendered with the provided [`ComponentID`].
 pub fn rerender(component_id: ComponentID) -> Result<()> {
-  manager::with(component_id, || -> Result<()> {
-    let (component, element) = {
-      let components = COMPONENTS.lock();
-      let elements = ELEMENTS.lock();
+  let component = COMPONENTS
+    .lock()
+    .get(&component_id)
+    .ok_or(Error::NoComponent(component_id))?
+    .clone();
+  let old_element = ELEMENTS.lock().get(&component_id).ok_or(Error::NoElement(component_id))?.clone();
 
-      let component = components.get(&component_id).ok_or(Error::NoComponent(component_id))?;
-      let element = elements.get(&component_id).ok_or(Error::NoElement(component_id))?;
+  let new_element = manager::with(component_id, || component.render());
 
-      (component.clone(), element.clone())
-    };
+  old_element.swap(&new_element);
 
-    element.swap(&component.render());
-
-    Ok(())
-  })
+  Ok(())
 }

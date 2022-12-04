@@ -14,7 +14,7 @@ use crate::{
   },
 };
 
-/// A container for a `T` which causes re-renders when mutated.
+/// A container for a `T` which causes re-renders when mutated, returned by [`use_state`].
 ///
 /// `State` is created through [`use_state`].
 pub struct State<T> {
