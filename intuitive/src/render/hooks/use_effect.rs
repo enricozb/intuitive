@@ -1,4 +1,4 @@
-use crate::render::hooks::manager;
+use crate::render::hooks::{manager, Hook};
 
 /// A hook to execute a function once within a component.
 ///
@@ -14,5 +14,10 @@ pub fn use_effect<F, T>(func: F)
 where
   F: FnOnce() -> T,
 {
-  manager::use_hook(|_| drop(func())).expect("use_effect: use_hook");
+  manager::use_hook::<()>(|_| {
+    drop(func());
+
+    Hook::from_value(())
+  })
+  .expect("use_effect: use_hook");
 }

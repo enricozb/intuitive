@@ -8,7 +8,10 @@ use parking_lot::Mutex;
 use crate::{
   error::Result,
   event,
-  render::{hooks::manager, ComponentID},
+  render::{
+    hooks::{manager, Hook},
+    ComponentID,
+  },
 };
 
 /// A container for a `T` which causes re-renders when mutated.
@@ -137,5 +140,5 @@ where
   F: FnOnce() -> T,
   T: 'static + Send,
 {
-  manager::use_hook(|component_id| State::new(component_id, initializer())).expect("use_state: use_hook")
+  manager::use_hook(|component_id| Hook::from_value(State::new(component_id, initializer()))).expect("use_state: use_hook")
 }

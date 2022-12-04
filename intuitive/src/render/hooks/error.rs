@@ -1,7 +1,5 @@
 use thiserror::Error;
 
-use crate::render::ComponentID;
-
 pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Error, Debug)]
@@ -9,10 +7,16 @@ pub enum Error {
   #[error("Cursor stack is empty")]
   NoCursor,
 
-  #[error("No Memos for component: {0:?}")]
-  NoMemo(ComponentID),
+  #[error("Hooks::get before sealed")]
+  NotSealed,
 
-  #[error("No memoized value for index: {0}")]
+  #[error("Hooks::push after sealed")]
+  Sealed,
+
+  #[error("Hooks::seal after sealed")]
+  AlreadySealed,
+
+  #[error("Hooks::get on invalid index: {0}")]
   InvalidIdx(usize),
 
   #[error("Invalid type: {0}")]
