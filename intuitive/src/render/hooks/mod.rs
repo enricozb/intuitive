@@ -60,11 +60,15 @@ impl Hook {
   /// Calls the `deinit` function
   pub fn deinit(self) {
     if let Some(deinit) = self.deinit {
-      deinit()
+      deinit();
     }
   }
 
   /// Calls [`Any.downcast_ref`] on the [`Hook`]s inner value.
+  ///
+  /// # Errors
+  ///
+  /// Will return an `Err` if the hook's value can't be cast to `T`.
   pub fn downcast_ref<T: 'static + Clone>(&self) -> Result<T> {
     Ok(
       self

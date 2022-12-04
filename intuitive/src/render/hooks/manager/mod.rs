@@ -26,6 +26,10 @@ where
 }
 
 /// A primitive hook used to implement higher-level hooks.
+///
+/// # Errors
+///
+/// Will return an `Err` if [`Manager::use_hook`] returns an [`Error`].
 #[allow(rustdoc::private_intra_doc_links)]
 pub fn use_hook<T>(f: impl FnOnce(ComponentID) -> Hook) -> Result<T>
 where

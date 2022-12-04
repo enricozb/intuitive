@@ -59,6 +59,7 @@ impl ToTokens for Component {
     tokens.extend(quote! {
       #crate_name::render::render(
         #component_id,
+        #[allow(clippy::needless_update)]
         #name {
           #params
           #children
