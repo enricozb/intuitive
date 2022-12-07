@@ -131,4 +131,11 @@ impl Hooks {
 
     Ok(())
   }
+
+  /// Deinitialize the contained hooks.
+  pub fn deinit(self) {
+    for hook in self.hooks {
+      hook.deinit();
+    }
+  }
 }

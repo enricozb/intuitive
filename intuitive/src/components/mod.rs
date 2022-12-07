@@ -1,5 +1,6 @@
 mod any;
 mod embed;
+mod empty;
 mod fixed;
 mod padding;
 mod section;
@@ -7,6 +8,7 @@ mod stack;
 mod text;
 
 pub use embed::Embed;
+pub use empty::Empty;
 pub use fixed::Fixed;
 pub use padding::Padding;
 pub use section::Section;

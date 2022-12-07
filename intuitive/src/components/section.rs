@@ -32,6 +32,8 @@ impl Component for Section {
 
 impl Element for Section {
   fn draw<'a>(&self, region: &'a mut Region<'a>) -> Result<()> {
+    region.clear();
+
     let size = region.size();
     let (min_x, min_y) = (0, 0);
     let (max_x, max_y) = (size.width.saturating_sub(1), size.height.saturating_sub(1));

@@ -11,9 +11,6 @@ pub enum Error {
   #[error("Hook error (perhaps hooks are called in non-deterministic order?): {0}")]
   HookError(HookError),
 
-  #[error("No component found for the given component id: {0:?}")]
-  NoComponent(ComponentID),
-
   #[error("No element found for the given component id: {0:?}")]
   NoElement(ComponentID),
 

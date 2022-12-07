@@ -12,87 +12,59 @@ use crate::render::{
 };
 
 lazy_static! {
-  /// The global hook [`Manager`].
-  static ref MANAGER: Manager = Manager::new();
+  /// A stack of [`Cursor`]s that are pushed/popped before/after [`with`].
+  static ref CURSORS: Mutex<Vec<Cursor>> = Mutex::new(Vec::new());
+
+  /// Maps [`ComponentID`]s to a component's [`Hooks`].
+  static ref HOOKS: Mutex<HashMap<ComponentID, Hooks>> = Mutex::new(HashMap::new());
 }
 
-/// Calls [`Manager::with`] for the global [`Manager`].
-#[allow(rustdoc::private_intra_doc_links)]
-pub fn with<F, T>(id: ComponentID, f: F) -> T
+/// Run a function `f` with `component_id` at the top of the [`CURSORS`] stack.
+pub fn with<F, T>(component_id: ComponentID, f: F) -> T
 where
   F: FnOnce() -> T,
 {
-  MANAGER.with(id, f)
+  let cursor = match HOOKS.lock().remove(&component_id) {
+    Some(hooks) => Cursor::new(component_id, hooks),
+    None => Cursor::new(component_id, Hooks::new()),
+  };
+
+  CURSORS.lock().push(cursor);
+
+  let ret = f();
+
+  let hooks = CURSORS
+    .lock()
+    .pop()
+    .ok_or(Error::NoCursor)
+    .expect("with: pop")
+    .done()
+    .expect("Cursor::done");
+
+  HOOKS.lock().insert(component_id, hooks);
+
+  ret
 }
 
-/// A primitive hook used to implement higher-level hooks.
+/// Returns the inner value of the current [`Hook`], constructing it with `f` if necessary.
 ///
-/// # Errors
-///
-/// Will return an `Err` if [`Manager::use_hook`] returns an [`Error`].
-#[allow(rustdoc::private_intra_doc_links)]
+/// The parameter `f` is not generic because `use_hook` is often used with a turbofish, and it
+/// would be difficult (impossible?) to specify the type of a closure.
 pub fn use_hook<T>(f: impl FnOnce(ComponentID) -> Hook) -> Result<T>
 where
   T: 'static + Send + Sync + Clone,
 {
-  MANAGER.use_hook(f)
+  CURSORS.lock().last_mut().ok_or(Error::NoCursor)?.next(f)
 }
 
-/// Manages [`use_hook`] calls across renders.
-///
-/// [`Manager`]s have interior mutability, so they can be [`Sync`].
-pub struct Manager {
-  /// A stack of [`Cursor`]s that are pushed/popped before/after rendering.
-  cursors: Mutex<Vec<Cursor>>,
-  /// Maps [`ComponentID`]s to a component's [`Hooks`].
-  hooks: Mutex<HashMap<ComponentID, Hooks>>,
+/// Returns the current [`ComponentID`] at the top of the [`CURSORS`] stack.
+pub fn current_component_id() -> Option<ComponentID> {
+  CURSORS.lock().last_mut().map(|cursor| cursor.component_id)
 }
 
-impl Manager {
-  /// Creates a new [`Manager`].
-  fn new() -> Self {
-    Self {
-      cursors: Mutex::new(Vec::new()),
-      hooks: Mutex::new(HashMap::new()),
-    }
-  }
-
-  /// Calls `f` with a [`Cursor`] for the given [`ComponentID`] at the top of the [`Self::cursors`] stack.
-  fn with<F, T>(&self, component_id: ComponentID, f: F) -> T
-  where
-    F: FnOnce() -> T,
-  {
-    let cursor = match self.hooks.lock().remove(&component_id) {
-      Some(hooks) => Cursor::new(component_id, hooks),
-      None => Cursor::new(component_id, Hooks::new()),
-    };
-
-    self.cursors.lock().push(cursor);
-
-    let ret = f();
-
-    let hooks = self
-      .cursors
-      .lock()
-      .pop()
-      .ok_or(Error::NoCursor)
-      .expect("with: pop")
-      .done()
-      .expect("Cursor::done");
-
-    self.hooks.lock().insert(component_id, hooks);
-
-    ret
-  }
-
-  /// Returns the inner value of the current [`Hook`], constructing it with `f` if necessary.
-  fn use_hook<F, T>(&self, f: F) -> Result<T>
-  where
-    F: FnOnce(ComponentID) -> Hook,
-    T: 'static + Send + Sync + Clone,
-  {
-    let mut cursors = self.cursors.lock();
-
-    cursors.last_mut().ok_or(Error::NoCursor)?.next(f)
+/// Unmounts the component, deinitializing all of its hooks.
+pub fn unmount(component_id: ComponentID) {
+  if let Some(hooks) = HOOKS.lock().remove(&component_id) {
+    hooks.deinit();
   }
 }

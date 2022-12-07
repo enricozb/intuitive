@@ -11,6 +11,17 @@ pub trait Draw {
   /// Sets an `Option<`[`Cell`]`>` at a given [`Position`].
   fn set_option_cell(&mut self, position: Position, cell: Option<Cell>) -> bool;
 
+  /// Clears all cells in a region.
+  fn clear(&mut self) {
+    let Size { width, height } = self.size();
+
+    for x in 0..width {
+      for y in 0..height {
+        self.set_option_cell(Position { x, y }, None);
+      }
+    }
+  }
+
   /// Sets a [`Cell`] at a given [`Position`].
   fn set_cell(&mut self, position: Position, cell: Cell) -> bool {
     self.set_option_cell(position, Some(cell))

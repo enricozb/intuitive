@@ -55,14 +55,12 @@
   - `on_mouse!`
 
 - components
-  - `Embed`
   - `Text` multi-line string
   - input
 
 - hooks
   - `use_memo`
   - `use_effect`
-    - if it returns a closure, it should be cleaned up on unmount
     - having a `deps: D` arg is a little difficult:
       - if the depenedency is a `State`, then just saving a clone of it wouldn't let us compare it to future
         versions of the state because the clone and the "future" version would hold `Arc`s to the same point
@@ -81,6 +79,9 @@
       - delete the hooks from the global `COMPONENTS` and `ELEMENTS`
 
 - misc
+  - remove mutexes, arcs, `Sync` and `Send` requirements by moving away from `lazy_static` and `static ref`, and instead
+    making the terminal own an instance of a render manager.
+  - implement proper tracing
   - `Terminal::render` should ensure that cleanup is called before it leaves that function, or else error isn't printed
   - cursor showing/hiding ability (or leave this to crossterm?)
 

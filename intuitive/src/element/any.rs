@@ -1,4 +1,8 @@
-use std::{cell::Cell, sync::Arc};
+use std::{
+  cell::Cell,
+  fmt::{Debug, Formatter},
+  sync::Arc,
+};
 
 use parking_lot::Mutex;
 
@@ -11,12 +15,6 @@ use crate::{error::Result, utils::array::Array};
 #[derive(Clone)]
 pub struct Any {
   element: Arc<Mutex<Cell<Box<dyn Element + Send>>>>,
-}
-
-impl Default for Any {
-  fn default() -> Self {
-    Self::new(Empty)
-  }
 }
 
 impl Any {
@@ -45,6 +43,18 @@ impl Any {
     cell.set(element);
 
     Ok(())
+  }
+}
+
+impl Element for Any {
+  fn draw<'a>(&self, region: &'a mut Region<'a>) -> Result<()> {
+    self.draw(region)
+  }
+}
+
+impl Default for Any {
+  fn default() -> Self {
+    Self::new(Empty)
   }
 }
 

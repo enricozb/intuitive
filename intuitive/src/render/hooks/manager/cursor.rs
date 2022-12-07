@@ -7,7 +7,8 @@ use crate::render::{
 
 /// A cursor for reading memoized hook values during [`fn@render`] calls.
 pub(crate) struct Cursor {
-  component_id: ComponentID,
+  pub component_id: ComponentID,
+
   hooks: Hooks,
   idx: usize,
 }
