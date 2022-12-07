@@ -50,6 +50,11 @@ where
 ///
 /// The parameter `f` is not generic because `use_hook` is often used with a turbofish, and it
 /// would be difficult (impossible?) to specify the type of a closure.
+///
+/// # Errors
+///
+/// Will return an `Err` if there is no [`Cursor`] at the top of the stack, or if
+/// [`Cursor::next`] returns an `Err`.
 pub fn use_hook<T>(f: impl FnOnce(ComponentID) -> Hook) -> Result<T>
 where
   T: 'static + Send + Sync + Clone,

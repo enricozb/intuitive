@@ -1,4 +1,7 @@
-use std::io::{self, Stdout};
+use std::{
+  io::{self, Stdout},
+  time::Instant,
+};
 
 use crossterm::{
   cursor::{Hide as HideCursor, Show as ShowCursor},
@@ -57,8 +60,11 @@ impl Terminal {
     loop {
       match event::read()? {
         Event::Rerender(component_id) => {
+          let start = Instant::now();
           render::rerender(component_id)?;
           self.draw(element)?;
+
+          eprintln!("Time elapsed in expensive_function() is: {:?}", start.elapsed());
         }
 
         Event::Resize => {

@@ -22,7 +22,6 @@ use intuitive::{
 /// A component that shows how many seconds it has been rendered for.
 #[component(Timer)]
 fn render(text: String, border: Style) -> AnyElement {
-  let text_clone = text.clone();
   let seconds = use_state(|| 0);
   let seconds_clone = seconds.clone();
 
@@ -62,7 +61,7 @@ fn render() -> AnyElement {
 
   use_effect(|| {
     thread::spawn(move || loop {
-      thread::sleep(Duration::from_millis(4500));
+      thread::sleep(Duration::from_secs(5));
 
       first_clone.update(|first| !first).unwrap();
     });

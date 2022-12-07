@@ -1,8 +1,4 @@
-use std::{
-  cell::Cell,
-  fmt::{Debug, Formatter},
-  sync::Arc,
-};
+use std::{cell::Cell, sync::Arc};
 
 use parking_lot::Mutex;
 
