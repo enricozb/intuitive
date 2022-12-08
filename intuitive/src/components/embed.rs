@@ -3,6 +3,7 @@ use crate::{
   components::Component,
   element::{Any as AnyElement, Children, Element},
   error::Result,
+  render::Manager as RenderManager,
 };
 
 /// Renders its child.
@@ -12,7 +13,7 @@ pub struct Embed {
 }
 
 impl Component for Embed {
-  fn render(&self) -> AnyElement {
+  fn render(&self, _render: &mut RenderManager) -> AnyElement {
     AnyElement::new(self.clone())
   }
 }

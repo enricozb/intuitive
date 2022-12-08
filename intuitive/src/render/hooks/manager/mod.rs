@@ -1,9 +1,6 @@
 mod cursor;
 use std::collections::HashMap;
 
-use lazy_static::lazy_static;
-use parking_lot::Mutex;
-
 use self::cursor::Cursor;
 use super::error::{Error, Result};
 use crate::render::{
@@ -11,65 +8,69 @@ use crate::render::{
   ComponentID,
 };
 
-lazy_static! {
-  /// A stack of [`Cursor`]s that are pushed/popped before/after [`with`].
-  static ref CURSORS: Mutex<Vec<Cursor>> = Mutex::new(Vec::new());
+/// Manages hooks.
+pub struct Manager {
+  /// A stack of [`Cursor`]s that keep track of what hooks have been used in a component.
+  cursors: Vec<Cursor>,
 
   /// Maps [`ComponentID`]s to a component's [`Hooks`].
-  static ref HOOKS: Mutex<HashMap<ComponentID, Hooks>> = Mutex::new(HashMap::new());
+  hooks: HashMap<ComponentID, Hooks>,
 }
 
-/// Run a function `f` with `component_id` at the top of the [`CURSORS`] stack.
-pub fn with<F, T>(component_id: ComponentID, f: F) -> T
-where
-  F: FnOnce() -> T,
-{
-  let cursor = match HOOKS.lock().remove(&component_id) {
-    Some(hooks) => Cursor::new(component_id, hooks),
-    None => Cursor::new(component_id, Hooks::new()),
-  };
+impl Manager {
+  /// Creates a new [`Manager`].
+  #[must_use]
+  pub fn new() -> Self {
+    Self {
+      cursors: Vec::new(),
+      hooks: HashMap::new(),
+    }
+  }
 
-  CURSORS.lock().push(cursor);
+  /// Pushes a new [`Cursor`] to the stack.
+  pub(crate) fn push_cursor(&mut self, component_id: ComponentID) {
+    let cursor = match self.hooks.remove(&component_id) {
+      Some(hooks) => Cursor::new(component_id, hooks),
+      None => Cursor::new(component_id, Hooks::new()),
+    };
 
-  let ret = f();
+    self.cursors.push(cursor);
+  }
 
-  let hooks = CURSORS
-    .lock()
-    .pop()
-    .ok_or(Error::NoCursor)
-    .expect("with: pop")
-    .done()
-    .expect("Cursor::done");
+  /// Pops a [`Cursor`] from the stack.
+  pub(crate) fn pop_cursor(&mut self) {
+    let cursor = self.cursors.pop().ok_or(Error::NoCursor).expect("pop");
+    let component_id = cursor.component_id;
+    let hooks = cursor.done().expect("Cursor::done");
 
-  HOOKS.lock().insert(component_id, hooks);
+    self.hooks.insert(component_id, hooks);
+  }
 
-  ret
-}
+  /// Returns the inner value of the current [`Hook`], constructing it with `f` if necessary.
+  ///
+  /// The parameter `f` is not generic because `use_hook` is often used with a turbofish, and it
+  /// would be difficult (impossible?) to specify the type of a closure.
+  ///
+  /// # Errors
+  ///
+  /// Will return an `Err` if there is no [`Cursor`] at the top of the stack, or if
+  /// [`Cursor::next`] returns an `Err`.
+  pub fn use_hook<T>(&mut self, f: impl FnOnce(ComponentID) -> Hook) -> Result<T>
+  where
+    T: 'static + Send + Sync + Clone,
+  {
+    self.cursors.last_mut().ok_or(Error::NoCursor)?.next(f)
+  }
 
-/// Returns the inner value of the current [`Hook`], constructing it with `f` if necessary.
-///
-/// The parameter `f` is not generic because `use_hook` is often used with a turbofish, and it
-/// would be difficult (impossible?) to specify the type of a closure.
-///
-/// # Errors
-///
-/// Will return an `Err` if there is no [`Cursor`] at the top of the stack, or if
-/// [`Cursor::next`] returns an `Err`.
-pub fn use_hook<T>(f: impl FnOnce(ComponentID) -> Hook) -> Result<T>
-where
-  T: 'static + Send + Sync + Clone,
-{
-  CURSORS.lock().last_mut().ok_or(Error::NoCursor)?.next(f)
-}
+  /// Returns the current [`ComponentID`] at the top of the [`Self::cursors`] stack.
+  pub fn current_component_id(&self) -> Option<ComponentID> {
+    self.cursors.last().map(|cursor| cursor.component_id)
+  }
 
-/// Returns the current [`ComponentID`] at the top of the [`CURSORS`] stack.
-pub fn current_component_id() -> Option<ComponentID> {
-  CURSORS.lock().last_mut().map(|cursor| cursor.component_id)
-}
-
-/// Unmounts the component, deinitializing all of its hooks.
-pub fn unmount(component_id: ComponentID) {
-  if let Some(hooks) = HOOKS.lock().remove(&component_id) {
-    hooks.deinit();
+  /// Unmounts the component, deinitializing all of its hooks.
+  pub fn unmount(&mut self, component_id: ComponentID) {
+    if let Some(hooks) = self.hooks.remove(&component_id) {
+      hooks.deinit();
+    }
   }
 }

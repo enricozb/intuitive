@@ -1,6 +1,4 @@
-use std::{cell::Cell, sync::Arc};
-
-use parking_lot::Mutex;
+use std::{cell::Cell, rc::Rc};
 
 use super::{Element, Empty};
 #[allow(unused)]
@@ -10,20 +8,20 @@ use crate::{error::Result, utils::array::Array};
 /// A container for any type that implements [`Element`].
 #[derive(Clone)]
 pub struct Any {
-  element: Arc<Mutex<Cell<Box<dyn Element + Send>>>>,
+  element: Rc<Cell<Box<dyn Element>>>,
 }
 
 impl Any {
   /// Creates a new [`Any`].
-  pub fn new<E: Element + 'static + Send>(element: E) -> Self {
+  pub fn new<E: Element + 'static>(element: E) -> Self {
     Self {
-      element: Arc::new(Mutex::new(Cell::new(Box::new(element)))),
+      element: Rc::new(Cell::new(Box::new(element))),
     }
   }
 
   /// Swaps the inner [`Element`]s.
   pub fn swap(&self, other: &Self) {
-    self.element.lock().swap(&other.element.lock());
+    self.element.swap(&other.element);
   }
 
   /// Draws the inner [`Element`] on to a [`Region`].
@@ -32,7 +30,7 @@ impl Any {
       return Ok(());
     }
 
-    let cell = self.element.lock();
+    let cell = &self.element;
 
     let element = cell.replace(Box::new(Empty));
     element.draw(region)?;

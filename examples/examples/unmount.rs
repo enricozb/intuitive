@@ -13,7 +13,7 @@ use intuitive::{
   element::Any as AnyElement,
   error::Result,
   render,
-  render::hooks::{use_effect, use_state, Cleanup},
+  render::hooks::{Cleanup, UseEffect, UseState},
   style::{Color, Style},
   terminal::Terminal,
   utils::layout::{Alignment, Amount},
@@ -22,10 +22,10 @@ use intuitive::{
 /// A component that shows how many seconds it has been rendered for.
 #[component(Timer)]
 fn render(text: String, border: Style) -> AnyElement {
-  let seconds = use_state(|| 0);
+  let seconds = render.hooks.use_state(|| 0);
   let seconds_clone = seconds.clone();
 
-  use_effect(|| {
+  render.hooks.use_effect(|| {
     let done = Arc::new(AtomicBool::new(false));
     let done_clone = done.clone();
 
@@ -56,10 +56,10 @@ fn render(text: String, border: Style) -> AnyElement {
 /// Swaps between two timers.
 #[component(Root)]
 fn render() -> AnyElement {
-  let first = use_state(|| true);
+  let first = render.hooks.use_state(|| true);
   let first_clone = first.clone();
 
-  use_effect(|| {
+  render.hooks.use_effect(|| {
     thread::spawn(move || loop {
       thread::sleep(Duration::from_secs(5));
 
@@ -79,7 +79,7 @@ fn render() -> AnyElement {
 }
 
 fn main() -> Result<()> {
-  Terminal::new()?.render(&render! { Root() })?;
+  Terminal::new()?.render(Root {})?;
 
   Ok(())
 }

@@ -1,11 +1,11 @@
 #[allow(unused)]
-use crate::render::render;
+use crate::render::Manager as RenderManager;
 use crate::render::{
   hooks::{error::Result, Hook, Hooks},
   ComponentID,
 };
 
-/// A cursor for reading memoized hook values during [`fn@render`] calls.
+/// A cursor for reading memoized hook values during [`RenderManager::render`] calls.
 pub(crate) struct Cursor {
   pub component_id: ComponentID,
 

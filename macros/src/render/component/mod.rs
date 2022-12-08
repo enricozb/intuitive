@@ -49,21 +49,21 @@ impl Parse for Component {
 
 impl ToTokens for Component {
   fn to_tokens(&self, tokens: &mut TokenStream2) {
-    let crate_name = utils::crate_name();
     let component_id = self.component_id();
 
     let Self { name, params, children, .. } = self;
 
     tokens.extend(quote! {
-      #crate_name::render::render(
-        #component_id,
+      {
         #[allow(clippy::needless_update)]
-        #name {
+        let component = #name {
           #params
           #children
           ..Default::default()
-        },
-      )
+        };
+
+        render.render(#component_id, component)
+      }
     });
   }
 }

@@ -13,10 +13,11 @@ use crossterm::{
 use crate::element::Element;
 use crate::{
   buffer::{region::Region, Buffer},
+  components::Component,
   element::Any as AnyElement,
   error::Result,
   event::{self, Event},
-  render,
+  render::{ComponentID, Manager as RenderManager},
 };
 
 /// A terminal that can be drawn onto.
@@ -29,6 +30,9 @@ pub struct Terminal {
 
   /// The current index of the [`Buffer`] being drawn onto.
   idx: bool,
+
+  /// Manages the rendering of the root element.
+  renderer: RenderManager,
 }
 
 impl Terminal {
@@ -44,6 +48,7 @@ impl Terminal {
       stdout: io::stdout(),
       buffers: [Buffer::new(size), Buffer::new(size)],
       idx: false,
+      renderer: RenderManager::new(),
     })
   }
 
@@ -53,16 +58,25 @@ impl Terminal {
   ///
   /// Will return `Err` if [`Terminal::prepare`] fails.
   #[allow(rustdoc::private_intra_doc_links)]
-  pub fn render(&mut self, element: &AnyElement) -> Result<()> {
+  pub fn render<C: Component + 'static + Send>(&mut self, component: C) -> Result<()> {
+    let root_component_id = ComponentID {
+      name: "intuitive::root",
+      key: None,
+      file: "terminal.rs",
+      uid: 0,
+    };
+
+    let element = self.renderer.render(root_component_id, component);
+
     self.prepare()?;
-    self.draw(element)?;
+    self.draw(&element)?;
 
     loop {
       match event::read()? {
         Event::Rerender(component_id) => {
           let start = Instant::now();
-          render::rerender(component_id)?;
-          self.draw(element)?;
+          self.renderer.rerender(component_id)?;
+          self.draw(&element)?;
 
           eprintln!("Time elapsed in expensive_function() is: {:?}", start.elapsed());
         }
@@ -70,7 +84,7 @@ impl Terminal {
         Event::Resize => {
           self.resize()?;
           execute!(&self.stdout, Clear(ClearType::All))?;
-          self.draw(element)?;
+          self.draw(&element)?;
         }
 
         Event::Quit => break,

@@ -8,9 +8,8 @@ use std::any::{self, Any};
 
 use self::error::{Error, Result};
 pub use self::{
-  manager::use_hook,
-  use_effect::{use_effect, Cleanup},
-  use_state::{use_state, State},
+  use_effect::{Cleanup, UseEffect},
+  use_state::{State, UseState},
 };
 
 /// A dynamically-typed hook return value, along with a deinitialization function for unmounting.

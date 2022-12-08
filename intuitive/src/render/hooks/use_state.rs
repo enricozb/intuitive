@@ -9,14 +9,14 @@ use crate::{
   error::Result,
   event,
   render::{
-    hooks::{manager, Hook},
+    hooks::{manager::Manager as HookManager, Hook},
     ComponentID,
   },
 };
 
-/// A container for a `T` which causes re-renders when mutated, returned by [`use_state`].
+/// A container for a `T` which causes re-renders when mutated, returned by [`UseState:[:UseState::use_state`]].
 ///
-/// `State` is created through [`use_state`].
+/// `State` is created through [`UseState::use_state`].
 pub struct State<T> {
   component_id: ComponentID,
   inner: Arc<Mutex<T>>,
@@ -125,20 +125,30 @@ impl<T: PartialEq<T>> PartialEq<State<T>> for State<T> {
 impl<T: Eq + PartialEq<T>> Eq for State<T> {}
 
 /// A hook to add state to a component.
-///
-/// Returns a [`State<T>`] initialized with the provided `initializer`. The `initializer` is only called once,
-/// when the `use_state` hook is first called, and a memoized value is used in future calls.
-///
-/// When a [`State`] is mutated through its methods, it will trigger a re-render of the component that it
-/// was first defined in.
-///
-/// This is inspired by React's [`useState`] hook.
-///
-/// [`useState`]: https://reactjs.org/docs/hooks-state.html
-pub fn use_state<F, T>(initializer: F) -> State<T>
-where
-  F: FnOnce() -> T,
-  T: 'static + Send,
-{
-  manager::use_hook(|component_id| Hook::from_value(State::new(component_id, initializer()))).expect("use_state: use_hook")
+pub trait UseState {
+  /// Returns a [`State<T>`] initialized with the provided `initializer`. The `initializer` is only called once,
+  /// when the [`UseState::use_state`] hook is first called, and a memoized value is used in future calls.
+  ///
+  /// When a [`State`] is mutated through its methods, it will trigger a re-render of the component that it
+  /// was first defined in.
+  ///
+  /// This is inspired by React's [`useState`] hook.
+  ///
+  /// [`useState`]: https://reactjs.org/docs/hooks-state.html
+  fn use_state<F, T>(&mut self, initializer: F) -> State<T>
+  where
+    F: FnOnce() -> T,
+    T: 'static + Send;
+}
+
+impl UseState for HookManager {
+  fn use_state<F, T>(&mut self, initializer: F) -> State<T>
+  where
+    F: FnOnce() -> T,
+    T: 'static + Send,
+  {
+    self
+      .use_hook(|component_id| Hook::from_value(State::new(component_id, initializer())))
+      .expect("use_state: use_hook")
+  }
 }

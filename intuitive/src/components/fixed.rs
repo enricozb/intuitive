@@ -3,16 +3,17 @@ use crate::{
   components::Component,
   element::{Any as AnyElement, Children, Element},
   error::Result,
+  render::Manager as RenderManager,
   utils::{
     geometry::{Position, Size},
     layout::Amount,
   },
 };
 
-#[derive(Clone, Default)]
 /// Renders its child at a fixed width and/or height.
 ///
 /// The parameters `width` and `height` default to [`Amount::default`].
+#[derive(Clone, Default)]
 pub struct Fixed {
   pub width: Amount,
   pub height: Amount,
@@ -21,7 +22,7 @@ pub struct Fixed {
 }
 
 impl Component for Fixed {
-  fn render(&self) -> AnyElement {
+  fn render(&self, _render: &mut RenderManager) -> AnyElement {
     AnyElement::new(self.clone())
   }
 }
