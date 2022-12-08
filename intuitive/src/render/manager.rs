@@ -64,22 +64,6 @@ impl Manager {
     Ok(())
   }
 
-  /// Unmounts the component.
-  pub fn unmount(&mut self, component_id: ComponentID) {
-    self.components.remove(&component_id);
-    self.elements.remove(&component_id);
-
-    let descendants = self.descendants.remove(&component_id);
-
-    if let Some(descendants) = descendants {
-      for descendant_component_id in descendants {
-        self.unmount(descendant_component_id);
-      }
-    }
-
-    self.hooks.unmount(component_id);
-  }
-
   /// Renders the root component, which does not have a hard-coded [`ComponentID`].
   pub(crate) fn render_root<C: Component + 'static>(&mut self, component: C) -> AnyElement {
     let root_component_id = ComponentID {
@@ -119,5 +103,21 @@ impl Manager {
     }
 
     element
+  }
+
+  /// Unmounts the component.
+  fn unmount(&mut self, component_id: ComponentID) {
+    self.components.remove(&component_id);
+    self.elements.remove(&component_id);
+
+    let descendants = self.descendants.remove(&component_id);
+
+    if let Some(descendants) = descendants {
+      for descendant_component_id in descendants {
+        self.unmount(descendant_component_id);
+      }
+    }
+
+    self.hooks.unmount(component_id);
   }
 }
