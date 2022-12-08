@@ -58,7 +58,7 @@ impl Terminal {
   ///
   /// Will return `Err` if [`Terminal::prepare`] fails.
   #[allow(rustdoc::private_intra_doc_links)]
-  pub fn render<C: Component + 'static + Send>(&mut self, component: C) -> Result<()> {
+  pub fn render<C: Component + 'static>(&mut self, component: C) -> Result<()> {
     let root_component_id = ComponentID {
       name: "intuitive::root",
       key: None,

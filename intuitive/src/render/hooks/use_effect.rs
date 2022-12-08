@@ -1,7 +1,7 @@
 use crate::render::hooks::{manager::Manager as HookManager, Hook};
 
 /// Optional function to run as a "cleanup" when a [`UseEffect::use_effect`] hook is unmounted.
-pub struct Cleanup(Option<Box<dyn FnOnce() + Send + Sync>>);
+pub struct Cleanup(Option<Box<dyn FnOnce()>>);
 
 impl From<()> for Cleanup {
   fn from((): ()) -> Self {
@@ -11,7 +11,7 @@ impl From<()> for Cleanup {
 
 impl<F> From<F> for Cleanup
 where
-  F: 'static + FnOnce() + Send + Sync,
+  F: 'static + FnOnce(),
 {
   fn from(cleanup: F) -> Self {
     Self(Some(Box::new(cleanup)))

@@ -116,14 +116,14 @@ pub trait UseState {
   fn use_state<F, T>(&mut self, initializer: F) -> State<T>
   where
     F: FnOnce() -> T,
-    T: 'static + Send;
+    T: 'static;
 }
 
 impl UseState for HookManager {
   fn use_state<F, T>(&mut self, initializer: F) -> State<T>
   where
     F: FnOnce() -> T,
-    T: 'static + Send,
+    T: 'static,
   {
     self
       .use_hook(|component_id| Hook::from_value(State::new(component_id, initializer())))
