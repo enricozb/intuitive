@@ -3,7 +3,7 @@ use std::rc::Rc;
 use super::Component;
 #[allow(unused)]
 use crate::element::Element;
-use crate::{element::Any as AnyElement, render::Manager as RenderManager};
+use crate::{element::Any as AnyElement, render::manager::Manager as RenderManager};
 
 /// A container for functions that return an [`Element`]. This is used as a way to
 /// capture a closure of a [`Component::render`] call.

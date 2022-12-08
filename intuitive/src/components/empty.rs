@@ -1,4 +1,4 @@
-use crate::{components::Component, element::Any as AnyElement, render::Manager as RenderManager};
+use crate::{components::Component, element::Any as AnyElement, render::manager::Manager as RenderManager};
 
 /// Renders an empty element.
 #[derive(Clone, Default)]

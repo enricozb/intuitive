@@ -1,5 +1,5 @@
 #[allow(unused)]
-use crate::render::Manager as RenderManager;
+use crate::render::manager::Manager as RenderManager;
 use crate::render::{
   hooks::{error::Result, Hook, Hooks},
   ComponentID,

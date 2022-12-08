@@ -6,7 +6,7 @@ use intuitive::{
   element::Any as AnyElement,
   error::Result,
   render,
-  render::hooks::{use_effect, use_state},
+  render::hooks::{UseEffect, UseState},
   style::Color,
   terminal::Terminal,
   utils::layout::{Alignment, Amount},
@@ -14,10 +14,10 @@ use intuitive::{
 
 #[component(Root)]
 fn render() -> AnyElement {
-  let seconds = use_state(|| 0);
+  let seconds = render.hooks.use_state(|| 0);
   let seconds_clone = seconds.clone();
 
-  use_effect(|| {
+  render.hooks.use_effect(|| {
     thread::spawn(move || loop {
       thread::sleep(Duration::from_secs(1));
 
@@ -29,7 +29,7 @@ fn render() -> AnyElement {
     Padding(amount: Amount::Percentage(10)) {
       Fixed(height: Amount::Fixed(3)) {
         Section(title: "Seconds", border: Color::Red) {
-          Text(text: format!("This program has run for {} seconds", seconds), alignment: Alignment::Center)
+          Text(text: format!("This program has run for {} seconds", seconds.get()), alignment: Alignment::Center)
         }
       }
     }
@@ -37,7 +37,7 @@ fn render() -> AnyElement {
 }
 
 fn main() -> Result<()> {
-  Terminal::new()?.render(&render! { Root() })?;
+  Terminal::new()?.render(Root {})?;
 
   Ok(())
 }

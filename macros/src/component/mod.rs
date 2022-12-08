@@ -53,7 +53,7 @@ pub fn parse(attr: TokenStream, item: TokenStream) -> TokenStream {
     }
 
     impl #impl_generics #crate_name::components::Component for #name #ty_generics #where_clause {
-      fn render(&self, render: &mut #crate_name::render::Manager) #retty {
+      fn render(&self, render: &mut #crate_name::render::manager::Manager) #retty {
         let #name { #(#param_names),* } = self;
 
         #block

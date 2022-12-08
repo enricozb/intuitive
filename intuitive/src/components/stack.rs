@@ -5,7 +5,7 @@ use crate::{
   element::{Any as AnyElement, Children, Element},
   error::Result,
   render,
-  render::Manager as RenderManager,
+  render::manager::Manager as RenderManager,
   utils::layout::{Flex, FlexArray, FlexDirection},
 };
 

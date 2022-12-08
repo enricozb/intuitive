@@ -14,7 +14,7 @@ use crate::{
   element::Any as AnyElement,
   error::Result,
   event::{self, Event},
-  render::Manager as RenderManager,
+  render::manager::Manager as RenderManager,
 };
 
 /// A terminal that can be drawn onto.

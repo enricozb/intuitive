@@ -3,7 +3,7 @@ use crate::{
   components::Component,
   element::{Any as AnyElement, Children, Element},
   error::Result,
-  render::Manager as RenderManager,
+  render::manager::Manager as RenderManager,
   style::Style,
   utils::{
     geometry::{Axis, Position, Size},

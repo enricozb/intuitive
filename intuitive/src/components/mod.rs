@@ -18,7 +18,7 @@ pub use text::Text;
 pub(crate) use self::any::Any;
 #[allow(unused)]
 use crate::element::Element;
-use crate::{element::Any as AnyElement, render::Manager as RenderManager};
+use crate::{element::Any as AnyElement, render::manager::Manager as RenderManager};
 
 /// Describes types which can be rendered to an [`Element`].
 pub trait Component: Default {
