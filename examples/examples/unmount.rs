@@ -46,7 +46,7 @@ fn render(text: String, border: Style) -> AnyElement {
     Padding(amount: Amount::Percentage(10)) {
       Fixed(height: Amount::Fixed(3)) {
         Section(title: "Seconds", border: border.clone()) {
-          Text(text: format!("{} has been up for {} seconds", text, seconds), alignment: Alignment::Center)
+          Text(text: format!("{} has been up for {} seconds", text, seconds.get()), alignment: Alignment::Center)
         }
       }
     }

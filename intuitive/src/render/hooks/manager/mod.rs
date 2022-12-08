@@ -57,7 +57,7 @@ impl Manager {
   /// [`Cursor::next`] returns an `Err`.
   pub fn use_hook<T>(&mut self, f: impl FnOnce(ComponentID) -> Hook) -> Result<T>
   where
-    T: 'static + Send + Sync + Clone,
+    T: 'static + Clone,
   {
     self.cursors.last_mut().ok_or(Error::NoCursor)?.next(f)
   }

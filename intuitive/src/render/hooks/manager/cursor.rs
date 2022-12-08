@@ -36,7 +36,7 @@ impl Cursor {
   pub fn next<F, T>(&mut self, f: F) -> Result<T>
   where
     F: FnOnce(ComponentID) -> Hook,
-    T: 'static + Send + Sync + Clone,
+    T: 'static + Clone,
   {
     let value = if self.hooks.sealed {
       self.hooks.get(self.idx)?.downcast_ref()?
