@@ -1,7 +1,4 @@
-use std::{
-  io::{self, Stdout},
-  time::Instant,
-};
+use std::io::{self, Stdout};
 
 use crossterm::{
   cursor::{Hide as HideCursor, Show as ShowCursor},
@@ -17,7 +14,7 @@ use crate::{
   element::Any as AnyElement,
   error::Result,
   event::{self, Event},
-  render::{ComponentID, Manager as RenderManager},
+  render::Manager as RenderManager,
 };
 
 /// A terminal that can be drawn onto.
@@ -59,14 +56,7 @@ impl Terminal {
   /// Will return `Err` if [`Terminal::prepare`] fails.
   #[allow(rustdoc::private_intra_doc_links)]
   pub fn render<C: Component + 'static>(&mut self, component: C) -> Result<()> {
-    let root_component_id = ComponentID {
-      name: "intuitive::root",
-      key: None,
-      file: "terminal.rs",
-      uid: 0,
-    };
-
-    let element = self.renderer.render(root_component_id, component);
+    let element = self.renderer.render_root(component);
 
     self.prepare()?;
     self.draw(&element)?;
@@ -74,11 +64,8 @@ impl Terminal {
     loop {
       match event::read()? {
         Event::Rerender(component_id) => {
-          let start = Instant::now();
           self.renderer.rerender(component_id)?;
           self.draw(&element)?;
-
-          eprintln!("Time elapsed in expensive_function() is: {:?}", start.elapsed());
         }
 
         Event::Resize => {

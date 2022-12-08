@@ -68,35 +68,6 @@ impl Manager {
     element
   }
 
-  /// Renders a component, unmounting any elements if necessary.
-  fn render_impl(&mut self, component_id: ComponentID, component: &AnyComponent) -> AnyElement {
-    if let Some(parent_component_id) = self.hooks.current_component_id() {
-      if let Some(descendants) = self.descendants.get_mut(&parent_component_id) {
-        descendants.insert(component_id);
-      }
-    }
-
-    let old_descendants = self.descendants.remove(&component_id);
-    self.descendants.insert(component_id, HashSet::new());
-
-    // `component.render()` is wrapped in an `AnyElement::new` in order to ensure that every
-    // component returns a unique container for its elements. This is so on rerenders, when
-    // calling `AnyElement::swap`, we know we are affecting only a single component.
-    self.hooks.push_cursor(component_id);
-    let element = AnyElement::new(component.render(self));
-    self.hooks.pop_cursor();
-
-    if let Some(old_descendants) = old_descendants {
-      let new_descendants = self.descendants.get(&component_id).expect("DESCENDANTS::get").clone();
-
-      for unmounted_component_id in old_descendants.difference(&new_descendants) {
-        self.unmount(*unmounted_component_id);
-      }
-    }
-
-    element
-  }
-
   /// Re-renders an already rendered component, specified by its [`ComponentID`].
   ///
   /// # Errors
@@ -127,5 +98,46 @@ impl Manager {
     }
 
     self.hooks.unmount(component_id);
+  }
+
+  /// Renders the root component, which does not have a hard-coded [`ComponentID`].
+  pub(crate) fn render_root<C: Component + 'static>(&mut self, component: C) -> AnyElement {
+    let root_component_id = ComponentID {
+      name: "::Root",
+      key: None,
+      file: "",
+      uid: 0,
+    };
+
+    self.render(root_component_id, component)
+  }
+
+  /// Renders a component, unmounting any elements if necessary.
+  fn render_impl(&mut self, component_id: ComponentID, component: &AnyComponent) -> AnyElement {
+    if let Some(parent_component_id) = self.hooks.current_component_id() {
+      if let Some(descendants) = self.descendants.get_mut(&parent_component_id) {
+        descendants.insert(component_id);
+      }
+    }
+
+    let old_descendants = self.descendants.remove(&component_id);
+    self.descendants.insert(component_id, HashSet::new());
+
+    // `component.render()` is wrapped in an `AnyElement::new` in order to ensure that every
+    // component returns a unique container for its elements. This is so on rerenders, when
+    // calling `AnyElement::swap`, we know we are affecting only a single component.
+    self.hooks.push_cursor(component_id);
+    let element = AnyElement::new(component.render(self));
+    self.hooks.pop_cursor();
+
+    if let Some(old_descendants) = old_descendants {
+      let new_descendants = self.descendants.get(&component_id).expect("DESCENDANTS::get").clone();
+
+      for unmounted_component_id in old_descendants.difference(&new_descendants) {
+        self.unmount(*unmounted_component_id);
+      }
+    }
+
+    element
   }
 }
