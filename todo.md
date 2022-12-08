@@ -81,6 +81,9 @@
 - misc
   - remove mutexes, arcs, `Sync` and `Send` requirements by moving away from `lazy_static` and `static ref`, and instead
     making the terminal own an instance of a render manager.
+    - this might be harder than i originally thought. Mostly because `render!` calls `render::render`, which is a top-level function.
+      I'm not sure how to make `render!` generate code that refers to the current terminal.
+    - Maybe `Component::render` can take in a `Terminal` reference.
   - implement proper tracing
   - `Terminal::render` should ensure that cleanup is called before it leaves that function, or else error isn't printed
   - cursor showing/hiding ability (or leave this to crossterm?)
