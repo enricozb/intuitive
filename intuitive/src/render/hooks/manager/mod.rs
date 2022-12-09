@@ -27,6 +27,22 @@ impl Manager {
     }
   }
 
+  /// Returns the inner value of the current [`Hook`], constructing it with `f` if necessary.
+  ///
+  /// The parameter `f` is not generic because `use_hook` is often used with a turbofish, and it
+  /// would be difficult (impossible?) to specify the type of a closure.
+  ///
+  /// # Errors
+  ///
+  /// Will return an `Err` if there is no [`Cursor`] at the top of the stack, or if
+  /// [`Cursor::next`] returns an `Err`.
+  pub fn use_hook<T>(&mut self, f: impl FnOnce(ComponentID) -> Hook) -> Result<T>
+  where
+    T: 'static + Clone,
+  {
+    self.cursors.last_mut().ok_or(Error::NoCursor)?.next(f)
+  }
+
   /// Pushes a new [`Cursor`] to the stack.
   pub(crate) fn push_cursor(&mut self, component_id: ComponentID) {
     let cursor = match self.hooks.remove(&component_id) {
@@ -46,29 +62,13 @@ impl Manager {
     self.hooks.insert(component_id, hooks);
   }
 
-  /// Returns the inner value of the current [`Hook`], constructing it with `f` if necessary.
-  ///
-  /// The parameter `f` is not generic because `use_hook` is often used with a turbofish, and it
-  /// would be difficult (impossible?) to specify the type of a closure.
-  ///
-  /// # Errors
-  ///
-  /// Will return an `Err` if there is no [`Cursor`] at the top of the stack, or if
-  /// [`Cursor::next`] returns an `Err`.
-  pub fn use_hook<T>(&mut self, f: impl FnOnce(ComponentID) -> Hook) -> Result<T>
-  where
-    T: 'static + Clone,
-  {
-    self.cursors.last_mut().ok_or(Error::NoCursor)?.next(f)
-  }
-
   /// Returns the current [`ComponentID`] at the top of the [`Self::cursors`] stack.
-  pub fn current_component_id(&self) -> Option<ComponentID> {
+  pub(crate) fn current_component_id(&self) -> Option<ComponentID> {
     self.cursors.last().map(|cursor| cursor.component_id)
   }
 
   /// Unmounts the component, deinitializing all of its hooks.
-  pub fn unmount(&mut self, component_id: ComponentID) {
+  pub(crate) fn unmount(&mut self, component_id: ComponentID) {
     if let Some(hooks) = self.hooks.remove(&component_id) {
       hooks.deinit();
     }
