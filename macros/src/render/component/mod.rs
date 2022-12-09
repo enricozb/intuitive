@@ -53,16 +53,21 @@ impl ToTokens for Component {
 
     let Self { name, params, children, .. } = self;
 
+    let crate_name = utils::crate_name();
+
     tokens.extend(quote! {
       {
         #[allow(clippy::needless_update)]
-        let component = #name {
-          #params
-          #children
-          ..Default::default()
-        };
+        let component = #crate_name::components::Any::new(
+          #component_id,
+          #name {
+            #params
+            #children
+            ..Default::default()
+          },
+        );
 
-        render.render(#component_id, component)
+        render.render(component)
       }
     });
   }

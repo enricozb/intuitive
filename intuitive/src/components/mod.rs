@@ -15,7 +15,7 @@ pub use section::Section;
 pub use stack::{HStack, Stack, VStack};
 pub use text::Text;
 
-pub(crate) use self::any::Any;
+pub use self::any::Any;
 #[allow(unused)]
 use crate::element::Element;
 use crate::{element::Any as AnyElement, render::manager::Manager as RenderManager};
