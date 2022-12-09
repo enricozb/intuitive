@@ -7,15 +7,16 @@ mod section;
 mod stack;
 mod text;
 
-pub use embed::Embed;
-pub use empty::Empty;
-pub use fixed::Fixed;
-pub use padding::Padding;
-pub use section::Section;
-pub use stack::{HStack, Stack, VStack};
-pub use text::Text;
-
-pub use self::any::Any;
+pub use self::{
+  any::Any,
+  embed::Embed,
+  empty::Empty,
+  fixed::Fixed,
+  padding::Padding,
+  section::Section,
+  stack::{HStack, Stack, VStack},
+  text::Text,
+};
 #[allow(unused)]
 use crate::element::Element;
 use crate::{element::Any as AnyElement, render::manager::Manager as RenderManager};
