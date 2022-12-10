@@ -14,7 +14,7 @@ use crate::{
   element::Any as AnyElement,
   error::Result,
   event::{self, Event},
-  render::manager::Manager as RenderManager,
+  render::context::Context,
 };
 
 /// A terminal that can be drawn onto.
@@ -28,8 +28,8 @@ pub struct Terminal {
   /// The current index of the [`Buffer`] being drawn onto.
   idx: bool,
 
-  /// Manages the rendering of the root element.
-  renderer: RenderManager,
+  /// The rendering context.
+  context: Context,
 }
 
 impl Terminal {
@@ -45,7 +45,7 @@ impl Terminal {
       stdout: io::stdout(),
       buffers: [Buffer::new(size), Buffer::new(size)],
       idx: false,
-      renderer: RenderManager::new(),
+      context: Context::new(),
     })
   }
 
@@ -56,7 +56,7 @@ impl Terminal {
   /// Will return `Err` if [`Terminal::prepare`] fails.
   #[allow(rustdoc::private_intra_doc_links)]
   pub fn render<C: Component + 'static>(&mut self, component: C) -> Result<()> {
-    let element = self.renderer.render_root(component);
+    let element = self.context.render_root(component);
 
     self.prepare()?;
     self.draw(&element)?;
@@ -64,7 +64,7 @@ impl Terminal {
     loop {
       match event::read()? {
         Event::Rerender(component_id) => {
-          self.renderer.rerender(component_id)?;
+          self.context.rerender(component_id)?;
           self.draw(&element)?;
         }
 
