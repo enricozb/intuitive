@@ -10,11 +10,11 @@ use crossterm::{
 use crate::element::Element;
 use crate::{
   buffer::{region::Region, Buffer},
-  components::Component,
+  components::{Any as AnyComponent, Component},
   element::Any as AnyElement,
   error::Result,
   event::{self, Event},
-  render::context::Context,
+  render::{context::Context, ComponentID},
 };
 
 /// A terminal that can be drawn onto.
@@ -56,7 +56,7 @@ impl Terminal {
   /// Will return `Err` if [`Terminal::prepare`] fails.
   #[allow(rustdoc::private_intra_doc_links)]
   pub fn render<C: Component + 'static>(&mut self, component: C) -> Result<()> {
-    let element = self.context.render_root(component);
+    let element = self.context.render(AnyComponent::new(ComponentID::ROOT, component));
 
     self.prepare()?;
     self.draw(&element)?;

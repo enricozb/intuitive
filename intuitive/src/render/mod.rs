@@ -20,3 +20,15 @@ pub struct ComponentID {
   /// An integer unique to each instance of a [`Component`] used across all [`render!`] macros.
   pub uid: usize,
 }
+
+impl ComponentID {
+  /// A [`ComponentID`] used to refer to the root component.
+  ///
+  /// The root component is not rendered with [`render!`], so this has to be done manually.
+  pub(crate) const ROOT: Self = Self {
+    name: "::Root",
+    key: None,
+    file: "",
+    uid: 0,
+  };
+}

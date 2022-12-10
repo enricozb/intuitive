@@ -2,15 +2,12 @@ use std::{io::Error as IoError, sync::mpsc::RecvError};
 
 use thiserror::Error;
 
-use crate::render::{hooks::error::Error as HookError, ComponentID};
+use crate::render::ComponentID;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Error, Debug)]
 pub enum Error {
-  #[error("Hook error (perhaps hooks are called in non-deterministic order?): {0}")]
-  HookError(HookError),
-
   #[error("No element found for the given component id: {0:?}")]
   NoElement(ComponentID),
 
