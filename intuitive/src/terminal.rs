@@ -56,7 +56,7 @@ impl Terminal {
   /// Will return `Err` if [`Terminal::prepare`] fails.
   #[allow(rustdoc::private_intra_doc_links)]
   pub fn render<C: Component + 'static>(&mut self, component: C) -> Result<()> {
-    let element = self.context.render(AnyComponent::new(ComponentID::ROOT, component));
+    let element = self.context.render(&AnyComponent::new(ComponentID::ROOT, component));
 
     self.prepare()?;
     self.draw(&element)?;
@@ -64,7 +64,7 @@ impl Terminal {
     loop {
       match event::read()? {
         Event::Rerender(component_id) => {
-          self.context.rerender(component_id)?;
+          self.context.rerender(component_id);
           self.draw(&element)?;
         }
 

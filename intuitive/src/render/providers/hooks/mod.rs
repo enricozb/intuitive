@@ -21,6 +21,8 @@ pub struct Hooks {
 }
 
 impl Hooks {
+  /// Creates a new [`Hooks`].
+  #[must_use]
   pub fn new() -> Self {
     Self {
       cursors: Vec::new(),
@@ -37,6 +39,7 @@ impl Hooks {
   ///
   /// Will return an `Err` if there is no [`Cursor`] at the top of the stack, or if
   /// [`Cursor::next`] returns an `Err`.
+  #[allow(rustdoc::private_intra_doc_links)]
   pub fn use_hook<T>(&mut self, f: impl FnOnce(ComponentID) -> Hook) -> Result<T>
   where
     T: 'static + Clone,
@@ -44,9 +47,10 @@ impl Hooks {
     self.cursors.last_mut().ok_or(Error::NoCursor)?.next(f)
   }
 
-  fn deinit(&mut self, unmounted_component_ids: &HashSet<ComponentID>) {
-    for component_id in unmounted_component_ids {
-      for hook in self.hooks.remove(&component_id).unwrap_or_default() {
+  /// Deinitializes all hooks for the given `component_ids`.
+  fn deinit(&mut self, component_ids: &HashSet<ComponentID>) {
+    for component_id in component_ids {
+      for hook in self.hooks.remove(component_id).unwrap_or_default() {
         hook.deinit();
       }
     }

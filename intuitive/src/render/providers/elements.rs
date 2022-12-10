@@ -10,6 +10,7 @@ pub struct Elements {
 
 impl Elements {
   /// Creates a new [`Elements`].
+  #[must_use]
   pub fn new() -> Self {
     Self { elements: HashMap::new() }
   }

@@ -67,7 +67,7 @@ impl ToTokens for Component {
           },
         );
 
-        context.render(component)
+        context.render(&component)
       }
     });
   }

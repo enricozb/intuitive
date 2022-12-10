@@ -13,6 +13,7 @@ pub struct Descendants {
 
 impl Descendants {
   /// Creates a new [`Descendants`].
+  #[must_use]
   pub fn new() -> Self {
     Self {
       component_ids: Vec::new(),
@@ -39,7 +40,7 @@ impl Provider for Descendants {
   type Context = HashSet<ComponentID>;
   type Exit = Self::Context;
 
-  /// [`ComponentID`]s that are _no longer_ descendants [`ComponentID`] originally given to [`Self::entry`].
+  /// [`ComponentID`]s that are _no longer_ descendants of the [`ComponentID`] originally given to [`Self::enter`].
   type Output = HashSet<ComponentID>;
 
   fn enter(&mut self, component_id: &Self::Entry) -> Self::Context {
@@ -47,12 +48,12 @@ impl Provider for Descendants {
     if let Some(parent_component_id) = self.component_ids.last() {
       self
         .descendants
-        .get_mut(&parent_component_id)
+        .get_mut(parent_component_id)
         .map(|descendants| descendants.insert(*component_id));
     }
 
     // Remove the old descendants, in order to compare to them in [`Self::exit`].
-    let old_descendants = self.descendants.remove(&component_id).unwrap_or_default();
+    let old_descendants = self.descendants.remove(component_id).unwrap_or_default();
     self.descendants.insert(*component_id, HashSet::new());
 
     self.component_ids.push(*component_id);
@@ -66,7 +67,7 @@ impl Provider for Descendants {
     let new_descendants = self.descendants.get(&component_id).expect("get").clone();
 
     let mut unmounted_component_ids = HashSet::new();
-    for unmounted_component_id in old_descendants.difference(&new_descendants).cloned() {
+    for unmounted_component_id in old_descendants.difference(&new_descendants).copied() {
       unmounted_component_ids.insert(unmounted_component_id);
       unmounted_component_ids.extend(self.descendants(unmounted_component_id));
     }

@@ -7,7 +7,7 @@ use std::any::{self, Any};
 use self::error::{Error, Result};
 pub use self::{
   use_effect::{Cleanup, UseEffect},
-  use_state::UseState,
+  use_state::{State, UseState},
 };
 
 /// A dynamically-typed hook return value, along with a deinitialization function for unmounting.
@@ -21,6 +21,7 @@ pub struct Hook {
 
 impl Hook {
   /// Creates a new [`Hook`].
+  #[must_use]
   pub fn new<T, F>(value: T, deinit: F) -> Self
   where
     T: 'static,

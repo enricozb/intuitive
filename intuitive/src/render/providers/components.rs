@@ -10,10 +10,13 @@ pub struct Components {
 
 impl Components {
   /// Creates a new [`Components`].
+  #[must_use]
   pub fn new() -> Self {
     Self { components: HashMap::new() }
   }
 
+  /// Gets the component.
+  #[must_use]
   pub fn get(&self, component_id: &ComponentID) -> Option<&AnyComponent> {
     self.components.get(component_id)
   }
