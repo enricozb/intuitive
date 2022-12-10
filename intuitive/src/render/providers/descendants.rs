@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use crate::{render::ComponentID, utils::provider::Provider};
 
+/// Descendants of elements with respect to rendering.
 pub struct Descendants {
   /// The parent [`ComponentID`], `None` if this is the first render.
   parent_component_id: Option<ComponentID>,
