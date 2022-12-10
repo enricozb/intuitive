@@ -7,6 +7,7 @@ use crate::{components::Any as AnyComponent, element::Any as AnyElement, render:
 /// - hooks
 /// - unmounting components
 /// - re-renders
+#[derive(Default)]
 pub struct Context {
   hooks: Hooks,
   descendants: Descendants,
@@ -15,17 +16,6 @@ pub struct Context {
 }
 
 impl Context {
-  /// Creates a new [`Context`].
-  #[must_use]
-  pub fn new() -> Self {
-    Self {
-      hooks: Hooks::new(),
-      descendants: Descendants::new(),
-      elements: Elements::new(),
-      components: Components::new(),
-    }
-  }
-
   /// Renders a component.
   pub fn render(&mut self, component: &AnyComponent) -> AnyElement {
     self.render_impl(component, false)

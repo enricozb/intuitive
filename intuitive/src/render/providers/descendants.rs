@@ -3,6 +3,7 @@ use std::collections::{HashMap, HashSet};
 use crate::{render::ComponentID, utils::provider::Provider};
 
 /// Descendants of elements with respect to rendering.
+#[derive(Default)]
 pub struct Descendants {
   /// A stack of component ids.
   component_ids: Vec<ComponentID>,
@@ -12,15 +13,6 @@ pub struct Descendants {
 }
 
 impl Descendants {
-  /// Creates a new [`Descendants`].
-  #[must_use]
-  pub fn new() -> Self {
-    Self {
-      component_ids: Vec::new(),
-      descendants: HashMap::new(),
-    }
-  }
-
   /// Returns all [`ComponentID`] descentants of `component_id`.
   fn descendants(&self, component_id: ComponentID) -> HashSet<ComponentID> {
     let mut descendants = HashSet::new();

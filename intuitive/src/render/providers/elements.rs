@@ -3,17 +3,10 @@ use std::collections::HashMap;
 use crate::{element::Any as AnyElement, render::ComponentID, utils::provider::Provider};
 
 /// Elements that have been rendered.
+#[derive(Default)]
 pub struct Elements {
   /// The elements that have been rendered.
   elements: HashMap<ComponentID, AnyElement>,
-}
-
-impl Elements {
-  /// Creates a new [`Elements`].
-  #[must_use]
-  pub fn new() -> Self {
-    Self { elements: HashMap::new() }
-  }
 }
 
 pub struct Exit {

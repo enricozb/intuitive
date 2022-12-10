@@ -3,18 +3,13 @@ use std::collections::{HashMap, HashSet};
 use crate::{components::Any as AnyComponent, render::ComponentID, utils::provider::Provider};
 
 /// Components that have been rendered.
+#[derive(Default)]
 pub struct Components {
   /// The components that have been rendered.
   components: HashMap<ComponentID, AnyComponent>,
 }
 
 impl Components {
-  /// Creates a new [`Components`].
-  #[must_use]
-  pub fn new() -> Self {
-    Self { components: HashMap::new() }
-  }
-
   /// Gets the component.
   #[must_use]
   pub fn get(&self, component_id: &ComponentID) -> Option<&AnyComponent> {

@@ -45,7 +45,7 @@ impl Terminal {
       stdout: io::stdout(),
       buffers: [Buffer::new(size), Buffer::new(size)],
       idx: false,
-      context: Context::new(),
+      context: Context::default(),
     })
   }
 

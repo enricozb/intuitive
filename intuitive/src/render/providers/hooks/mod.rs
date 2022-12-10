@@ -15,21 +15,13 @@ use crate::{
 };
 
 /// Hooks used within renders.
+#[derive(Default)]
 pub struct Hooks {
   cursors: Vec<Cursor>,
   hooks: HashMap<ComponentID, Vec<Hook>>,
 }
 
 impl Hooks {
-  /// Creates a new [`Hooks`].
-  #[must_use]
-  pub fn new() -> Self {
-    Self {
-      cursors: Vec::new(),
-      hooks: HashMap::new(),
-    }
-  }
-
   /// Returns the inner value of the current [`Hook`], constructing it with `f` if necessary.
   ///
   /// The parameter `f` is not generic because `use_hook` is often used with a turbofish, and it
