@@ -8,7 +8,7 @@ use crate::{components::Any as AnyComponent, element::Any as AnyElement, error::
 /// - unmounting components
 /// - re-renders
 pub struct Context {
-  pub hooks: Hooks,
+  hooks: Hooks,
   descendants: Descendants,
   elements: Elements,
   components: Components,
@@ -28,6 +28,11 @@ impl Context {
   /// Renders a component.
   pub fn render(&mut self, component: AnyComponent) -> AnyElement {
     self.render_impl(component, false)
+  }
+
+  /// Returns the [`Hooks`] context [`Provider`].
+  pub fn hooks(&mut self) -> &mut Hooks {
+    &mut self.hooks
   }
 
   /// Re-renders a component.

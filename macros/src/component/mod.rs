@@ -54,6 +54,7 @@ pub fn parse(attr: TokenStream, item: TokenStream) -> TokenStream {
 
     impl #impl_generics #crate_name::components::Component for #name #ty_generics #where_clause {
       fn render(&self, context: &mut #crate_name::render::context::Context) #retty {
+        let hooks = context.hooks();
         let #name { #(#param_names),* } = self;
 
         #block
