@@ -22,7 +22,7 @@ impl Descendants {
 
   /// Returns all [`ComponentID`] descentants of `component_id`.
   fn descendants(&self, component_id: ComponentID) -> HashSet<ComponentID> {
-    let descendants = HashSet::new();
+    let mut descendants = HashSet::new();
     for component_id in self.descendants.get(&component_id).cloned().unwrap_or_default() {
       descendants.extend(self.descendants(component_id));
     }
@@ -65,7 +65,7 @@ impl Provider for Descendants {
   fn exit(&mut self, old_descendants: Self::Context, component_id: Self::Exit) -> Self::Output {
     let new_descendants = self.descendants.get(&component_id).expect("DESCENDANTS::get").clone();
 
-    let unmounted_component_ids = HashSet::new();
+    let mut unmounted_component_ids = HashSet::new();
     for unmounted_component_id in old_descendants.difference(&new_descendants).cloned() {
       unmounted_component_ids.extend(self.descendants(unmounted_component_id));
     }

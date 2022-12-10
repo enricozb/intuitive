@@ -16,9 +16,9 @@ impl Elements {
 }
 
 pub struct Exit {
-  component_id: ComponentID,
-  element: AnyElement,
-  is_rerender: bool,
+  pub component_id: ComponentID,
+  pub element: AnyElement,
+  pub is_rerender: bool,
 }
 
 impl Provider for Elements {
