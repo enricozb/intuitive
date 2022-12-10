@@ -10,7 +10,7 @@ use crate::{components::Any as AnyComponent, element::Any as AnyElement, error::
 /// - unmounting components
 /// - re-renders
 pub struct Context {
-  hooks: Hooks,
+  pub hooks: Hooks,
   descendants: Descendants,
   elements: Elements,
 
@@ -56,7 +56,12 @@ impl Context {
 
     let element = component.render(self);
 
-    let unmounted_component_ids = self.descendants.exit(old_descendants, component.id);
+    let unmounted_component_ids = self.descendants.exit(old_descendants, ());
+
+    for component_id in &unmounted_component_ids {
+      self.components.remove(&component_id);
+    }
+
     let () = self.hooks.exit((), unmounted_component_ids).expect("hooks::exit");
     let () = self.elements.exit(
       (),

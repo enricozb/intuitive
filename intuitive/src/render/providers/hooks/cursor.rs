@@ -1,8 +1,10 @@
-use super::{
-  error::{Error, Result},
-  Hook,
+use crate::render::{
+  hooks::{
+    error::{Error, Result},
+    Hook,
+  },
+  ComponentID,
 };
-use crate::render::ComponentID;
 
 /// Tracks hook usage within a render.
 pub struct Cursor {

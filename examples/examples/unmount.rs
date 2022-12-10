@@ -22,10 +22,10 @@ use intuitive::{
 /// A component that shows how many seconds it has been rendered for.
 #[component(Timer)]
 fn render(text: String, border: Style) -> AnyElement {
-  let seconds = render.hooks.use_state(|| 0);
+  let seconds = context.hooks.use_state(|| 0);
   let seconds_clone = seconds.clone();
 
-  render.hooks.use_effect(|| {
+  context.hooks.use_effect(|| {
     let done = Arc::new(AtomicBool::new(false));
     let done_clone = done.clone();
 
@@ -56,10 +56,10 @@ fn render(text: String, border: Style) -> AnyElement {
 /// Swaps between two timers.
 #[component(Root)]
 fn render() -> AnyElement {
-  let first = render.hooks.use_state(|| true);
+  let first = context.hooks.use_state(|| true);
   let first_clone = first.clone();
 
-  render.hooks.use_effect(|| {
+  context.hooks.use_effect(|| {
     thread::spawn(move || loop {
       thread::sleep(Duration::from_secs(5));
 
@@ -69,11 +69,11 @@ fn render() -> AnyElement {
 
   if first.get() {
     render! {
-      Timer(key: 1, text: "The first component", border: Color::Green)
+      Timer(text: "The first component", border: Color::Green)
     }
   } else {
     render! {
-      Timer(key: 1, text: "The second component", border: Color::Red)
+      Timer(text: "The second component", border: Color::Red)
     }
   }
 }

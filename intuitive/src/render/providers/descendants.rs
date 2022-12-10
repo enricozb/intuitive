@@ -4,8 +4,8 @@ use crate::{render::ComponentID, utils::provider::Provider};
 
 /// Descendants of elements with respect to rendering.
 pub struct Descendants {
-  /// The parent [`ComponentID`], `None` if this is the first render.
-  parent_component_id: Option<ComponentID>,
+  /// A stack of component ids.
+  component_ids: Vec<ComponentID>,
 
   /// The immediate descendants of a component with respect to rendering.
   descendants: HashMap<ComponentID, HashSet<ComponentID>>,
@@ -15,7 +15,7 @@ impl Descendants {
   /// Creates a new [`Descendants`].
   pub fn new() -> Self {
     Self {
-      parent_component_id: None,
+      component_ids: Vec::new(),
       descendants: HashMap::new(),
     }
   }
@@ -37,16 +37,14 @@ impl Provider for Descendants {
 
   /// The old descendants for the given [`ComponentID`].
   type Context = HashSet<ComponentID>;
-
-  /// The component being rendered.
-  type Exit = ComponentID;
+  type Exit = ();
 
   /// [`ComponentID`]s that are _no longer_ descendants [`ComponentID`] originally given to [`Self::entry`].
   type Output = HashSet<ComponentID>;
 
   fn enter(&mut self, component_id: Self::Entry) -> Self::Context {
     // Add `component_id` to the descendants of `self.current_component_id`
-    if let Some(parent_component_id) = self.parent_component_id {
+    if let Some(parent_component_id) = self.component_ids.last() {
       self
         .descendants
         .get_mut(&parent_component_id)
@@ -57,16 +55,19 @@ impl Provider for Descendants {
     let old_descendants = self.descendants.remove(&component_id).unwrap_or_default();
     self.descendants.insert(component_id, HashSet::new());
 
-    self.parent_component_id = Some(component_id);
+    self.component_ids.push(component_id);
 
     old_descendants
   }
 
-  fn exit(&mut self, old_descendants: Self::Context, component_id: Self::Exit) -> Self::Output {
-    let new_descendants = self.descendants.get(&component_id).expect("DESCENDANTS::get").clone();
+  fn exit(&mut self, old_descendants: Self::Context, (): Self::Exit) -> Self::Output {
+    let component_id = self.component_ids.pop().expect("pop");
+
+    let new_descendants = self.descendants.get(&component_id).expect("get").clone();
 
     let mut unmounted_component_ids = HashSet::new();
     for unmounted_component_id in old_descendants.difference(&new_descendants).cloned() {
+      unmounted_component_ids.insert(unmounted_component_id);
       unmounted_component_ids.extend(self.descendants(unmounted_component_id));
     }
 
