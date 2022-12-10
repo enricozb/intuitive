@@ -26,11 +26,11 @@ impl Provider for Components {
   type Exit = HashSet<ComponentID>;
   type Output = ();
 
-  fn enter(&mut self, component: Self::Entry) -> Self::Context {
-    self.components.insert(component.id, component);
+  fn enter(&mut self, component: &Self::Entry) -> Self::Context {
+    self.components.insert(component.id, component.clone());
   }
-  fn exit(&mut self, (): Self::Context, unmounted_component_ids: Self::Exit) -> Self::Output {
-    for component_id in &unmounted_component_ids {
+  fn exit(&mut self, unmounted_component_ids: &Self::Exit) -> Self::Output {
+    for component_id in unmounted_component_ids {
       self.components.remove(component_id);
     }
   }

@@ -37,30 +37,30 @@ impl Provider for Descendants {
 
   /// The old descendants for the given [`ComponentID`].
   type Context = HashSet<ComponentID>;
-  type Exit = ();
+  type Exit = Self::Context;
 
   /// [`ComponentID`]s that are _no longer_ descendants [`ComponentID`] originally given to [`Self::entry`].
   type Output = HashSet<ComponentID>;
 
-  fn enter(&mut self, component_id: Self::Entry) -> Self::Context {
+  fn enter(&mut self, component_id: &Self::Entry) -> Self::Context {
     // Add `component_id` to the descendants of `self.current_component_id`
     if let Some(parent_component_id) = self.component_ids.last() {
       self
         .descendants
         .get_mut(&parent_component_id)
-        .map(|descendants| descendants.insert(component_id));
+        .map(|descendants| descendants.insert(*component_id));
     }
 
     // Remove the old descendants, in order to compare to them in [`Self::exit`].
     let old_descendants = self.descendants.remove(&component_id).unwrap_or_default();
-    self.descendants.insert(component_id, HashSet::new());
+    self.descendants.insert(*component_id, HashSet::new());
 
-    self.component_ids.push(component_id);
+    self.component_ids.push(*component_id);
 
     old_descendants
   }
 
-  fn exit(&mut self, old_descendants: Self::Context, (): Self::Exit) -> Self::Output {
+  fn exit(&mut self, old_descendants: &Self::Exit) -> Self::Output {
     let component_id = self.component_ids.pop().expect("pop");
 
     let new_descendants = self.descendants.get(&component_id).expect("get").clone();

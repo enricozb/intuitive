@@ -44,7 +44,7 @@ impl Hooks {
     self.cursors.last_mut().ok_or(Error::NoCursor)?.next(f)
   }
 
-  fn deinit(&mut self, unmounted_component_ids: HashSet<ComponentID>) {
+  fn deinit(&mut self, unmounted_component_ids: &HashSet<ComponentID>) {
     for component_id in unmounted_component_ids {
       for hook in self.hooks.remove(&component_id).unwrap_or_default() {
         hook.deinit();
@@ -60,16 +60,16 @@ impl Provider for Hooks {
   type Exit = HashSet<ComponentID>;
   type Output = Result<()>;
 
-  fn enter(&mut self, component_id: Self::Entry) -> Self::Context {
-    let cursor = match self.hooks.remove(&component_id) {
-      Some(hooks) => Cursor::read(component_id, hooks),
-      None => Cursor::write(component_id),
+  fn enter(&mut self, component_id: &Self::Entry) -> Self::Context {
+    let cursor = match self.hooks.remove(component_id) {
+      Some(hooks) => Cursor::read(*component_id, hooks),
+      None => Cursor::write(*component_id),
     };
 
     self.cursors.push(cursor);
   }
 
-  fn exit(&mut self, (): Self::Context, unmounted_component_ids: Self::Exit) -> Self::Output {
+  fn exit(&mut self, unmounted_component_ids: &Self::Exit) -> Self::Output {
     let cursor = self.cursors.pop().ok_or(Error::NoCursor)?;
 
     self.hooks.insert(cursor.component_id, cursor.hooks());

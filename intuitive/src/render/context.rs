@@ -43,24 +43,21 @@ impl Context {
     // https://github.com/rust-lang/rust/issues/86935#issuecomment-1146670057
     type Type<T> = T;
 
-    let () = self.components.enter(component.clone());
-    let () = self.elements.enter(());
-    let () = self.hooks.enter(component.id);
-    let old_descendants = self.descendants.enter(component.id);
+    let () = self.components.enter(&component);
+    let () = self.elements.enter(&());
+    let () = self.hooks.enter(&component.id);
+    let old_descendants = self.descendants.enter(&component.id);
 
     let element = component.render(self);
 
-    let unmounted_component_ids = self.descendants.exit(old_descendants, ());
-    let () = self.hooks.exit((), unmounted_component_ids.clone()).expect("hooks::exit");
-    let () = self.components.exit((), unmounted_component_ids);
-    let () = self.elements.exit(
-      (),
-      Type::<<Elements as Provider>::Exit> {
-        component_id: component.id,
-        element: element.clone(),
-        is_rerender,
-      },
-    );
+    let unmounted_component_ids = self.descendants.exit(&old_descendants);
+    let () = self.hooks.exit(&unmounted_component_ids).expect("hooks::exit");
+    let () = self.components.exit(&unmounted_component_ids);
+    let () = self.elements.exit(&Type::<<Elements as Provider>::Exit> {
+      component_id: component.id,
+      element: element.clone(),
+      is_rerender,
+    });
 
     element
   }

@@ -14,12 +14,8 @@ pub(crate) trait Provider {
   type Output;
 
   /// Enters into the context provider.
-  ///
-  /// This method requires the outer context, in the form of [`Self::Entry`].
-  fn enter(&mut self, entry: Self::Entry) -> Self::Context;
+  fn enter(&mut self, entry: &Self::Entry) -> Self::Context;
 
   /// Exits the context provider.
-  ///
-  /// This method requires the context returned by [`Self::exit`], and any additional [`Self::Exit`] context.
-  fn exit(&mut self, context: Self::Context, exit: Self::Exit) -> Self::Output;
+  fn exit(&mut self, exit: &Self::Exit) -> Self::Output;
 }

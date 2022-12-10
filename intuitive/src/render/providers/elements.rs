@@ -27,14 +27,15 @@ impl Provider for Elements {
   type Exit = Exit;
   type Output = ();
 
-  fn enter(&mut self, (): Self::Entry) -> Self::Context {}
-  fn exit(&mut self, (): Self::Context, exit: Self::Exit) -> Self::Output {
+  fn enter(&mut self, (): &Self::Entry) -> Self::Context {}
+
+  fn exit(&mut self, exit: &Self::Exit) -> Self::Output {
     if exit.is_rerender {
       if let Some(old_element) = self.elements.get(&exit.component_id) {
         old_element.swap(&exit.element);
       }
     } else {
-      self.elements.insert(exit.component_id, exit.element);
+      self.elements.insert(exit.component_id, exit.element.clone());
     }
   }
 }
