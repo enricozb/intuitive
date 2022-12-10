@@ -5,7 +5,7 @@ use super::Component;
 use crate::element::Element;
 use crate::{
   element::Any as AnyElement,
-  render::{manager::Manager as RenderManager, ComponentID},
+  render::{context::Context, ComponentID},
 };
 
 /// A container for functions that return an [`Element`]. This is used as a way to
@@ -16,7 +16,7 @@ pub struct Any {
   pub id: ComponentID,
 
   /// The component.
-  component: Rc<Box<dyn Fn(&mut RenderManager) -> AnyElement>>,
+  component: Rc<Box<dyn Fn(&mut Context) -> AnyElement>>,
 }
 
 impl Any {
@@ -24,13 +24,13 @@ impl Any {
   pub fn new<C: Component + 'static>(component_id: ComponentID, component: C) -> Self {
     Self {
       id: component_id,
-      component: Rc::new(Box::new(move |render: &mut RenderManager| component.render(render))),
+      component: Rc::new(Box::new(move |context: &mut Context| component.render(context))),
     }
   }
 
   /// Calls the inner [`Self::component`].
   #[must_use]
-  pub(crate) fn render(&self, render: &mut RenderManager) -> AnyElement {
-    (self.component)(render)
+  pub(crate) fn render(&self, context: &mut Context) -> AnyElement {
+    (self.component)(context)
   }
 }

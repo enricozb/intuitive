@@ -19,9 +19,9 @@ pub use self::{
 };
 #[allow(unused)]
 use crate::element::Element;
-use crate::{element::Any as AnyElement, render::manager::Manager as RenderManager};
+use crate::{element::Any as AnyElement, render::context::Context};
 
 /// Describes types which can be rendered to an [`Element`].
 pub trait Component: Default {
-  fn render(&self, render: &mut RenderManager) -> AnyElement;
+  fn render(&self, context: &mut Context) -> AnyElement;
 }

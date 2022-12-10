@@ -3,7 +3,7 @@ use crate::{
   components::Component,
   element::{Any as AnyElement, Children, Element},
   error::Result,
-  render::manager::Manager as RenderManager,
+  render::context::Context,
   style::Style,
   utils::{
     geometry::{Axis, Position, Size},
@@ -26,7 +26,7 @@ pub struct Section {
 }
 
 impl Component for Section {
-  fn render(&self, _render: &mut RenderManager) -> AnyElement {
+  fn render(&self, _context: &mut Context) -> AnyElement {
     AnyElement::new(self.clone())
   }
 }

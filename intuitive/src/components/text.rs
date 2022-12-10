@@ -3,7 +3,7 @@ use crate::{
   components::Component,
   element::{Any as AnyElement, Element},
   error::Result,
-  render::manager::Manager as RenderManager,
+  render::context::Context,
   style::Style,
   utils::{
     geometry::{Axis, Position},
@@ -19,7 +19,7 @@ pub struct Text {
 }
 
 impl Component for Text {
-  fn render(&self, _render: &mut RenderManager) -> AnyElement {
+  fn render(&self, _context: &mut Context) -> AnyElement {
     AnyElement::new(self.clone())
   }
 }

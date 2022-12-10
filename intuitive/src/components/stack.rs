@@ -5,7 +5,7 @@ use crate::{
   element::{Any as AnyElement, Children, Element},
   error::Result,
   render,
-  render::manager::Manager as RenderManager,
+  render::context::Context,
   utils::layout::{Flex, FlexArray, FlexDirection},
 };
 
@@ -37,7 +37,7 @@ pub fn render(flex: FlexArray<N>, children: Children<N>) -> AnyElement {
 }
 
 impl<const N: usize> Component for Stack<N> {
-  fn render(&self, _render: &mut RenderManager) -> AnyElement {
+  fn render(&self, _context: &mut Context) -> AnyElement {
     AnyElement::new(self.clone())
   }
 }
