@@ -56,7 +56,7 @@ impl Hooks {
 impl Provider for Hooks {
   type Entry = ComponentID;
   type Context = ();
-  /// The component ids that were unmounted, to call [`Hook::deinit`] on.
+  /// Components that were unmounted, to call [`Hook::deinit`] on.
   type Exit = HashSet<ComponentID>;
   type Output = Result<()>;
 

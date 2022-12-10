@@ -1,6 +1,4 @@
-use std::collections::HashMap;
-
-use super::providers::{Descendants, Elements, Hooks};
+use super::providers::{Components, Descendants, Elements, Hooks};
 use crate::{components::Any as AnyComponent, element::Any as AnyElement, error::Result, render::ComponentID, utils::provider::Provider};
 
 /// The rendering context.
@@ -13,9 +11,7 @@ pub struct Context {
   pub hooks: Hooks,
   descendants: Descendants,
   elements: Elements,
-
-  /// Components that have been rendered.
-  components: HashMap<ComponentID, AnyComponent>,
+  components: Components,
 }
 
 impl Context {
@@ -25,15 +21,12 @@ impl Context {
       hooks: Hooks::new(),
       descendants: Descendants::new(),
       elements: Elements::new(),
-
-      components: HashMap::new(),
+      components: Components::new(),
     }
   }
 
   /// Renders a component.
   pub fn render(&mut self, component: AnyComponent) -> AnyElement {
-    self.components.insert(component.id, component.clone());
-
     self.render_impl(component, false)
   }
 
@@ -50,6 +43,7 @@ impl Context {
     // https://github.com/rust-lang/rust/issues/86935#issuecomment-1146670057
     type Type<T> = T;
 
+    let () = self.components.enter(component.clone());
     let () = self.elements.enter(());
     let () = self.hooks.enter(component.id);
     let old_descendants = self.descendants.enter(component.id);
@@ -57,12 +51,8 @@ impl Context {
     let element = component.render(self);
 
     let unmounted_component_ids = self.descendants.exit(old_descendants, ());
-
-    for component_id in &unmounted_component_ids {
-      self.components.remove(&component_id);
-    }
-
-    let () = self.hooks.exit((), unmounted_component_ids).expect("hooks::exit");
+    let () = self.hooks.exit((), unmounted_component_ids.clone()).expect("hooks::exit");
+    let () = self.components.exit((), unmounted_component_ids);
     let () = self.elements.exit(
       (),
       Type::<<Elements as Provider>::Exit> {
