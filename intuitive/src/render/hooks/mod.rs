@@ -57,6 +57,8 @@
 //! Custom hooks are, like the built-in hooks, implemented as traits on the [`Hooks`] context provider. For example,
 //! the [`UseState`] hook is implemented as follows:
 //! ```rust
+//! # use intuitive::render::{hooks::State, providers::Hooks};
+//!
 //! pub trait UseState {
 //!   fn use_state<F, T>(&mut self, initializer: F) -> State<T>
 //!   where

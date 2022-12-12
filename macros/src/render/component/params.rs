@@ -55,7 +55,7 @@ impl ToTokens for Params {
 /// A single parameter passed to a component within [`render!`].
 pub enum Param {
   /// Long-form syntax for passing a parameter. For example,
-  /// ```
+  /// ```ignore
   /// render! {
   ///   Text(text: "Hello, world!")
   /// }
@@ -63,7 +63,7 @@ pub enum Param {
   Long(Ident, Box<Expr>),
 
   /// Shorthand syntax for passing a parameter. For example,
-  /// ```
+  /// ```ignore
   /// let text = "Hello, world!";
   ///
   /// render! {

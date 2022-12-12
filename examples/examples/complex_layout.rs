@@ -42,7 +42,7 @@ fn render() -> AnyElement {
 }
 
 fn main() -> Result<()> {
-  Terminal::new()?.render(&render! { Root() })?;
+  Terminal::new()?.render(Root {})?;
 
   Ok(())
 }
