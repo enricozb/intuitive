@@ -137,7 +137,7 @@ pub use intuitive_macros::component;
 /// Macro for rendering components.
 ///
 /// # Usage
-/// This macro is used to render components from within [`Component::render`]. It uses a [SwiftUI]-like syntax, where
+/// This macro is used to render components from within [`Component::render`]. It uses a [SwiftUI-like] syntax, where
 /// the rough syntax is as follows:
 /// ```text
 /// render! { <component> }
@@ -195,5 +195,5 @@ pub use intuitive_macros::component;
 /// [`VStack`]: components::VStack
 /// [`Component::render`]: components::Component::render
 /// [`TryInto::try_into`]: https://doc.rust-lang.org/std/convert/trait.TryInto.html#tymethod.try_into
-/// [SwiftUI]: https://developer.apple.com/xcode/swiftui/
+/// [SwiftUI-like]: https://developer.apple.com/xcode/swiftui/
 pub use intuitive_macros::render;
