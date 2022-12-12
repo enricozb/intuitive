@@ -60,11 +60,6 @@
 
 - hooks
   - `use_memo`
-  - `use_effect`
-    - having a `deps: D` arg is a little difficult:
-      - if the depenedency is a `State`, then just saving a clone of it wouldn't let us compare it to future
-        versions of the state because the clone and the "future" version would hold `Arc`s to the same point
-        in memory, so they would always be equal.
   - signals: finer-grained re-rendering) on `State` changes
 
 - rendering
