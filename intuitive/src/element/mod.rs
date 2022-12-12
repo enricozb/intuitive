@@ -12,7 +12,10 @@ use crate::{buffer::region::Region, error::Result};
 /// A rendered [`Component`], which can be drawn onto a [`Region`].
 pub trait Element {
   /// Draw the element onto the given [`Region`].
-  #[allow(clippy::missing_errors_doc)]
+  ///
+  /// # Errors
+  ///
+  /// Will return an `Err` if the drawing fails.
   fn draw<'a>(&self, region: &'a mut Region<'a>) -> Result<()>;
 
   // Future methods
