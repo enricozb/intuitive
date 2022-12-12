@@ -1,3 +1,5 @@
+//! Colors and text attributes.
+
 use crossterm::style::ContentStyle as CrosstermStyle;
 pub use crossterm::style::{Attribute, Attributes, Color};
 

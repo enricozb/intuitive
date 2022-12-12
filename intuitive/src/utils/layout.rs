@@ -1,6 +1,9 @@
+//! Layout primitives.
+
 use crate::utils::array::Array;
 
 #[derive(Clone, Copy)]
+/// Positioning along an axis.
 pub enum Alignment {
   Left,
   Center,
@@ -14,6 +17,7 @@ impl Default for Alignment {
 }
 
 #[derive(Clone, Copy)]
+/// A relative or absolute amount.
 pub enum Amount {
   /// A fixed amount in cells.
   Fixed(u16),

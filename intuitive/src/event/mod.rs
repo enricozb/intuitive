@@ -1,3 +1,5 @@
+//! Primitives for sending and receiving events.
+
 mod channel;
 use std::thread;
 

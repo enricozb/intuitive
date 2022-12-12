@@ -1,3 +1,5 @@
+//! Generic array type imlementing common convenience traits.
+
 use std::ops::Deref;
 
 /// An array type that implements common convenience traits that are not yet implemented for `[T; N]` over all `N`.

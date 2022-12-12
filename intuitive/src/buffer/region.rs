@@ -1,3 +1,5 @@
+//! Types for regions of a buffer.
+
 use super::{draw::Draw, Buffer, Cell};
 use crate::{
   error::{Error, Result},

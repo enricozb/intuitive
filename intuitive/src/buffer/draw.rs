@@ -1,3 +1,5 @@
+//! The [`Draw`] trait.
+
 use super::Cell;
 #[allow(unused)]
 use super::{region::Region, Buffer};

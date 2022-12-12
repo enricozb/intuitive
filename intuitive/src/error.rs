@@ -1,16 +1,15 @@
+//! Intuitive error types.
+
 use std::{io::Error as IoError, sync::mpsc::RecvError};
 
 use thiserror::Error;
 
-use crate::render::ComponentID;
-
+/// Intuitive result.
 pub type Result<T> = std::result::Result<T, Error>;
 
+/// Intuitive errors.
 #[derive(Error, Debug)]
 pub enum Error {
-  #[error("No element found for the given component id: {0:?}")]
-  NoElement(ComponentID),
-
   #[error("Narrower region exceeds bounds")]
   RegionOutOfBounds,
 

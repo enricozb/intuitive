@@ -1,3 +1,5 @@
+//! Geometric primitives.
+
 use std::ops::Add;
 
 #[derive(Clone, Copy, Debug)]

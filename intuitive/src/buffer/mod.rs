@@ -1,3 +1,5 @@
+//! Types for drawing onto the terminal.
+
 pub mod draw;
 pub mod region;
 

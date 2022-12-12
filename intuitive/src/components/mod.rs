@@ -1,3 +1,5 @@
+//! A collection of components.
+
 mod any;
 mod embed;
 mod empty;

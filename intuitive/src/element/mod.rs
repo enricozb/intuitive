@@ -1,3 +1,5 @@
+//! Rendered components.
+
 mod any;
 mod empty;
 

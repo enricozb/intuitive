@@ -1,3 +1,5 @@
+//! Component rendering context and hooks.
+
 mod context;
 pub mod hooks;
 pub mod providers;

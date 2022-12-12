@@ -1,3 +1,5 @@
+//! Types for orchestrating component rendering, drawing, and event handling.
+
 use std::io::{self, Stdout};
 
 use crossterm::{

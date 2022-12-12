@@ -1,3 +1,5 @@
+//! The [`Provider`] trait.
+
 /// Describes a context provider.
 ///
 /// This trait is used to describe common behavior across different data that needs to

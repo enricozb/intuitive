@@ -1,3 +1,5 @@
+//! The [`Context`] type.
+
 use super::providers::{Components, Descendants, Elements, Hooks};
 use crate::{components::Any as AnyComponent, element::Any as AnyElement, render::ComponentID, utils::provider::Provider};
 
