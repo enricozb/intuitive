@@ -8,7 +8,7 @@ use crate::{
   render::{hooks::Hook, providers::Hooks, ComponentID},
 };
 
-/// A container for a `T` which causes re-renders when mutated, returned by [`UseState:[:UseState::use_state`]].
+/// A container for a `T` which causes re-renders when mutated, returned by [`UseState::use_state`].
 ///
 /// `State` is created through [`UseState::use_state`].
 pub struct State<T> {
@@ -17,7 +17,7 @@ pub struct State<T> {
 }
 
 impl<T> State<T> {
-  /// Creates a new [`State<T>`].
+  /// Creates a new [`State`].
   fn new(component_id: ComponentID, inner: T) -> Self {
     Self {
       component_id,
@@ -38,7 +38,7 @@ impl<T> State<T> {
   {
     // TODO(enricozb): implement signals:
     //   This should check the current `ComponentID` in use, and associate this state with that `ComponentID`.
-    //   Then, on any changes to this `State<T>`, re-renders should be triggered for those `ComponentID`s.
+    //   Then, on any changes to this `State`, re-renders should be triggered for those `ComponentID`s.
 
     self.inner.lock().clone()
   }
@@ -99,9 +99,15 @@ impl<T> Clone for State<T> {
   }
 }
 
+impl<T: 'static> From<State<T>> for Hook {
+  fn from(state: State<T>) -> Self {
+    Self::from_value(state)
+  }
+}
+
 /// A hook to add state to a component.
 pub trait UseState {
-  /// Returns a [`State<T>`] initialized with the provided `initializer`. The `initializer` is only called once,
+  /// Returns a [`State`] initialized with the provided `initializer`. The `initializer` is only called once,
   /// when the [`UseState::use_state`] hook is first called, and a memoized value is used in future calls.
   ///
   /// When a [`State`] is mutated through its methods, it will trigger a re-render of the component that it
@@ -123,7 +129,7 @@ impl UseState for Hooks {
     T: 'static,
   {
     self
-      .use_hook(|component_id| Hook::from_value(State::new(component_id, initializer())))
+      .use_hook(|component_id| State::new(component_id, initializer()).into())
       .expect("use_state: use_hook")
   }
 }

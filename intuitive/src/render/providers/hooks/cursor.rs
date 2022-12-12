@@ -60,6 +60,11 @@ impl Cursor {
     Ok(value)
   }
 
+  /// Returns whether there is a next hook value.
+  pub fn has_hook(&self) -> bool {
+    !self.writing
+  }
+
   /// Ends a cursor and returns its hooks.
   pub fn hooks(self) -> Vec<Hook> {
     self.hooks

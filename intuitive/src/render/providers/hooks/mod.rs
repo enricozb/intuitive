@@ -39,6 +39,16 @@ impl Hooks {
     self.cursors.last_mut().ok_or(Error::NoCursor)?.next(f)
   }
 
+  /// Returns whether there is a hook to be read.
+  ///
+  /// # Errors
+  ///
+  /// Will return an `Err` if there is no [`Cursor`] at the top of the stack.
+  #[allow(rustdoc::private_intra_doc_links)]
+  pub fn has_hook(&self) -> Result<bool> {
+    Ok(self.cursors.last().ok_or(Error::NoCursor)?.has_hook())
+  }
+
   /// Deinitializes all hooks for the given `component_ids`.
   fn deinit(&mut self, component_ids: &HashSet<ComponentID>) {
     for component_id in component_ids {

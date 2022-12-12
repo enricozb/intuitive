@@ -1,5 +1,6 @@
 pub mod error;
 mod use_effect;
+mod use_effect_with_deps;
 mod use_state;
 
 use std::any::{self, Any};
@@ -7,6 +8,7 @@ use std::any::{self, Any};
 use self::error::{Error, Result};
 pub use self::{
   use_effect::{Cleanup, UseEffect},
+  use_effect_with_deps::UseEffectWithDeps,
   use_state::{State, UseState},
 };
 
@@ -17,6 +19,15 @@ pub struct Hook {
 
   /// Any deinitialization needed for whne this hook's parent component is unmounted.
   deinit: Option<Box<dyn FnOnce()>>,
+}
+
+impl Default for Hook {
+  fn default() -> Self {
+    Self {
+      value: Box::new(()),
+      deinit: None,
+    }
+  }
 }
 
 impl Hook {
