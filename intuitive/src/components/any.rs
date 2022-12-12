@@ -16,6 +16,7 @@ pub struct Any {
   pub id: ComponentID,
 
   /// The component.
+  #[allow(clippy::type_complexity)]
   component: Rc<Box<dyn Fn(&mut Context) -> AnyElement>>,
 }
 
