@@ -11,8 +11,7 @@
 //! Intuitive attempts to make it easy to write reusable TUI components that are:
 //!   - readable (minimal-code)
 //!   - familiar (similar to existing web frameworks)
-//!   - full-featured (conditional rendering, styles, key/mouse-handling)
-//!   - free of boilerplate (responsive by default, focusing handled for free)
+//!   - fully-featured (conditional rendering, key/mouse-handling, responsive)
 //!
 //! ## Getting Started
 //! There are a few fundamental concepts within Intuitive:
@@ -20,6 +19,10 @@
 //!   - Using components with [`render!`].
 //!   - Using [hooks](crate::render::hooks).
 //!
+//! TODO(enricozb): talk about the three points above in a little more detail, with further reading for each of them.
+//! TODO(enricozb): give simple example
+//!
+//! [Getting Started]: #getting-started
 //! [lazygit]: https://github.com/jesseduffield/lazygit
 //! [React]: https://reactjs.org/
 //! [SwiftUI]: https://developer.apple.com/xcode/swiftui/
