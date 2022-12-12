@@ -43,6 +43,8 @@
           - i _think_ this could work, because children being prop drilled will have this called multiple times on them,
             the last one being on the parent they ended up with
 
+  - probably going to end up being something to `render::Context`.
+
 - macros
   - `render!`
     - add the ability to specify generic parameters when using components, using turbofish:
@@ -59,26 +61,13 @@
   - input
 
 - hooks
-  - `use_memo`
   - signals: finer-grained re-rendering) on `State` changes
 
 - rendering
-  - unmount
-    - elements should be "unmounted": when a re-render occurs for a parent of an element
-      and this element _isn't_ re-rendered, it should be unmounted
     - unmounting an element could:
       - call an `on_umount` method on the element
-      - have `Initializer` return something that implements `Unmountable`, so we can call `unmount` on
-        `State`, and other structs returned by `use_hook`.
-        - `Memos` would have to be changed to store `dyn Unmountable` (better named `Hook`)
-      - delete the hooks from the global `COMPONENTS` and `ELEMENTS`
 
 - misc
-  - remove mutexes, arcs, `Sync` and `Send` requirements by moving away from `lazy_static` and `static ref`, and instead
-    making the terminal own an instance of a render manager.
-    - this might be harder than i originally thought. Mostly because `render!` calls `render::render`, which is a top-level function.
-      I'm not sure how to make `render!` generate code that refers to the current terminal.
-    - Maybe `Component::render` can take in a `Terminal` reference.
   - implement proper tracing
   - `Terminal::render` should ensure that cleanup is called before it leaves that function, or else error isn't printed
   - cursor showing/hiding ability (or leave this to crossterm?)
@@ -92,5 +81,5 @@
   - `use_effect`
 
 - docs
-  - hooks
-    - writing custom hooks
+  - top-level docs
+    - getting started
