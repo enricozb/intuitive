@@ -12,6 +12,79 @@ pub mod utils;
 
 pub mod event;
 
+/// Helper attribute macro for creating functional components.
+///
+/// # Usage
+/// This macro is used to create functional components, where the name (and type paramters) of the generated component
+/// is the item in the attribute. For example,
+/// ```rust
+/// # use intuitive::{
+/// #   component,
+/// #   components::{Section, Text},
+/// #   element::Any as AnyElement,
+/// #   render,
+/// # };
+/// #
+/// #[component(Root)]
+/// pub fn render(title: String) -> AnyElement {
+///   render! {
+///     Section(title) {
+///       Text(text: "Hello world!")
+///     }
+///   }
+/// }
+/// ```
+/// constructs a `Root` component, that can be used in a [`render!`] macro.
+///
+/// # Parameters
+/// If the `render` function contains parameters, these will become parameters to the generated component. These
+/// parameters can later be supplied when using the generated component in a [`render!`] macro. The parameters' types
+/// **must** implement [`Default`] as the generated component derives [`Default`]. If you need more control over the
+/// default values of the parameters, consider implementing the [`Component`] trait instead of using the
+/// [`#[component(..)]`](component) attribute macro.
+///
+/// # Managing State
+/// State in functional components is managed similarly to how they are in [React], using the [`UseState`] hook. Refer
+/// to the [`UseState`] documentation for details.
+///
+/// # Generics
+/// When requiring generics they can be added into the attribute and then used in the parameters. For example,
+/// ```rust
+/// # use std::fmt::Display;
+/// # use intuitive::{
+/// #   component,
+/// #   components::{Section, Text},
+/// #   element::Any as AnyElement,
+/// #   error::Result,
+/// #   render,
+/// #   terminal::Terminal,
+/// # };
+/// #
+/// #[component(Root<T: Display + Default>)]
+/// fn render(title: String, t: T) -> AnyElement {
+///   render! {
+///     Section(title) {
+///       Text(text: format!("My value: {t}"))
+///     }
+///   }
+/// }
+/// ```
+///
+/// # Generated Component
+/// The generated component is a structure that implements the [`Component`] trait. The structure's fields are exactly
+/// the paramters defined in the `render` function passed to [`#[component(..)]`](component).
+///
+/// # Additional Details
+/// There are a couple of additional details with this macro:
+/// 1. The visibility of the generated component will be the same as the visibility of the `render` function the
+///    [`#[component(..)]`](component) attribute is applied to.
+/// 2. The function name (commonly `render`) is ignored.
+/// 3. The return type must by [`AnyElement`].
+///
+/// [`Component`]: components::Component
+/// [`AnyElement`]: element::Any
+/// [`UseState`]: render::hooks::UseState
+/// [React]: https://reactjs.org/
 pub use intuitive_macros::component;
 /// Macro for rendering components.
 ///
