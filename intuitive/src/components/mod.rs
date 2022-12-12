@@ -1,4 +1,7 @@
 //! A collection of components.
+//!
+//! Refer to the documentation for the [`#[component(..)]`](crate::component) attribute macro for information on how
+//! to write custom components.
 
 mod any;
 mod embed;

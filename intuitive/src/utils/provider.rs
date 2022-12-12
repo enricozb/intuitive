@@ -9,7 +9,7 @@
 ///   - previous renders
 ///
 /// This trait defines entry and exit requirements for these pieces of data to be tracked.
-pub(crate) trait Provider {
+pub trait Provider {
   type Entry;
   type Context;
   type Exit;

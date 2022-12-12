@@ -1,3 +1,29 @@
+//! # Intuitive
+//! Intuitive is a component-based library for creating text-based user interfaces (TUIs) easily.
+//!
+//! It is heavily inspired by [React] and [SwiftUI], containing features that resemble functional components,
+//! hooks, and a declarative DSL.
+//!
+//! Check out the [Getting Started] section below for a brief introduction to using Intuitive.
+//!
+//! ## Design
+//! The main focus of Intuitive is to simplify the implementation of full-terminal TUIs, such as [lazygit].
+//! Intuitive attempts to make it easy to write reusable TUI components that are:
+//!   - readable (minimal-code)
+//!   - familiar (similar to existing web frameworks)
+//!   - full-featured (conditional rendering, styles, key/mouse-handling)
+//!   - free of boilerplate (responsive by default, focusing handled for free)
+//!
+//! ## Getting Started
+//! There are a few fundamental concepts within Intuitive:
+//!   - Writing components with [`#[component(..)]`](component).
+//!   - Using components with [`render!`].
+//!   - Using [hooks](crate::render::hooks).
+//!
+//! [lazygit]: https://github.com/jesseduffield/lazygit
+//! [React]: https://reactjs.org/
+//! [SwiftUI]: https://developer.apple.com/xcode/swiftui/
+
 // A hack so macro uses within intuitive use the correct crate name.
 extern crate self as intuitive;
 

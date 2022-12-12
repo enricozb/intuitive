@@ -3,4 +3,4 @@
 pub mod array;
 pub mod geometry;
 pub mod layout;
-pub mod provider;
+pub(crate) mod provider;
