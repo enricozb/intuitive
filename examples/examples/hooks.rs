@@ -14,10 +14,10 @@ use intuitive::{
 
 #[component(Root)]
 fn render() -> AnyElement {
-  let seconds = render.hooks.use_state(|| 0);
+  let seconds = hooks.use_state(|| 0);
   let seconds_clone = seconds.clone();
 
-  render.hooks.use_effect(|| {
+  hooks.use_effect(|| {
     thread::spawn(move || loop {
       thread::sleep(Duration::from_secs(1));
 

@@ -3,7 +3,7 @@ use crate::{
   components::Component,
   element::{Any as AnyElement, Children, Element},
   error::Result,
-  render::context::Context,
+  render::Context,
 };
 
 /// Renders its child.

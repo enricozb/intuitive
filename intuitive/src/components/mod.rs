@@ -19,7 +19,7 @@ pub use self::{
 };
 #[allow(unused)]
 use crate::element::Element;
-use crate::{element::Any as AnyElement, render::context::Context};
+use crate::{element::Any as AnyElement, render::Context};
 
 /// Describes types which can be rendered to an [`Element`].
 pub trait Component: Default {

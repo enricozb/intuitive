@@ -15,7 +15,7 @@ pub mod event;
 /// Helper attribute macro for creating functional components.
 ///
 /// # Usage
-/// This macro is used to create functional components, where the name (and type paramters) of the generated component
+/// This macro is used to create functional components, where the name (and type parameters) of the generated component
 /// is the item in the attribute. For example,
 /// ```rust
 /// # use intuitive::{
@@ -43,9 +43,51 @@ pub mod event;
 /// default values of the parameters, consider implementing the [`Component`] trait instead of using the
 /// [`#[component(..)]`](component) attribute macro.
 ///
-/// # Managing State
-/// State in functional components is managed similarly to how they are in [React], using the [`UseState`] hook. Refer
-/// to the [`UseState`] documentation for details.
+/// # Hooks
+/// Intuitive supports a construct similar to [React's hooks]. See the [module-level documentation](render::hooks) for
+/// details.
+///
+/// These are functions defined through traits on the [`Hooks`] context provider. A `hooks` variable
+/// (of type [`Hooks`]) is implicitly introduced into scope within the function that the
+/// [`#[component(..)]`](component) attribute macro is applied to.
+///
+/// For example, here is a component that shows how many seconds have passed since it was first rendered:
+/// ```rust
+/// use std::{thread, time::Duration};
+///
+/// use intuitive::{
+///   component,
+///   components::{Section, Text},
+///   element::Any as AnyElement,
+///   render,
+///   render::hooks::{UseEffect, UseState},
+///   style::Color,
+/// };
+///
+/// #[component(Root)]
+/// fn render() -> AnyElement {
+///   let seconds = hooks.use_state(|| 0);
+///
+///   // cloned because it's moved into the `use_effect` hook below
+///   let seconds_clone = seconds.clone();
+///
+///   hooks.use_effect(|| {
+///     thread::spawn(move || loop {
+///       thread::sleep(Duration::from_secs(1));
+///
+///       seconds_clone.update(|seconds| seconds + 1).unwrap();
+///     });
+///   });
+///
+///   render! {
+///     Section(title: "Seconds", border: Color::Red) {
+///       Text(text: format!("This program has run for {} seconds", seconds.get()))
+///     }
+///   }
+/// }
+///
+/// ```
+/// Notice the implicit variable `hooks`, and how the [`UseEffect`] and [`UseState`] traits had to be imported.
 ///
 /// # Generics
 /// When requiring generics they can be added into the attribute and then used in the parameters. For example,
@@ -72,19 +114,25 @@ pub mod event;
 ///
 /// # Generated Component
 /// The generated component is a structure that implements the [`Component`] trait. The structure's fields are exactly
-/// the paramters defined in the `render` function passed to [`#[component(..)]`](component).
+/// the parameters defined in the `render` function passed to [`#[component(..)]`](component).
 ///
-/// # Additional Details
-/// There are a couple of additional details with this macro:
-/// 1. The visibility of the generated component will be the same as the visibility of the `render` function the
+/// # Additional Details + TL;DR
+/// 1. [`#[component(..)]`](component) generates a structure that implements [`Component`].
+/// 2. The name and type parameters of the generated component are in the item of the attribute macro.
+/// 3. The variables `hooks: `[`Hooks`] and `context: `[`Context`] are implicitly introduced into `render`'s scope.
+/// 4. The visibility of the generated component will be the same as the visibility of the `render` function the
 ///    [`#[component(..)]`](component) attribute is applied to.
-/// 2. The function name (commonly `render`) is ignored.
-/// 3. The return type must by [`AnyElement`].
+/// 5. The function name (commonly `render`) is ignored.
+/// 6. The return type must be [`AnyElement`].
 ///
-/// [`Component`]: components::Component
 /// [`AnyElement`]: element::Any
+/// [`Component`]: components::Component
+/// [`Context`]: render::Context
+/// [`Hooks`]: render::providers::Hooks
+/// [`UseEffect`]: render::hooks::UseEffect
 /// [`UseState`]: render::hooks::UseState
 /// [React]: https://reactjs.org/
+/// [React's hooks]: https://reactjs.org/docs/hooks-intro.html
 pub use intuitive_macros::component;
 /// Macro for rendering components.
 ///

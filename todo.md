@@ -92,6 +92,5 @@
   - `use_effect`
 
 - docs
-  - macros
   - hooks
     - writing custom hooks

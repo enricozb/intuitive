@@ -14,7 +14,7 @@ use crate::{
   element::Any as AnyElement,
   error::Result,
   event::{self, Event},
-  render::{context::Context, ComponentID},
+  render::{ComponentID, Context},
 };
 
 /// A terminal that can be drawn onto.

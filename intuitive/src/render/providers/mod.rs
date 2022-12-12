@@ -1,3 +1,5 @@
+//! Structures that track information across renders.
+
 pub(crate) mod components;
 pub(crate) mod descendants;
 pub(crate) mod elements;

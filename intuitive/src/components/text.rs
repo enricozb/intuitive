@@ -3,7 +3,7 @@ use crate::{
   components::Component,
   element::{Any as AnyElement, Element},
   error::Result,
-  render::context::Context,
+  render::Context,
   style::Style,
   utils::{
     geometry::{Axis, Position},

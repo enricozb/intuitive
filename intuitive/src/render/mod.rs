@@ -1,6 +1,8 @@
-pub mod context;
+mod context;
 pub mod hooks;
 pub mod providers;
+
+pub use context::Context;
 
 #[allow(unused)]
 use crate::{components::Component, render};

@@ -5,7 +5,7 @@ use super::Component;
 use crate::element::Element;
 use crate::{
   element::Any as AnyElement,
-  render::{context::Context, ComponentID},
+  render::{ComponentID, Context},
 };
 
 /// A container for functions that return an [`Element`]. This is used as a way to

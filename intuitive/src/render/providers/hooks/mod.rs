@@ -15,6 +15,10 @@ use crate::{
 };
 
 /// Hooks used within renders.
+///
+/// See the [`render::hooks`] module for details on using and creating hooks.
+///
+/// [`render::hooks`]: crate::render::hooks
 #[derive(Default)]
 pub struct Hooks {
   cursors: Vec<Cursor>,
