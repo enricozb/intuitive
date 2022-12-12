@@ -29,7 +29,7 @@ impl<'a> Region<'a> {
   ///
   /// # Errors
   ///
-  /// Will return `Err` if the desired region exceeds the current region's bounds.
+  /// Will return an `Err` if the desired region exceeds the current region's bounds.
   pub fn narrow<'b>(&'b mut self, position: Position, size: Size) -> Result<Region<'b>>
   where
     'a: 'b,

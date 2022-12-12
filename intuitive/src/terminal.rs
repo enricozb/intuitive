@@ -37,7 +37,7 @@ impl Terminal {
   ///
   /// # Errors
   ///
-  /// Will return `Err` if the terminal's size cannot be read from [`Stdout`].
+  /// Will return an `Err` if the terminal's size cannot be read from [`Stdout`].
   pub fn new() -> Result<Self> {
     let size = terminal::size()?;
 
@@ -53,7 +53,7 @@ impl Terminal {
   ///
   /// # Errors
   ///
-  /// Will return `Err` if [`Terminal::prepare`] fails.
+  /// Will return an `Err` if [`Terminal::prepare`] fails.
   #[allow(rustdoc::private_intra_doc_links)]
   pub fn render<C: Component + 'static>(&mut self, component: C) -> Result<()> {
     let element = self.context.render(&AnyComponent::new(ComponentID::ROOT, component));

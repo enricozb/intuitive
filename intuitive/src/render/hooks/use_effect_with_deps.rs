@@ -40,11 +40,11 @@ impl<D> Clone for Effect<D> {
   }
 }
 
-impl<F, T, D> From<(F, D)> for Effect<D>
+impl<D, F, T> From<(F, D)> for Effect<D>
 where
+  D: Eq,
   F: FnOnce() -> T,
   T: Into<Cleanup>,
-  D: Eq,
 {
   fn from((func, deps): (F, D)) -> Self {
     Self {
@@ -73,7 +73,7 @@ pub trait UseEffectWithDeps {
   /// This is inspired by React's [`useEffect`].
   ///
   /// [`useEffect`]: https://reactjs.org/docs/hooks-effect.html
-  fn use_effect_with_deps<F, T, D>(&mut self, deps: D, func: F)
+  fn use_effect_with_deps<D, F, T>(&mut self, deps: D, func: F)
   where
     D: 'static + Eq,
     F: FnOnce() -> T,
@@ -81,7 +81,7 @@ pub trait UseEffectWithDeps {
 }
 
 impl UseEffectWithDeps for Hooks {
-  fn use_effect_with_deps<F, T, D>(&mut self, deps: D, func: F)
+  fn use_effect_with_deps<D, F, T>(&mut self, deps: D, func: F)
   where
     D: 'static + Eq,
     F: FnOnce() -> T,

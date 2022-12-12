@@ -7,6 +7,7 @@
 //! The main hooks are:
 //! - [`UseState`]
 //! - [`UseEffect`]
+//! - ... more in the [traits](#traits) section.
 //!
 //! ## Using Hooks
 //! Hooks are implemented as traits on the [`Hooks`] provider, which has a primitive [`use_hook`] hook.
@@ -55,47 +56,45 @@
 //!
 //! ## Writing Custom Hooks
 //! Custom hooks are, like the built-in hooks, implemented as traits on the [`Hooks`] context provider. For example,
-//! the [`UseState`] hook is implemented as follows:
+//! a possible implementation of the [`UseEffect`] hook (without cleanup support, but with dependencies) could be:
 //! ```rust
-//! # use intuitive::render::{hooks::State, providers::Hooks};
-//!
-//! pub trait UseState {
-//!   fn use_state<F, T>(&mut self, initializer: F) -> State<T>
+//! # use intuitive::render::{hooks::UseMemo, providers::Hooks};
+//! #
+//! pub trait UseEffect {
+//!   fn use_effect<D, F>(&mut self, deps: D, func: F)
 //!   where
-//!     F: FnOnce() -> T,
-//!     T: 'static;
+//!     D: 'static + Eq,
+//!     F: FnOnce();
 //! }
 //!
-//! impl UseState for Hooks {
-//!   fn use_state<F, T>(&mut self, initializer: F) -> State<T>
+//! impl UseEffect for Hooks {
+//!   fn use_effect<D, F>(&mut self, deps: D, func: F)
 //!   where
-//!     F: FnOnce() -> T,
-//!     T: 'static,
+//!     D: 'static + Eq,
+//!     F: FnOnce(),
 //!   {
-//!     self
-//!       .use_hook(|component_id| State::new(component_id, initializer()).into())
-//!       .expect("use_state: use_hook")
+//!     self.use_memo(deps, func);
 //!   }
 //! }
 //! ```
-//! Now, when [`UseState`] is imported, [`UseState::use_state`] can be called as a method on [`Hooks`]. Custom
-//! hooks can also rely on higher-level built in hooks by importing their respective traits.
+//! Now, when [`UseEffect`] is imported, [`UseEffect::use_effect`] can be called as a method on [`Hooks`].
 //!
-//! ### `Hooks::use_hook`
-//! This is the "primitive" hook that all other hooks must eventually use in order to hook into the component
-//! rendering lifecycle. This is the only hook that is not implemented as a trait, and is therefore always available.
-//! See the [method's documentation](crate::render::providers::Hooks::use_hook) for details.
+//! Custom hooks can also rely on [`Hooks::use_hook`]. This is the "primitive" hook that all other hooks must
+//! eventually use in order to hook into the component rendering lifecycle. This is the only hook that is not
+//! implemented as a trait, and is therefore always available.
 //!
 //! [`Component::render`]: crate::components::Component::render
 //! [`Context`]: crate::render::Context
 //! [`Context::hooks`]: crate::render::Context::hooks
 //! [`Hooks`]: crate::render::providers::Hooks
+//! [`Hooks::use_hook`]: crate::render::providers::Hooks::use_hook
 //! [`use_hook`]: crate::render::providers::Hooks::use_hook
 //! [React's hooks]: https://reactjs.org/docs/hooks-intro.html
 
 pub mod error;
 mod use_effect;
 mod use_effect_with_deps;
+mod use_memo;
 mod use_state;
 
 use std::any::{self, Any};
@@ -104,6 +103,7 @@ use self::error::{Error, Result};
 pub use self::{
   use_effect::{Cleanup, UseEffect},
   use_effect_with_deps::UseEffectWithDeps,
+  use_memo::UseMemo,
   use_state::{State, UseState},
 };
 
