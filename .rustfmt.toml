@@ -1,5 +1,0 @@
-group_imports = "StdExternalCrate"
-imports_granularity = "Crate"
-max_width = 140
-reorder_imports = true
-tab_spaces = 2
