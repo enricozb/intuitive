@@ -19,9 +19,78 @@
 //!   - Using components with [`render!`].
 //!   - Using [hooks](crate::render::hooks).
 //!
-//! TODO(enricozb): talk about the three points above in a little more detail, with further reading for each of them.
-//! TODO(enricozb): give simple example
+//! A quick example of these three concepts in action looks like this:
 //!
+//! ```rust
+//! use std::{thread, time::Duration};
+//!
+//! use intuitive::{
+//!   component,
+//!   components::{Fixed, Padding, Section, Text},
+//!   element::Any as AnyElement,
+//!   error::Result,
+//!   render,
+//!   render::hooks::{UseEffect, UseState},
+//!   style::Color,
+//!   terminal::Terminal,
+//!   utils::layout::{Alignment, Amount},
+//! };
+//!
+//! #[component(Root)]
+//! fn render() -> AnyElement {
+//!   let seconds = hooks.use_state(|| 0);
+//!
+//!   hooks.use_effect(|| {
+//!     thread::spawn({
+//!       let seconds = seconds.clone();
+//!       move || loop {
+//!         thread::sleep(Duration::from_secs(1));
+//!
+//!         seconds.update(|seconds| seconds + 1).unwrap();
+//!       }
+//!     });
+//!   });
+//!
+//!   render! {
+//!     Padding(amount: Amount::Percentage(10)) {
+//!       Fixed(height: Amount::Fixed(3)) {
+//!         Section(title: "Seconds", border: Color::Red) {
+//!           Text(
+//!             text: format!("This program has run for {} seconds", seconds.get()),
+//!             alignment: Alignment::Center
+//!           )
+//!         }
+//!       }
+//!     }
+//!   }
+//! }
+//!
+//! fn main() -> Result<()> {
+//!   Terminal::new()?.render(Root {})?;
+//!
+//!   Ok(())
+//! }
+//! ```
+//! Above, a `Root` component is being defined using the [`#[component(..)]`](component) attribute macro. It uses the
+//! [`UseState`] hook to create a [`State<i32>`], whose value is initially `0`. Then it uses the [`UseEffect`] hook to
+//! run a function when this component is first rendered. Specifically, it spawns a thread that increments `seconds`
+//! once every second. This means that `Root` will be re-rendered once a second, each time the `seconds` is updated.
+//!
+//! Then, `Root::render` returns an element constructed using the [`Padding`], [`Fixed`], [`Section`], [`Text`]
+//! components, and the [`render!`] macro. Specifically, it constructs a section of text that will be centered on the
+//! screen with a fixed height. The text displayed will show how many seconds have passed since the program started.
+//!
+//! See the relevant documentation linked at the beginning of the [Getting Started] section for more details.
+//!
+//!
+//! [`Fixed`]: components::Fixed
+//! [`Padding`]: components::Padding
+//! [`Section`]: components::Section
+//! [`State<i32>`]: render::hooks::State
+//! [`Text`]: components::Text
+//! [`UseEffect`]: render::hooks::UseEffect
+//! [`UseState`]: render::hooks::UseState
+//! [`render!`]: render!
 //! [Getting Started]: #getting-started
 //! [lazygit]: https://github.com/jesseduffield/lazygit
 //! [React]: https://reactjs.org/

@@ -23,23 +23,27 @@ use intuitive::{
 #[component(Timer)]
 fn render(text: String, border: Style) -> AnyElement {
   let seconds = hooks.use_state(|| 0);
-  let seconds_clone = seconds.clone();
 
-  hooks.use_effect(|| {
-    let done = Arc::new(AtomicBool::new(false));
-    let done_clone = done.clone();
+  hooks.use_effect({
+    let seconds = seconds.clone();
+    || {
+      let done = Arc::new(AtomicBool::new(false));
 
-    thread::spawn(move || {
-      while !done.load(Ordering::Relaxed) {
-        thread::sleep(Duration::from_secs(1));
+      thread::spawn({
+        let done = done.clone();
+        move || {
+          while !done.load(Ordering::Relaxed) {
+            thread::sleep(Duration::from_secs(1));
 
-        seconds_clone.update(|seconds| seconds + 1).unwrap();
-      }
-    });
+            seconds.update(|seconds| seconds + 1).unwrap();
+          }
+        }
+      });
 
-    Cleanup::from(move || {
-      done_clone.store(true, Ordering::Relaxed);
-    })
+      Cleanup::from(move || {
+        done.store(true, Ordering::Relaxed);
+      })
+    }
   });
 
   render! {

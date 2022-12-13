@@ -15,13 +15,15 @@ use intuitive::{
 #[component(Root)]
 fn render() -> AnyElement {
   let seconds = hooks.use_state(|| 0);
-  let seconds_clone = seconds.clone();
 
   hooks.use_effect(|| {
-    thread::spawn(move || loop {
-      thread::sleep(Duration::from_secs(1));
+    thread::spawn({
+      let seconds = seconds.clone();
+      move || loop {
+        thread::sleep(Duration::from_secs(1));
 
-      seconds_clone.update(|seconds| seconds + 1).unwrap();
+        seconds.update(|seconds| seconds + 1).unwrap();
+      }
     });
   });
 

@@ -52,5 +52,5 @@ impl Default for Any {
   }
 }
 
-/// An [`Array`] of [`AnyElement`][struct@Any].
+/// An [`Array`] of [`Any`](Any).
 pub type Children<const N: usize> = Array<N, Any>;
