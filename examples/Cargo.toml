@@ -1,8 +1,7 @@
 [package]
 name = "intuitive_examples"
-version = "0.1.0"
-edition = "2021"
 readme = "readme.md"
+edition = "2021"
 
 [dependencies]
 intuitive = { path = "../intuitive" }
