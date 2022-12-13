@@ -81,5 +81,5 @@
   - `use_effect`
 
 - docs
-  - top-level docs
-    - getting started
+  - explain that hooks can't be rendered conditionally
+  - add a recipes section
