@@ -1,6 +1,10 @@
 [package]
 name = "intuitive_macros"
 version = "0.7.0-alpha.0"
+description = "macros for the intuitive crate"
+license = "CC0-1.0"
+repository = "https://github.com/enricozb/intuitive"
+readme = "readme.md"
 edition = "2021"
 
 [lib]
