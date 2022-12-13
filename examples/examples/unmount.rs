@@ -61,14 +61,16 @@ fn render(text: String, border: Style) -> AnyElement {
 #[component(Root)]
 fn render() -> AnyElement {
   let first = hooks.use_state(|| true);
-  let first_clone = first.clone();
 
-  hooks.use_effect(|| {
-    thread::spawn(move || loop {
-      thread::sleep(Duration::from_secs(5));
+  hooks.use_effect({
+    let first = first.clone();
+    || {
+      thread::spawn(move || loop {
+        thread::sleep(Duration::from_secs(5));
 
-      first_clone.update(|first| !first).unwrap();
-    });
+        first.update(|first| !first).unwrap();
+      });
+    }
   });
 
   if first.get() {
