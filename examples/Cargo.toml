@@ -1,5 +1,6 @@
 [package]
 name = "intuitive_examples"
+version = "0.0.0"
 readme = "readme.md"
 edition = "2021"
 
