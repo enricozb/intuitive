@@ -1,7 +1,7 @@
 use crate::{
-  buffer::region::Region,
   component,
   components::Component,
+  draw::Region,
   element::{Any as AnyElement, Children, Element},
   error::Result,
   render,

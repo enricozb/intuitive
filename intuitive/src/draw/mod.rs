@@ -1,14 +1,22 @@
-//! The [`Draw`] trait.
+//! Types for drawing onto the terminal.
 
-use super::Cell;
-#[allow(unused)]
-use super::{region::Region, Buffer};
+mod buffer;
+mod region;
+
+pub use self::{buffer::Buffer, region::Region};
 use crate::{
   style::Style,
   utils::geometry::{Axis, Position, Size},
 };
 
-/// Types that can be drawn onto, mostly for [`Buffer`] and [`Region`].
+/// A single cell within a [`Buffer`].
+#[derive(PartialEq, Eq, Debug)]
+pub struct Cell {
+  chr: Option<char>,
+  style: Style,
+}
+
+/// Describes types that can be drawn onto, mostly for [`Buffer`] and [`Region`].
 pub trait Draw {
   /// Sets an `Option<`[`Cell`]`>` at a given [`Position`].
   fn set_option_cell(&mut self, position: Position, cell: Option<Cell>) -> bool;

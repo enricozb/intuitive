@@ -9,7 +9,7 @@ pub use self::{
 };
 #[allow(unused)]
 use crate::components::Component;
-use crate::{buffer::region::Region, error::Result};
+use crate::{draw::Region, error::Result};
 
 /// A rendered [`Component`], which can be drawn onto a [`Region`].
 pub trait Element {

@@ -1,5 +1,5 @@
 use super::Element;
-use crate::{buffer::region::Region, error::Result};
+use crate::{draw::Region, error::Result};
 
 /// The empty [`Element`]. It draws nothing.
 pub struct Empty;

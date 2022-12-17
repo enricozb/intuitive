@@ -1,6 +1,6 @@
 use crate::{
-  buffer::{draw::Draw, region::Region},
   components::Component,
+  draw::{Draw, Region},
   element::{Any as AnyElement, Children, Element},
   error::Result,
   render::Context,

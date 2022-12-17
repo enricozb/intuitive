@@ -2,7 +2,7 @@ use std::{cell::Cell, rc::Rc};
 
 use super::{Element, Empty};
 #[allow(unused)]
-use crate::buffer::region::Region;
+use crate::draw::Region;
 use crate::{error::Result, utils::array::Array};
 
 /// A container for any type that implements [`Element`].

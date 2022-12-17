@@ -11,8 +11,8 @@ use crossterm::{
 #[allow(unused)]
 use crate::element::Element;
 use crate::{
-  buffer::{region::Region, Buffer},
   components::{Any as AnyComponent, Component},
+  draw::{Buffer, Region},
   element::Any as AnyElement,
   error::Result,
   event::{self, Event},

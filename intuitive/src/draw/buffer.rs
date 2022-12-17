@@ -1,7 +1,4 @@
-//! Types for drawing onto the terminal.
-
-pub mod draw;
-pub mod region;
+//! The [`Buffer`] type.
 
 use std::{
   io::{Stdout, Write},
@@ -14,10 +11,9 @@ use crossterm::{
   style::{Print, SetStyle},
 };
 
-use self::draw::Draw;
+use super::{Cell, Draw};
 use crate::{
   error::Result,
-  style::Style,
   utils::geometry::{Position, Size},
 };
 
@@ -93,13 +89,6 @@ impl Draw for Buffer {
   fn size(&self) -> Size {
     self.size
   }
-}
-
-/// A single cell within a [`Buffer`].
-#[derive(PartialEq, Eq, Debug)]
-pub struct Cell {
-  chr: Option<char>,
-  style: Style,
 }
 
 /// Differences between two [`Buffer`]s.

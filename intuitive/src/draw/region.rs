@@ -1,6 +1,6 @@
-//! Types for regions of a buffer.
+//! The [`Region`] type.
 
-use super::{draw::Draw, Buffer, Cell};
+use super::{buffer::Buffer, Cell, Draw};
 use crate::{
   error::{Error, Result},
   utils::geometry::{Position, Size},
