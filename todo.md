@@ -83,3 +83,6 @@
 - docs
   - explain that hooks can't be rendered conditionally
   - add a recipes section
+
+- resources
+  - [signals](https://preactjs.com/blog/introducing-signals/)
