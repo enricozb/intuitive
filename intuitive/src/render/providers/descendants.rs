@@ -6,7 +6,7 @@ use crate::{render::ComponentID, utils::provider::Provider};
 #[derive(Default)]
 pub struct Descendants {
   /// A stack of component ids.
-  component_ids: Vec<ComponentID>,
+  pub component_ids: Vec<ComponentID>,
 
   /// The immediate descendants of a component with respect to rendering.
   descendants: HashMap<ComponentID, HashSet<ComponentID>>,

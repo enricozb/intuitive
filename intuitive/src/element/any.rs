@@ -2,19 +2,25 @@ use std::{cell::Cell, rc::Rc};
 
 use super::{Element, Empty};
 #[allow(unused)]
-use crate::draw::Region;
-use crate::{error::Result, utils::array::Array};
+use crate::draw::{Context, Region};
+use crate::{error::Result, render::ComponentID, utils::array::Array};
 
 /// A container for any type that implements [`Element`].
 #[derive(Clone)]
 pub struct Any {
+  /// The ID of the component that rendered this element.
+  ///
+  /// If `None`, this element won't be drawn.
+  pub(crate) id: Option<ComponentID>,
+
   element: Rc<Cell<Box<dyn Element>>>,
 }
 
 impl Any {
   /// Creates a new [`Any`].
-  pub fn new<E: Element + 'static>(element: E) -> Self {
+  pub fn new<E: Element + 'static>(id: ComponentID, element: E) -> Self {
     Self {
+      id: Some(id),
       element: Rc::new(Cell::new(Box::new(element))),
     }
   }
@@ -25,7 +31,7 @@ impl Any {
   }
 
   /// Draws the inner [`Element`] on to a [`Region`].
-  pub(crate) fn draw<'a>(&self, region: &'a mut Region<'a>) -> Result<()> {
+  pub(crate) fn draw<'a>(&self, context: &mut Context, region: &'a mut Region<'a>) -> Result<()> {
     if region.is_empty() {
       return Ok(());
     }
@@ -33,22 +39,26 @@ impl Any {
     let cell = &self.element;
 
     let element = cell.replace(Box::new(Empty));
-    element.draw(region)?;
+    element.draw(context, region)?;
     cell.set(element);
 
     Ok(())
   }
 }
 
+// TODO(enricozb): why do we need this?
 impl Element for Any {
-  fn draw<'a>(&self, region: &'a mut Region<'a>) -> Result<()> {
-    self.draw(region)
+  fn draw<'a>(&self, context: &mut Context, region: &'a mut Region<'a>) -> Result<()> {
+    self.draw(context, region)
   }
 }
 
 impl Default for Any {
   fn default() -> Self {
-    Self::new(Empty)
+    Self {
+      id: None,
+      element: Rc::new(Cell::new(Box::new(Empty))),
+    }
   }
 }
 

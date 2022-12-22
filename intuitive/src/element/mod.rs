@@ -9,7 +9,10 @@ pub use self::{
 };
 #[allow(unused)]
 use crate::components::Component;
-use crate::{draw::Region, error::Result};
+use crate::{
+  draw::{Context, Region},
+  error::Result,
+};
 
 /// A rendered [`Component`], which can be drawn onto a [`Region`].
 pub trait Element {
@@ -18,7 +21,7 @@ pub trait Element {
   /// # Errors
   ///
   /// Will return an `Err` if the drawing fails.
-  fn draw<'a>(&self, region: &'a mut Region<'a>) -> Result<()>;
+  fn draw<'a>(&self, context: &mut Context, region: &'a mut Region<'a>) -> Result<()>;
 
   // Future methods
   //

@@ -1,11 +1,11 @@
 use crate::{
   component,
   components::Component,
-  draw::Region,
+  draw::{Context as DrawContext, Region},
   element::{Any as AnyElement, Children, Element},
   error::Result,
   render,
-  render::Context,
+  render::Context as RenderContext,
   utils::layout::{Flex, FlexArray, FlexDirection},
 };
 
@@ -37,13 +37,13 @@ pub fn render(flex: FlexArray<N>, children: Children<N>) -> AnyElement {
 }
 
 impl<const N: usize> Component for Stack<N> {
-  fn render(&self, _context: &mut Context) -> AnyElement {
-    AnyElement::new(self.clone())
+  fn render(&self, context: &mut RenderContext) -> AnyElement {
+    AnyElement::new(context.current_component_id(), self.clone())
   }
 }
 
 impl<const N: usize> Element for Stack<N> {
-  fn draw<'a>(&self, region: &'a mut Region<'a>) -> Result<()> {
+  fn draw<'a>(&self, context: &mut DrawContext, region: &'a mut Region<'a>) -> Result<()> {
     let region_size = region.size();
 
     let total = match self.direction {
@@ -66,7 +66,7 @@ impl<const N: usize> Element for Stack<N> {
         FlexDirection::Column => ((0, total_offset), (region_size.width, cur_offset)),
       };
 
-      self.children[i].draw(&mut region.narrow(child_position.into(), child_size.into())?)?;
+      context.draw(&self.children[i], &mut region.narrow(child_position.into(), child_size.into())?)?;
 
       total_offset += cur_offset;
     }

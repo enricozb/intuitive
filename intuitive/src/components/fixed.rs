@@ -1,9 +1,9 @@
 use crate::{
   components::Component,
-  draw::Region,
+  draw::{Context as DrawContext, Region},
   element::{Any as AnyElement, Children, Element},
   error::Result,
-  render::Context,
+  render::Context as RenderContext,
   utils::{
     geometry::{Position, Size},
     layout::Amount,
@@ -22,13 +22,13 @@ pub struct Fixed {
 }
 
 impl Component for Fixed {
-  fn render(&self, _context: &mut Context) -> AnyElement {
-    AnyElement::new(self.clone())
+  fn render(&self, context: &mut RenderContext) -> AnyElement {
+    AnyElement::new(context.current_component_id(), self.clone())
   }
 }
 
 impl Element for Fixed {
-  fn draw<'a>(&self, region: &'a mut Region<'a>) -> Result<()> {
+  fn draw<'a>(&self, context: &mut DrawContext, region: &'a mut Region<'a>) -> Result<()> {
     let size = region.size();
 
     let width = self.width.of(size.width);
@@ -42,7 +42,7 @@ impl Element for Fixed {
       Size { width, height },
     )?;
 
-    self.children[0].draw(&mut region)?;
+    context.draw(&self.children[0], &mut region)?;
 
     Ok(())
   }

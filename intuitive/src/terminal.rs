@@ -12,11 +12,11 @@ use crossterm::{
 use crate::element::Element;
 use crate::{
   components::{Any as AnyComponent, Component},
-  draw::{Buffer, Region},
+  draw::{Buffer, Context as DrawContext},
   element::Any as AnyElement,
   error::Result,
   event::{self, Event},
-  render::{ComponentID, Context},
+  render::{ComponentID, Context as RenderContext},
 };
 
 /// A terminal that can be drawn onto.
@@ -31,7 +31,10 @@ pub struct Terminal {
   idx: bool,
 
   /// The rendering context.
-  context: Context,
+  render_context: RenderContext,
+
+  /// The drawing context.
+  draw_context: DrawContext,
 }
 
 impl Terminal {
@@ -47,7 +50,8 @@ impl Terminal {
       stdout: io::stdout(),
       buffers: [Buffer::new(size), Buffer::new(size)],
       idx: false,
-      context: Context::default(),
+      render_context: RenderContext::default(),
+      draw_context: DrawContext::default(),
     })
   }
 
@@ -58,7 +62,7 @@ impl Terminal {
   /// Will return an `Err` if [`Terminal::prepare`] fails.
   #[allow(rustdoc::private_intra_doc_links)]
   pub fn render<C: Component + 'static>(&mut self, component: C) -> Result<()> {
-    let element = self.context.render(&AnyComponent::new(ComponentID::ROOT, component));
+    let element = self.render_context.render(&AnyComponent::new(ComponentID::ROOT, component));
 
     self.prepare()?;
     self.draw(&element)?;
@@ -66,7 +70,7 @@ impl Terminal {
     loop {
       match event::read()? {
         Event::Rerender(component_id) => {
-          self.context.rerender(component_id);
+          self.render_context.rerender(component_id);
           self.draw(&element)?;
         }
 
@@ -91,14 +95,11 @@ impl Terminal {
     Ok(())
   }
 
-  /// Returns a the current [`Region`].
-  fn current_region(&mut self) -> Region {
-    (&mut self.buffers[usize::from(self.idx)]).into()
-  }
-
   /// Draw the provided [`Element`] onto the terminal.
   fn draw(&mut self, element: &AnyElement) -> Result<()> {
-    element.draw(&mut self.current_region())?;
+    let mut region = (&mut self.buffers[usize::from(self.idx)]).into();
+
+    self.draw_context.draw(element, &mut region)?;
     self.paint_diffs()?;
 
     Ok(())

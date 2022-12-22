@@ -1,9 +1,10 @@
 //! Types for drawing onto the terminal.
 
 mod buffer;
+mod context;
 mod region;
 
-pub use self::{buffer::Buffer, region::Region};
+pub use self::{buffer::Buffer, context::Context, region::Region};
 use crate::{
   style::Style,
   utils::geometry::{Axis, Position, Size},

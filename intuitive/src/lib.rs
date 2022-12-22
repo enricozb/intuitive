@@ -21,7 +21,7 @@
 //!
 //! A quick example of these three concepts in action looks like this:
 //!
-//! ```rust
+//! ```no_run
 //! use std::{thread, time::Duration};
 //!
 //! use intuitive::{

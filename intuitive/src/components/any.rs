@@ -32,6 +32,6 @@ impl Any {
   /// Calls the inner [`Self::component`].
   #[must_use]
   pub(crate) fn render(&self, context: &mut Context) -> AnyElement {
-    AnyElement::new((self.component)(context))
+    AnyElement::new(self.id, (self.component)(context))
   }
 }

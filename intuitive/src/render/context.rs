@@ -28,6 +28,11 @@ impl Context {
     &mut self.hooks
   }
 
+  /// Returns the current [`ComponentID`] being rendered.
+  pub(crate) fn current_component_id(&mut self) -> ComponentID {
+    *self.descendants.component_ids.last().unwrap()
+  }
+
   /// Re-renders a component.
   pub(crate) fn rerender(&mut self, component_id: ComponentID) {
     if let Some(component) = self.components.get(&component_id).cloned() {

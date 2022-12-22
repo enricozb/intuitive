@@ -1,9 +1,9 @@
 use crate::{
   components::Component,
-  draw::Region,
+  draw::{Context as DrawContext, Region},
   element::{Any as AnyElement, Children, Element},
   error::Result,
-  render::Context,
+  render::Context as RenderContext,
 };
 
 /// Renders its child.
@@ -13,13 +13,13 @@ pub struct Embed {
 }
 
 impl Component for Embed {
-  fn render(&self, _context: &mut Context) -> AnyElement {
-    AnyElement::new(self.clone())
+  fn render(&self, context: &mut RenderContext) -> AnyElement {
+    AnyElement::new(context.current_component_id(), self.clone())
   }
 }
 
 impl Element for Embed {
-  fn draw<'a>(&self, region: &'a mut Region<'a>) -> Result<()> {
-    self.children[0].draw(region)
+  fn draw<'a>(&self, context: &mut DrawContext, region: &'a mut Region<'a>) -> Result<()> {
+    context.draw(&self.children[0], region)
   }
 }

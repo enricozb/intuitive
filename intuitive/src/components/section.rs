@@ -1,9 +1,9 @@
 use crate::{
   components::Component,
-  draw::{Draw, Region},
+  draw::{Context as DrawContext, Draw, Region},
   element::{Any as AnyElement, Children, Element},
   error::Result,
-  render::Context,
+  render::Context as RenderContext,
   style::Style,
   utils::{
     geometry::{Axis, Position, Size},
@@ -26,13 +26,13 @@ pub struct Section {
 }
 
 impl Component for Section {
-  fn render(&self, _context: &mut Context) -> AnyElement {
-    AnyElement::new(self.clone())
+  fn render(&self, context: &mut RenderContext) -> AnyElement {
+    AnyElement::new(context.current_component_id(), self.clone())
   }
 }
 
 impl Element for Section {
-  fn draw<'a>(&self, region: &'a mut Region<'a>) -> Result<()> {
+  fn draw<'a>(&self, context: &mut DrawContext, region: &'a mut Region<'a>) -> Result<()> {
     region.clear();
 
     let size = region.size();
@@ -75,7 +75,7 @@ impl Element for Section {
       },
     )?;
 
-    self.children[0].draw(&mut region)?;
+    context.draw(&self.children[0], &mut region)?;
 
     Ok(())
   }
