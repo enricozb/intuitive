@@ -1,6 +1,6 @@
 # Intuitive
 
-> [!WARNING]  
+> [!WARNING]
 > This crate currently does not work. (Hooks don't work, rendering is synchronous,
 > children have a compile-time fixed number of children, and other issues).
 > It's unmaintained at the moment but I hope to one day pick this idea back up.
