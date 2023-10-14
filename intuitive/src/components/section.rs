@@ -66,11 +66,12 @@ impl Element for Frozen {
   fn on_mouse(&self, rect: Rect, event: MouseEvent) {
     self.on_mouse.handle_or(event, |event| {
       self.content.on_mouse(
+        // Based on Block impl: https://docs.rs/tui/0.19.0/src/tui/widgets/block.rs.html#121
         Rect {
-          x: rect.x + 1,
-          y: rect.y - 1,
-          width: rect.width - 1,
-          height: rect.height - 1,
+          x: rect.x.saturating_add(1),
+          y: rect.y.saturating_add(1),
+          width: rect.width.saturating_sub(2),
+          height: rect.height.saturating_sub(2)
         },
         event,
       );
