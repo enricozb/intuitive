@@ -1,0 +1,11 @@
+[workspace]
+resolver = "3"
+
+members = ["intuitive", "intuitive-macros", "intuitive-macros-core", "examples/*"]
+default-members = ["intuitive", "examples/pomodoro"]
+
+[workspace.package]
+edition = "2024"
+
+[workspace.lints.clippy]
+pedantic = { level = "warn", priority = -1 }

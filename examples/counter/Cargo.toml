@@ -1,0 +1,11 @@
+[package]
+name = "counter"
+version = "0.1.0"
+edition.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+intuitive = { path = "../../intuitive" }
+tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros", "time", "sync"] }

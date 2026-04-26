@@ -1,0 +1,5 @@
+error: the top level of `ui!{}` must be a single component invocation; `if`/`for`/`match` are only allowed inside a children block
+ --> tests/fail/ui_top_level_if.rs:9:5
+  |
+9 |     if true { a() } else { b() }
+  |     ^^

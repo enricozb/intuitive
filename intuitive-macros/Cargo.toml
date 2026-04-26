@@ -1,0 +1,18 @@
+[package]
+name = "intuitive-macros"
+version = "0.1.0"
+edition.workspace = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+intuitive-macros-core = { path = "../intuitive-macros-core" }
+
+[dev-dependencies]
+trybuild = "1"
+macrotest = "1"
+intuitive = { path = "../intuitive" }
+
+[lints]
+workspace = true
